@@ -35,7 +35,10 @@
                   <span class="state-tag">{{ unesco.states }}</span>
                 </td>
                 <td style="text-align: right;">
-                  <button class="btn-zoom" onclick="zoomToLocation({{ unesco.longitude }}, {{ unesco.latitude }})">
+                  <button
+                    class="btn-zoom"
+                    onclick="zoomToLocation({{ unesco.coordinates.lon }}, {{ unesco.coordinates.lat }})"
+                  >
                     📍 Localiser
                   </button>
                 </td>
