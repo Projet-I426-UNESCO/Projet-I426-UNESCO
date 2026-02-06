@@ -5,34 +5,34 @@ export default class extends BaseSchema {
 
   async up() {
     this.schema.createTable(this.tableName, (table) => {
-      table.increments('id')
+      table.increments('id').notNullable()
 
-      table.string('category', 100)
-      table.string('criteria_txt', 100)
-      table.string('danger', 100)
-      table.string('date_inscribed', 100)
+      table.string('category', 100).nullable()
+      table.string('criteria_txt', 100).nullable()
+      table.string('danger', 100).nullable()
+      table.string('date_inscribed', 100).nullable()
 
-      table.decimal('extension', 20)
+      table.decimal('extension', 20).nullable()
 
-      table.string('http_url', 500)
-      table.string('image_url', 500)
+      table.string('http_url', 500).nullable()
+      table.string('image_url', 500).nullable()
 
-      table.string('iso_code', 10)
-      table.string('justification', 600)
-      table.string('location', 200)
-      table.string('region', 100)
+      table.string('iso_code', 10).nullable()
+      table.string('justification', 600).nullable()
+      table.string('location', 200).nullable()
+      table.string('region', 100).nullable()
 
-      table.integer('revision')
-      table.string('secondary_dates', 100)
+      table.integer('revision').nullable()
+      table.string('secondary_dates', 100).nullable()
 
-      table.string('short_description', 1200)
-      table.string('site', 200)
+      table.string('short_description', 1200).nullable()
+      table.string('site', 200).nullable()
 
-      table.string('states', 200)
-      table.integer('transboundary')
+      table.string('states', 200).nullable()
+      table.integer('transboundary').nullable()
 
       // ex: { "lat": 48.85, "lon": 2.29 }
-      table.json('coordinates')
+      table.json('coordinates').nullable()
     })
   }
 
