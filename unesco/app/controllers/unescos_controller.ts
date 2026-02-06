@@ -6,10 +6,10 @@ export default class UnescosController {
    * Display a list of resource
    */
   async index({ view }: HttpContext) {
-    const unesco = await Unesco.query().orderBy('site', 'asc').exec()
+    const unescos = await Unesco.query().orderBy('site', 'asc').exec()
 
     // Appel de la vue
-    return view.render('pages/home', { unesco })
+    return view.render('pages/home', { unescos })
   }
 
   /**

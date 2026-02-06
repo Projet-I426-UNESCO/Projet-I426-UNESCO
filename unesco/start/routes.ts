@@ -7,6 +7,7 @@
 |
 */
 
+import UnescosController from '#controllers/unescos_controller'
 import router from '@adonisjs/core/services/router'
 
-router.on('/').render('pages/home').as('home')
+router.get('/', [UnescosController, 'index']).as('home')
