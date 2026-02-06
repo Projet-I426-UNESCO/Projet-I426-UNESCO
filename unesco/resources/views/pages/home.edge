@@ -22,14 +22,14 @@
     <tbody>
       @each (unesco in unescos)
         <tr>
-          <td>
+          <td data-label="Nom">
             {{ unesco.site }}
           </td>
-          <td>
+          <td data-label="Etat">
             {{ unesco.states }}
           </td>
-          <td>
-
+          <td data-label="Action">
+            <span class="state-badge">Patrimoine</span>
           </td>
         </tr>
       @end
