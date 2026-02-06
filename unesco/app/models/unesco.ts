@@ -1,6 +1,19 @@
 import { DateTime } from 'luxon'
 import { BaseModel, column } from '@adonisjs/lucid/orm'
 
+type ImageUrl = {
+  thumbnail: boolean
+  filename: string
+  format: string
+  width: number
+  height: number
+  mimetype: string
+  etag: string
+  id: string
+  last_synchronized: string
+  color_summary: string[]
+}
+
 export default class Unesco extends BaseModel {
   @column({ isPrimary: true })
   declare id: number
@@ -23,8 +36,11 @@ export default class Unesco extends BaseModel {
   @column()
   declare httpUrl: string | null
 
-  @column()
-  declare imageUrl: string | null
+  @column({
+    prepare: (value) => (value ? JSON.stringify(value) : null),
+    consume: (value) => (value ? JSON.parse(value) : null),
+  })
+  declare imageUrl: ImageUrl | null
 
   @column()
   declare isoCode: string | null
@@ -50,18 +66,20 @@ export default class Unesco extends BaseModel {
   @column()
   declare site: string | null
 
-  @column()
-  declare states: string | null
+  @column({
+    prepare: (value) => (value ? JSON.stringify(value) : null),
+    consume: (value) => (value ? JSON.parse(value) : null),
+  })
+  declare states: string[] | null
 
   @column()
   declare transboundary: number | null
 
-  // ex: { lat: 48.85, lon: 2.29 }
-  @column()
-  declare coordinates: {
-    lat: number
-    lon: number
-  } | null
+  @column({
+    prepare: (value) => (value ? JSON.stringify(value) : null),
+    consume: (value) => (value ? JSON.parse(value) : null),
+  })
+  declare coordinates: { lon: number; lat: number } | null
 
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime

@@ -15,9 +15,11 @@ export default class extends BaseSchema {
       table.decimal('extension', 20).nullable()
 
       table.string('http_url', 500).nullable()
-      table.string('image_url', 500).nullable()
 
-      table.string('iso_code', 10).nullable()
+      // image_url is an object in JSON
+      table.json('image_url').nullable()
+
+      table.string('iso_code', 50).nullable()
       table.string('justification', 600).nullable()
       table.string('location', 200).nullable()
       table.string('region', 100).nullable()
@@ -28,11 +30,15 @@ export default class extends BaseSchema {
       table.string('short_description', 1200).nullable()
       table.string('site', 200).nullable()
 
-      table.string('states', 200).nullable()
+      // states is an array of strings in JSON
+      table.json('states').nullable()
+
       table.integer('transboundary').nullable()
 
-      // ex: { "lat": 48.85, "lon": 2.29 }
       table.json('coordinates').nullable()
+
+      table.timestamp('created_at').notNullable()
+      table.timestamp('updated_at').nullable()
     })
   }
 
