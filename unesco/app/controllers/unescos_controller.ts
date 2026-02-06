@@ -1,10 +1,16 @@
 import type { HttpContext } from '@adonisjs/core/http'
+import Unesco from '#models/unesco'
 
 export default class UnescosController {
   /**
    * Display a list of resource
    */
-  async index({}: HttpContext) {}
+  async index({ view }: HttpContext) {
+    const unesco = await Unesco.query().orderBy('site', 'asc').exec()
+
+    // Appel de la vue
+    return view.render('pages/home', { unesco })
+  }
 
   /**
    * Display form to create a new record
