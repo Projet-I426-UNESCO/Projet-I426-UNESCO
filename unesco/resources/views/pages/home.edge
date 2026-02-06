@@ -20,28 +20,18 @@
               <th>
                 État
               </th>
-              <th style="text-align: right;">
-                Action
-              </th>
             </tr>
           </thead>
           <tbody>
             @each(unesco in unescos)
-              <tr>
+              <tr onclick="zoomToLocation({{ unesco.coordinates.lon }}, {{ unesco.coordinates.lat }})">
                 <td>
                   <strong>{{ unesco.site }}</strong>
                 </td>
                 <td>
                   <span class="state-tag">{{ unesco.states }}</span>
                 </td>
-                <td style="text-align: right;">
-                  <button
-                    class="btn-zoom"
-                    onclick="zoomToLocation({{ unesco.coordinates.lon }}, {{ unesco.coordinates.lat }})"
-                  >
-                    📍 Localiser
-                  </button>
-                </td>
+
               </tr>
             @end
           </tbody>
