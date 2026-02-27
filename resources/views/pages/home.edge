@@ -1,12 +1,12 @@
-@component('components/layout', { title: 'Accueil' })
+@layout('components/layout/index', { title: 'Accueil' })
+
   <h3>
     Exploration du Patrimoine Mondial
   </h3>
 
   <div class="explorer-container">
     <div class="map-container">
-      <div id="map">
-      </div>
+      <div id="map"></div>
     </div>
 
     <div class="sidebar">
@@ -14,12 +14,8 @@
         <table>
           <thead>
             <tr>
-              <th>
-                Site
-              </th>
-              <th>
-                État
-              </th>
+              <th>Site</th>
+              <th>État</th>
             </tr>
           </thead>
           <tbody>
@@ -31,7 +27,6 @@
                 <td>
                   <span class="state-tag">{{ unesco.states }}</span>
                 </td>
-
               </tr>
             @end
           </tbody>
@@ -39,6 +34,7 @@
       </div>
     </div>
   </div>
+
 
   <script>
     mapboxgl.accessToken = "pk.eyJ1IjoiNjdza2liaWRpc2NydW0iLCJhIjoiY21sYXdlamR3MGcyOTNlcXoxdHQ2bXliaiJ9.BXx6EzzxvsFrDg5yeo1LUQ";
@@ -63,10 +59,12 @@
       });
     }
 
+    let rainbowEnabled = false;
+
     map.on("style.load", () => {
       function animateFog() {
         map.setFog({
-          range: [ .5, 10 ],
+          range: [ 0.5, 10 ],
           color: rainbowEnabled ? rainbowColor() : "white",
           "high-color": "#245cdf",
           "space-color": "#000000"
@@ -77,55 +75,44 @@
     });
 
     const konamiCode = [ "ArrowUp", "ArrowUp", "ArrowDown", "ArrowDown", "ArrowLeft", "ArrowRight", "ArrowLeft", "ArrowRight", "b", "a" ];
-
     let konamiIndex = 0;
 
-    let rainbowEnabled = false;
-
     function rainbowColor() {
-      const t = Date.now() / 1e3; // seconds
-      const hue = t % 5 * 360 / 5; // 5 seconds per full cycle
-      const rgb = hslToRgb(hue / 360, 1, .5);
+      const t = Date.now() / 1000;
+      const hue = (t % 5) * 360 / 5;
+      const rgb = hslToRgb(hue / 360, 1, 0.5);
       return `rgb(${rgb[0]}, ${rgb[1]}, ${rgb[2]})`;
     }
 
     function hslToRgb(h, s, l) {
       let r, g, b;
-      if (s === 0) {
-        r = g = b = l;
-      } else {
-        const hue2rgb = (p, q, t) => {
-          if (t < 0) t += 1;
-          if (t > 1) t -= 1;
-          if (t < 1 / 6) return p + (q - p) * 6 * t;
-          if (t < 1 / 2) return q;
-          if (t < 2 / 3) return p + (q - p) * (2 / 3 - t) * 6;
-          return p;
-        };
-        const q = l < .5 ? l * (1 + s) : l + s - l * s;
-        const p = 2 * l - q;
-        r = hue2rgb(p, q, h + 1 / 3);
-        g = hue2rgb(p, q, h);
-        b = hue2rgb(p, q, h - 1 / 3);
-      }
+      const hue2rgb = (p, q, t) => {
+        if (t < 0) t += 1;
+        if (t > 1) t -= 1;
+        if (t < 1 / 6) return p + (q - p) * 6 * t;
+        if (t < 1 / 2) return q;
+        if (t < 2 / 3) return p + (q - p) * (2 / 3 - t) * 6;
+        return p;
+      };
+      const q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+      const p = 2 * l - q;
+      r = hue2rgb(p, q, h + 1 / 3);
+      g = hue2rgb(p, q, h);
+      b = hue2rgb(p, q, h - 1 / 3);
       return [ Math.round(r * 255), Math.round(g * 255), Math.round(b * 255) ];
     }
-    // -------------------------------
-    // Konami Code Listener
-    // -------------------------------
 
     window.addEventListener("keydown", e => {
-      const key = e.key;
-      if (key === konamiCode[konamiIndex]) {
+      if (e.key === konamiCode[konamiIndex]) {
         konamiIndex++;
         if (konamiIndex === konamiCode.length) {
-          rainbowEnabled = !rainbowEnabled; // toggle
+          rainbowEnabled = !rainbowEnabled;
           konamiIndex = 0;
-          console.log("Konami Code activated! Rainbow fog: " + rainbowEnabled);
+          console.log("Konami Code activated!");
         }
       } else {
         konamiIndex = 0;
       }
     });
   </script>
-@endcomponent
+@end

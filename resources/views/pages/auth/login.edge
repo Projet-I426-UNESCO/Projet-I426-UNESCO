@@ -1,0 +1,31 @@
+@layout({ title: "Connexion"})
+  <div class="auth-page-container">
+    <h1>Connexion</h1>
+
+    <form method="POST" action="{{ route('auth.login.store') }}">
+      {{ csrfField() }}
+
+      <label>
+        <span>Email</span>
+        <input type="email" name="email" value="{{ old('email') || '' }}" placeholder="votre@email.com" />
+        @inputError('email')
+          <span class="error-message">{{ $messages.join(', ') }}</span>
+        @end
+      </label>
+
+      <label>
+        <span>Mot de passe</span>
+        <input type="password" name="password" placeholder="••••••••" />
+        @inputError('password')
+          <span class="error-message">{{ $messages.join(', ') }}</span>
+        @end
+      </label>
+
+      <button type="submit" class="form-button">Se connecter</button>
+
+      @error('E_INVALID_CREDENTIALS')
+        <p class="error-message" style="text-align:center; margin-top:1rem;">Identifiants invalides.</p>
+      @end
+    </form>
+  </div>
+@end

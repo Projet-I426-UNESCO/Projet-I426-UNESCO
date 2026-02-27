@@ -5,7 +5,8 @@ export default class UnescosController {
   /**
    * Display a list of resource
    */
-  async index({ view }: HttpContext) {
+  async index({ view, auth }: HttpContext) {
+    await auth.check()
     const unescos = await Unesco.query().orderBy('site', 'asc').exec()
 
     // Appel de la vue
