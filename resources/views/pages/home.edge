@@ -1,12 +1,12 @@
 @layout('components/layout/index', { title: 'Accueil' })
-
   <h3>
     Exploration du Patrimoine Mondial
   </h3>
 
-  <div class="explorer-container">
+  <div class="explorer-container" onload="loadMarkers({{ unesco }})">
     <div class="map-container">
-      <div id="map"></div>
+      <div id="map">
+      </div>
     </div>
 
     <div class="sidebar">
@@ -14,13 +14,19 @@
         <table>
           <thead>
             <tr>
-              <th>Site</th>
-              <th>État</th>
+              <th>
+                Site
+              </th>
+              <th>
+                État
+              </th>
             </tr>
           </thead>
           <tbody>
             @each(unesco in unescos)
-              <tr onclick="zoomToLocation({{ unesco.coordinates.lon }}, {{ unesco.coordinates.lat }})">
+              <tr
+                onclick="zoomToLocation({{ unesco.coordinates.lon }}, {{ unesco.coordinates.lat }}), loadMarker({{ unesco.coordinates.lon }}, {{ unesco.coordinates.lat }})"
+              >
                 <td>
                   <strong>{{ unesco.site }}</strong>
                 </td>
@@ -35,8 +41,9 @@
     </div>
   </div>
 
-
   <script>
+    console.log("ouinonbof");
+
     mapboxgl.accessToken = "pk.eyJ1IjoiNjdza2liaWRpc2NydW0iLCJhIjoiY21sYXdlamR3MGcyOTNlcXoxdHQ2bXliaiJ9.BXx6EzzxvsFrDg5yeo1LUQ";
 
     const map = new mapboxgl.Map({
@@ -46,6 +53,18 @@
       zoom: 1.8,
       center: [ 10, 20 ]
     });
+
+    function loadMarker(lng, lat) {
+      const marker = new mapboxgl.Marker().setLngLat([ lng, lat ]).addTo(map);
+    }
+
+    function loadMarkers(unescos) {
+      console.log(unescos);
+      unescos.forEach(heritage => {
+        console.log(heritage);
+        const marker = new mapboxgl.Marker().setLngLat([ heritage.coordinates.lon, heritage.coordinates.lat ]).addTo(map);
+      });
+    }
 
     map.addControl(new mapboxgl.NavigationControl());
 
@@ -64,7 +83,7 @@
     map.on("style.load", () => {
       function animateFog() {
         map.setFog({
-          range: [ 0.5, 10 ],
+          range: [ .5, 10 ],
           color: rainbowEnabled ? rainbowColor() : "white",
           "high-color": "#245cdf",
           "space-color": "#000000"
@@ -75,12 +94,13 @@
     });
 
     const konamiCode = [ "ArrowUp", "ArrowUp", "ArrowDown", "ArrowDown", "ArrowLeft", "ArrowRight", "ArrowLeft", "ArrowRight", "b", "a" ];
+
     let konamiIndex = 0;
 
     function rainbowColor() {
-      const t = Date.now() / 1000;
-      const hue = (t % 5) * 360 / 5;
-      const rgb = hslToRgb(hue / 360, 1, 0.5);
+      const t = Date.now() / 1e3;
+      const hue = t % 5 * 360 / 5;
+      const rgb = hslToRgb(hue / 360, 1, .5);
       return `rgb(${rgb[0]}, ${rgb[1]}, ${rgb[2]})`;
     }
 
@@ -94,7 +114,7 @@
         if (t < 2 / 3) return p + (q - p) * (2 / 3 - t) * 6;
         return p;
       };
-      const q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+      const q = l < .5 ? l * (1 + s) : l + s - l * s;
       const p = 2 * l - q;
       r = hue2rgb(p, q, h + 1 / 3);
       g = hue2rgb(p, q, h);
