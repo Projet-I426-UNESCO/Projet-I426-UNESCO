@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ACD Dashboard - Site Details</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"/>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=K2D:wght@300;400;500&display=swap");
+
+      body {
+        margin: 0;
+        display: grid;
+        font-family: "K2D", sans-serif;
+        grid-template-columns: 8% 92%;
+        min-height: 100vh;
+        background-color: #0f172a;
+      }
+
+      header {
+        background-color: #1e2533;
+        color: #d1d5db;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        align-items: center;
+        padding: 20px 0;
+        height: 100vh;
+        box-sizing: border-box;
+        border-right: 1px solid #334155;
+        position: sticky;
+        top: 0;
+      }
+
+      .top-nav { width: 100%; text-align: center; }
+      .logo h1 { color: white; font-size: 40px; margin-top: 0; margin-bottom: 40px; }
+      
+      .menu-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 15px 0;
+        cursor: pointer;
+        transition: 0.2s;
+        color: #9ca3af;
+      }
+      .menu-item.active { color: white; }
+      .menu-item p { margin: 0; font-size: 14px; color: inherit; }
+      .material-symbols-outlined { font-size: 40px; color: inherit; font-variation-settings: "wght" 300; }
+
+      .lang-container { position: relative; margin-bottom: 20px; }
+      .language-picker {
+        background-color: #141827;
+        border-radius: 50px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 8px 15px;
+        cursor: pointer;
+        border: 1px solid rgba(255,255,255,0.1);
+      }
+      .flag-icon { width: 25px; height: 18px; object-fit: cover; border-radius: 2px; }
+
+      /* --- MAIN CONTENT AREA --- */
+      main { 
+        padding: 40px 60px; 
+        background-color: #1e2533; 
+        color: #d1d5db;
+        overflow-y: auto;
+        height: 100vh;
+        box-sizing: border-box;
+      }
+
+      /* Custom Scrollbar */
+      main::-webkit-scrollbar { width: 8px; }
+      main::-webkit-scrollbar-track { background: #0f172a; }
+      main::-webkit-scrollbar-thumb { background: #6366f1; border-radius: 10px; }
+
+      .breadcrumb {
+        font-size: 14px;
+        color: #9ca3af;
+        margin-bottom: 30px;
+      }
+
+      .content-wrapper {
+        display: grid;
+        grid-template-columns: 1.5fr 1fr;
+        gap: 60px;
+        margin-bottom: 60px;
+      }
+
+      /* Text Section */
+      .site-text h1 { color: white; font-size: 36px; margin: 0 0 20px 0; }
+      .site-text h2 { color: white; font-size: 20px; margin: 40px 0 15px 0; }
+      .site-text p { line-height: 1.8; color: #cbd5e1; font-size: 15px; margin-bottom: 20px; }
+
+      /* Info Sidebar Card */
+      .info-card {
+        background-color: #2C303D;
+        border-radius: 20px;
+        overflow: hidden;
+        border: 1px solid #334155;
+        height: fit-content;
+        padding: 20px;
+      }
+      .hero-img { width: 100%; height: 280px; object-fit: cover; }
+      .card-details { padding: 30px; background-color: #2C303D; display: flex;}
+      .meta-data { margin-bottom: 30px; display: flex;}
+      .meta-item { display: flex; align-items: center; gap: 15px; margin-bottom: 15px; font-size: 15px; }
+      .meta-item strong { color: white; width: 120px; }
+
+      .action-btns { display: flex; flex-direction: column; gap: 12px; }
+     /* Container for the text info */
+.info {
+    color: #ffffff;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.4;
+}
+
+.country-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.flag {
+    width: 24px;
+    height: 24px;
+    margin-right: 10px;
+}
+
+.info h2 {
+    margin: 0;
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+.info p {
+    margin: 2px 0;
+    font-size: 0.95rem;
+}
+
+.info strong {
+    font-weight: 700;
+}
+
+.buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-left: 40px; 
+    align-items: center;
+}
+
+.btn {
+    background: transparent;
+    color: #ffffff;
+    border: 1px solid #7a828e;
+    border-radius: 6px;
+    padding: 10px 20px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: background 0.2s, border-color 0.2s;
+    text-align: center;
+    min-width: 220px;
+}
+
+.btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: #ffffff;
+}
+
+      /* Map Area */
+      .map-section h2 { color: white; font-size: 24px; margin-bottom: 25px; }
+      .map-placeholder {
+        width: 100%;
+        height: 500px;
+        background-color: #334155;
+        border-radius: 20px;
+        overflow: hidden;
+        border: 1px solid #475569;
+      }
+
+      a { text-decoration: none; }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="top-nav">
+        <div class="logo"><h1>ACD</h1></div>
+        <nav>
+          <a href="#"><div class="menu-item"><span class="material-symbols-outlined">map</span><p>Explorer</p></div></a>
+          <a href="#"><div class="menu-item active"><span class="material-symbols-outlined">list</span><p>Liste des sites</p></div></a>
+          <a href="#"><div class="menu-item"><span class="material-symbols-outlined">account_circle</span><p>Mon compte</p></div></a>
+          <a href="#"><div class="menu-item"><span class="material-symbols-outlined">list_alt_check</span><p>Sites marqués</p></div></a>
+          <a href="#"><div class="menu-item"><span class="material-symbols-outlined">patient_list</span><p>Sites visités</p></div></a>
+        </nav>
+      </div>
+
+      <div class="lang-container">
+        <div class="language-picker">
+          <img src="https://flagcdn.com/w80/fr.png" class="flag-icon">
+          <span style="color:white">FR</span>
+          <span class="material-symbols-outlined" style="font-size: 20px; color: white;">expand_less</span>
+        </div>
+      </div>
+    </header>
+
+    <main id="main-content">
+      <div class="breadcrumb">
+        Liste complète > <span id="site-name-crumb" style="color: white;">Chargement...</span>
+      </div>
+
+      <div class="content-wrapper">
+        <div class="site-text">
+          <h1 id="site-title">Nom du site</h1>
+          <p id="site-desc-1"></p>
+          
+          <h2>Valeur universelle exceptionnelle</h2>
+          <p id="site-desc-2"></p>
+        </div>
+         <div class="info-sidebar"> <div class="info-card">
+ <img id="site-img" src="" alt="Hero Image" class="hero-img">
+  <div class="card-details">
+              <div class="meta-data">
+              <div class="info">
+    <div class="country-header">
+        <img src="swiss-flag.png" alt="Flag" class="flag">
+        <h2>Suisse</h2>
+    </div>
+    <p><strong>Date d'inscription :</strong> 2007</p>
+    <p><strong>Critères :</strong> (vii)(viii)(ix)</p>
+    <p><strong>Bien :</strong> 82 400 ha</p>
+    <p><strong>Dossier :</strong> 1037bis</p>
+    <p><strong>Catégorie :</strong> Culturel</p>
+</div>
+
+<div class="buttons">
+    <button class="btn">Ajouter dans les sites visités</button>
+    <button class="btn">Ajouter dans les sites marqués</button>
+</div>
+              </div>
+         </div>
+        </div>
+<!--
+        <div class="info-sidebar">
+          <div class="info-card">
+            <img id="site-img" src="" alt="Hero Image" class="hero-img">
+            <div class="card-details">
+              <div class="meta-data">
+              <div class="info">
+    <div class="country-header">
+        <img src="swiss-flag.png" alt="Flag" class="flag">
+        <h2>Suisse</h2>
+    </div>
+    <p><strong>Date d'inscription :</strong> 2007</p>
+    <p><strong>Critères :</strong> (vii)(viii)(ix)</p>
+    <p><strong>Bien :</strong> 82 400 ha</p>
+    <p><strong>Dossier :</strong> 1037bis</p>
+    <p><strong>Catégorie :</strong> Culturel</p>
+</div>
+
+<div class="buttons">
+    <button class="btn">Ajouter dans les sites visités</button>
+    <button class="btn">Ajouter dans les sites marqués</button>
+</div>
+             <div class="meta-item">
+                  <span class="material-symbols-outlined" style="color:#6366f1">flag</span>
+                  <strong>Pays</strong> <span id="site-country">---</span>
+                </div>
+                <div class="meta-item">
+                  <span class="material-symbols-outlined" style="color:#6366f1">event</span>
+                  <strong>Inscription</strong> <span id="site-year">---</span>
+                </div>
+                <div class="meta-item">
+                  <span class="material-symbols-outlined" style="color:#6366f1">category</span>
+                  <strong>Catégorie</strong> <span id="site-cat">---</span>
+                </div>--> 
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="map-section">
+        <h2>Monument sur la carte</h2>
+        <div class="map-placeholder">
+          <iframe 
+            width="100%" 
+            height="100%" 
+            frameborder="0" 
+            scrolling="no" 
+            marginheight="0" 
+            marginwidth="0" 
+            src="https://maps.google.com/maps?q=46.49,6.64&z=12&output=embed">
+          </iframe>
+        </div>
+      </div>
+    </main>
+
+    <script>
+      // 1. Extended Database
+      const siteDatabase = {
+        "1": {
+          name: "Lavaux, vignoble en terrasses",
+          country: "Suisse",
+          year: "2007",
+          cat: "Culturel",
+          img: "https://i.imgur.com/8Q9Z5OQ.png",
+          desc1: "S'étendant sur environ 30 km le long du versant orienté au sud des berges du lac Léman, du château de Chillon juste au sud de Montreux jusqu'aux faubourgs orientaux de Lausanne au cœur du canton de Vaud...",
+          desc2: "Le vignoble en terrasses de Lavaux est un paysage culturel qui montre de manière éclatante son évolution et son développement sur près de mille ans au travers d'un paysage de vignobles bien préservés..."
+        },
+        "3": {
+          name: "Montagne Magique, Chili",
+          country: "Chili",
+          year: "2011",
+          cat: "Naturel",
+          img: "https://i.imgur.com/8Q9Z5OQ.png",
+          desc1: "Un hôtel incroyable niché dans une forêt profonde, conçu comme un volcan qui crache de l'eau au lieu de lave.",
+          desc2: "Ce monument architectural s'intègre parfaitement à la biodiversité chilienne..."
+        }
+      };
+
+      // 2. Logic to get ID from URL (?id=1)
+      const urlParams = new URLSearchParams(window.location.search);
+      const siteId = urlParams.get('id');
+
+      // 3. Populate Page
+      if (siteId && siteDatabase[siteId]) {
+        const data = siteDatabase[siteId];
+        document.getElementById('site-name-crumb').innerText = data.name;
+        document.getElementById('site-title').innerText = data.name;
+        document.getElementById('site-desc-1').innerText = data.desc1;
+        document.getElementById('site-desc-2').innerText = data.desc2;
+        document.getElementById('site-country').innerText = data.country;
+        document.getElementById('site-year').innerText = data.year;
+        document.getElementById('site-cat').innerText = data.cat;
+        document.getElementById('site-img').src = data.img;
+      } else {
+        document.getElementById('main-content').innerHTML = "<h1 style='color:white'>Site non trouvé</h1>";
+      }
+    </script>
+  </body>
+</html>
