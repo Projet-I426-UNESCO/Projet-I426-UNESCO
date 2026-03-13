@@ -14,16 +14,16 @@ export default class GetData extends BaseCommand {
   }
 }
 
+// URL API de l'Unesco limit=100 et sans offset
+const UNESCO_URL =
+  'https://data.unesco.org/api/explore/v2.1/catalog/datasets/whc001/records?limit=100'
+
 async function getData() {
-  const firstResponse = await fetch(
-    `https://data.unesco.org/api/explore/v2.1/catalog/datasets/whc001/records?select=name_en&limit=100&offset=0`
-  )
+  const firstResponse = await fetch(UNESCO_URL)
   let objA = await firstResponse.json()
 
   for (let offset = 100; offset < 1300; offset += 100) {
-    const response = await fetch(
-      `https://data.unesco.org/api/explore/v2.1/catalog/datasets/whc001/records?select=name_en&limit=100&offset=${offset}`
-    )
+    const response = await fetch(`${UNESCO_URL}offset=${offset}`)
 
     let objB = await response.json()
     objA = deepMerge(objA, objB)
