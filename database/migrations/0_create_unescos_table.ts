@@ -4,7 +4,7 @@ import { BaseSchema } from '@adonisjs/lucid/schema'
 // https://gemini.google.com/share/79ebc5eccbaf
 
 export default class extends BaseSchema {
-  protected tableName = 'whc_sites'
+  protected tableName = 'unescos'
 
   async up() {
     this.schema.createTable(this.tableName, (table) => {
