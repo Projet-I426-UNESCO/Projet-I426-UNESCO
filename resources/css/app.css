@@ -199,29 +199,25 @@ input {
   font-weight: 500;
 }
 aside {
+  padding: 10px;
   position: absolute;
-  top: 20px;
-  right: 20px;
+  top: 0;
+  right: 0;
   margin: 0;
-  width: 340px;
-  height: calc(100vh - 40px);
-
+  height: 100vh;
+  width: 344px;
   background: #141827;
-
-  border: 1px solid #334155;
-
   display: flex;
   flex-direction: column;
-
   overflow: hidden;
-
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+  z-index: 10;
 }
 
 #aside-dynamic-content {
   flex: 1;
   overflow-y: auto;
-  padding: 16px;
+  padding: 0;
 }
 
 /* --- CUSTOM SCROLLBAR --- */
