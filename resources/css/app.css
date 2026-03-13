@@ -13,6 +13,9 @@
 }
 
 @import url('https://fonts.googleapis.com/css2?family=K2D:wght@300;400;500&display=swap');
+* {
+  font-family: 'K2D', sans-serif;
+}
 
 body {
   margin: 0;
@@ -155,6 +158,25 @@ h3 {
   letter-spacing: -0.02em;
   margin-bottom: 1.5rem;
   color: #0f172a;
+}
+
+/* Toggles pour map */
+.controls {
+  margin-bottom: 10px;
+}
+
+.controls div {
+  display: flex;
+  align-items: center;
+  color: azure;
+}
+
+input {
+  cursor: pointer;
+  width: 25px;
+  height: 25px;
+  margin-right: 10px;
+  margin-left: 15px;
 }
 
 /* Carte Mapbox */
