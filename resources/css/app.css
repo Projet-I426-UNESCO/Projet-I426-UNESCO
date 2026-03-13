@@ -13,6 +13,9 @@
 }
 
 @import url('https://fonts.googleapis.com/css2?family=K2D:wght@300;400;500&display=swap');
+* {
+  font-family: 'K2D', sans-serif;
+}
 
 body {
   margin: 0;
@@ -154,6 +157,25 @@ h3 {
   color: #0f172a;
 }
 
+/* Toggles pour map */
+.controls {
+  margin-bottom: 10px;
+}
+
+.controls div {
+  display: flex; 
+  align-items: center;
+  color: azure;
+}
+
+input {
+  cursor: pointer; 
+  width: 25px; 
+  height: 25px; 
+  margin-right: 10px;
+  margin-left: 15px;
+}
+
 /* Carte Mapbox */
 #map {
   border-radius: var(--radius);
@@ -257,7 +279,6 @@ tr:hover td {
   gap: 24px;
   height: calc(100vh - 180px); /* S'adapte à la hauteur de l'écran */
   min-height: 500px;
-  margin-top: 20px;
 }
 
 /* Carte à gauche */
