@@ -1,5 +1,6 @@
 import type { HttpContext } from '@adonisjs/core/http'
 import Unesco from '#models/unesco'
+import { dd } from '@adonisjs/core/services/dumper'
 
 export default class UnescosController {
   /**
@@ -7,7 +8,9 @@ export default class UnescosController {
    */
   async index({ view, auth }: HttpContext) {
     await auth.check()
-    const unescos = await Unesco.query().orderBy('site', 'asc').exec()
+    const unescos = await Unesco.query().exec()
+
+    dd(unescos)
 
     // Appel de la vue
     return view.render('pages/home', { unescos })
