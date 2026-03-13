@@ -2,7 +2,7 @@
 import scheduler from 'adonisjs-scheduler/services/main'
 import unescoSeeder from '#database/seeders/unesco_seeder';
 import db from '@adonisjs/lucid/services/db';
-import getData from '../commands/get_data.js';
+import { getData, UNESCO_URL } from '../commands/get_data.js';
 
 
 scheduler.call(async () => {
@@ -15,5 +15,5 @@ scheduler.call(async () => {
     const seeder = new unescoSeeder(client)
     await seeder.run()
     console.log("seeder terminate")
-    
+
 }).monthly()
