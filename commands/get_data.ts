@@ -3,18 +3,7 @@ import { BaseCommand } from '@adonisjs/core/ace'
 import type { CommandOptions } from '@adonisjs/core/types/ace'
 import fs from 'node:fs'
 
-export default class GetData extends BaseCommand {
-  static commandName = 'get:data'
-  static description = ''
-
-  static options: CommandOptions = {}
-
-  async run() {
-    return getData()
-  }
-}
-
-async function getData() {
+export default async function getData() {
   const firstResponse = await fetch(
     `https://data.unesco.org/api/explore/v2.1/catalog/datasets/whc001/records?select=name_en&limit=100&offset=0`
   )
