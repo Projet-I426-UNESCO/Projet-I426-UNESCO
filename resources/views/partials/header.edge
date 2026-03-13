@@ -1,32 +1,60 @@
+<link
+  rel="stylesheet"
+  href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
+/>
 <header>
-  <div class="container-header">
-    <div class="logo-header">
-      <div>
-        <a class="logo-link" href="{{ route('home') }}">
-          <img src="/resources/assets/logo.png" alt="Logo" />
-        </a>
-      </div>
+  <div class="top-nav">
+    <div class="logo">
+      <h1>
+        ACD
+      </h1>
     </div>
-
-    <div class="login-container">
-      @if(auth.user)
-        <span class="user-info">
-          Connecté en tant que <strong>{{ auth.user.fullName }}</strong>
-        </span>
-
-        <form method="POST" action="{{ route('auth.logout') }}">
-          {{ csrfField() }}
-          <button type="submit" class="btn-logout">Se déconnecter</button>
-        </form>
-      @else
-        <div class="auth-links">
-          <a href="{{ route('auth.register.show') }}">Créer un compte</a>
-          <a href="{{ route('auth.login.show') }}">Se connecter</a>
-        </div>
-      @end
-    </div>
+    <nav>
+      <a href="#">        <div class="menu-item active">
+          <span class="material-symbols-outlined">map</span>          <p>
+            Explorer
+          </p>
+        </div></a>
+      <a href="#">        <div class="menu-item">
+          <span class="material-symbols-outlined">list</span>          <p>
+            Liste des sites
+          </p>
+        </div></a>
+      <a href="#">        <div class="menu-item">
+          <span class="material-symbols-outlined">account_circle</span>          <p>
+            Mon compte
+          </p>
+        </div></a>
+      <a href="#">        <div class="menu-item">
+          <span class="material-symbols-outlined">list_alt_check</span>          <p>
+            Sites marqués
+          </p>
+        </div></a>
+      <a href="#">        <div class="menu-item">
+          <span class="material-symbols-outlined">patient_list</span>          <p>
+            Sites visités
+          </p>
+        </div></a>
+    </nav>
   </div>
 
-  <nav>
-    </nav>
+  <!-- <div class="lang-container">
+    <div class="lang-popup" id="langPopup">
+      <div class="lang-option" onclick="changeLang('EN', 'us')">
+        <img src="https://flagcdn.com/w80/us.png" class="flag-icon" />        <span class="lang-text">EN</span>
+      </div>
+      <div class="lang-option" onclick="changeLang('ES', 'es')">
+        <img src="https://flagcdn.com/w80/es.png" class="flag-icon" />        <span class="lang-text">ES</span>
+      </div>
+      <div class="lang-option" onclick="changeLang('FR', 'fr')">
+        <img src="https://flagcdn.com/w80/fr.png" class="flag-icon" />        <span class="lang-text">FR</span>
+      </div>
+    </div>
+  
+    <div class="language-picker" id="langTrigger">
+      <img src="https://flagcdn.com/w80/fr.png" id="mainFlag" class="flag-icon" />
+      <span class="lang-text" id="mainText">FR</span>
+      <span class="material-symbols-outlined" style="font-size: 20px; color: white;">expand_less</span>
+    </div>
+  </div> -->
 </header>
