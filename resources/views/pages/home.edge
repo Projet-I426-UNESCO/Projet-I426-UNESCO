@@ -1,8 +1,4 @@
 @layout('components/layout/index', { title: 'Accueil' })
-  <h3>
-    Exploration du Patrimoine Mondial
-  </h3>
-
   <div class="controls">
     <div style="display: flex; align-items: center;">
       <input
@@ -22,38 +18,32 @@
       </div>
     </div>
 
-    <div class="sidebar">
-      <div class="table-wrapper">
-        <table>
-          <thead>
-            <tr>
-              <th>
-                Site
-              </th>
-              <th>
-                État
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            @each(unesco in unescos)
-              <tr
-                onclick="zoomToLocation({{ unesco.coordinates.lon }}, {{ unesco.coordinates.lat }}), loadMarker({{ unesco.coordinates.lon }}, {{ unesco.coordinates.lat }})"
-              >
-                <td>
-                  <strong>{{ unesco.site }}</strong>
-                </td>
-                <td>
-                  <span class="state-tag">{{ unesco.states }}</span>
-                </td>
-              </tr>
-            @end
-          </tbody>
-        </table>
-      </div>
-    </div>
   </div>
+  <aside>
+    <div id="aside-dynamic-content">
 
+      @each(unesco in unescos)
+        <div
+          class="site-card"
+          onclick="zoomToLocation({{ unesco.coordinates.lon }}, {{ unesco.coordinates.lat }})"
+        >
+
+          <img src="{{ unesco.main_image_url }}" />
+
+          <div class="card-info">
+            <h4>
+              {{ unesco.site }}
+            </h4>
+            <p>
+              {{ unesco.states }}
+            </p>
+          </div>
+
+        </div>
+      @end
+      
+    </div>
+  </aside>
   <script>
     // Gets all the markers 
     const unescosData = {{{ JSON.stringify(unescos) }}};
@@ -68,22 +58,25 @@
       zoom: 1.8,
       center: [ 10, 20 ]
     });
-
     // Gets the checkbox toggle 
+
     document.getElementById("markerToggle").addEventListener("click", () => {
       // Toggles the markers
       toggleMarkers();
     });
-
     // Loads markers on page load
+
     map.on("load", () => {
       loadMarkers(unescosData);
       toggleMarkers();
     });
 
     let markerInstances = [];
+
     let markersVisible = true;
+
     const allMarkersColor = "#61afef";
+
     const visitedMarkersColor = "#fe8d50";
 
     function loadMarkers(unescos) {
@@ -101,8 +94,8 @@
         }
       });
     }
-
     // Toggles the markers.
+
     function toggleMarkers() {
       markersVisible = !markersVisible;
       markerInstances.forEach(marker => {
