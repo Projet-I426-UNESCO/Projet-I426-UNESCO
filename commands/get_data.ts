@@ -1,6 +1,7 @@
+// @ts-nocheck
 import { BaseCommand } from '@adonisjs/core/ace'
 import type { CommandOptions } from '@adonisjs/core/types/ace'
-const fs = require("fs");
+import fs from 'node:fs'
 
 export default class GetData extends BaseCommand {
   static commandName = 'get:data'
@@ -9,29 +10,28 @@ export default class GetData extends BaseCommand {
   static options: CommandOptions = {}
 
   async run() {
-    this.logger.info('Hello world from "GetData"')
+    return getData()
   }
 }
 
 async function getData() {
   const firstResponse = await fetch(
     `https://data.unesco.org/api/explore/v2.1/catalog/datasets/whc001/records?select=name_en&limit=100&offset=0`
-  );
-  let objA = await firstResponse.json();
+  )
+  let objA = await firstResponse.json()
 
   for (let offset = 100; offset < 1300; offset += 100) {
     const response = await fetch(
       `https://data.unesco.org/api/explore/v2.1/catalog/datasets/whc001/records?select=name_en&limit=100&offset=${offset}`
-    );
-    
-    let objB = await response.json();
-    objA = deepMerge(objA, objB);
-    
-    console.log(offset / 100);
-  }
-  fs.writeFileSync("whc001.json", JSON.stringify(objA, null, 2), "utf8");
-}
+    )
 
+    let objB = await response.json()
+    objA = deepMerge(objA, objB)
+
+    console.log(offset / 100)
+  }
+  fs.writeFileSync('public/data/whc001.json', JSON.stringify(objA, null, 2), 'utf8')
+}
 
 // https://github.com/Hangga-hub/hangga-hub.github.io/blob/main/tools/json-merge-tool/script.js
 
@@ -45,40 +45,40 @@ async function getData() {
 function deepMerge(objA, objB) {
   // If both are arrays, concatenate them
   if (Array.isArray(objA) && Array.isArray(objB)) {
-    return [...objA, ...objB];
+    return [...objA, ...objB]
   }
 
   // If both are objects, deep merge their properties
   if (
-    typeof objA === "object" &&
+    typeof objA === 'object' &&
     objA !== null &&
-    typeof objB === "object" &&
+    typeof objB === 'object' &&
     objB !== null &&
     !Array.isArray(objA) &&
     !Array.isArray(objB)
   ) {
-    const merged = { ...objA }; // Start with properties from A
+    const merged = { ...objA } // Start with properties from A
     for (const key in objB) {
       if (Object.prototype.hasOwnProperty.call(objB, key)) {
         if (
           Object.prototype.hasOwnProperty.call(merged, key) &&
-          typeof merged[key] === "object" &&
+          typeof merged[key] === 'object' &&
           merged[key] !== null &&
-          typeof objB[key] === "object" &&
+          typeof objB[key] === 'object' &&
           objB[key] !== null
         ) {
           // Recursively merge if both are objects/arrays
-          merged[key] = deepMerge(merged[key], objB[key]);
+          merged[key] = deepMerge(merged[key], objB[key])
         } else {
           // Otherwise, B's value overwrites A's value
-          merged[key] = objB[key];
+          merged[key] = objB[key]
         }
       }
     }
-    return merged;
+    return merged
   }
 
   // If types are different or not mergeable (e.g., one is primitive, one is object),
   // B's value takes precedence.
-  return objB;
+  return objB
 }

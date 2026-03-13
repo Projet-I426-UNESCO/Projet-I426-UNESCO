@@ -3,6 +3,7 @@ node_modules
 build
 tmp
 .npm-cache
+package-lock.json
 
 # Secrets
 .env
@@ -24,3 +25,6 @@ yarn-error.log
 
 # Platform specific
 .DS_Store
+
+# Import db
+public/data
