@@ -262,8 +262,8 @@ aside {
   transform: translateY(-1px);
 }
 .site-card img {
-  width: 90px;
-  height: 65px;
+  width: 67px;
+  height: 67px;
   border-radius: 8px;
   object-fit: cover;
 }
