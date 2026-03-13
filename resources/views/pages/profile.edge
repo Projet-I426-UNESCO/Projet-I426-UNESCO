@@ -172,8 +172,6 @@
 <body>
     @layout('components/layout/index', { title: 'Accueil' })
 
-    {{-- Sidebar placeholder --}}
-    <aside></aside>
 
     <main>
         <div class="info-block">
@@ -193,13 +191,13 @@
 
             {{-- Dernière visite --}}
             <div class="last-visit-block">
-                <h3>Dernière visite</h3>
+                <p>Dernière visite</p>
                 <p></p>
             </div>
 
             {{-- Progression --}}
             <div class="progress-block">
-                <h3>Progression Globale</h3>
+                <p>Progression Globale</p>
                 <p>%</p>
             </div>
 
@@ -213,7 +211,7 @@
 
             {{-- Historique récent --}}
             <div class="few-last-visits-block">
-                <h3>Visites récentes</h3>
+                <p>Visites récentes</p>
                 {{-- Boucle sur les dernières visites --}}
             </div>
 
