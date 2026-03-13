@@ -1,0 +1,245 @@
+<!doctype html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Profil - </title>
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <style>
+        @import url("https://fonts.googleapis.com/css2?family=K2D:wght@300;400;500&display=swap");
+
+        body {
+            margin: 0;
+            display: grid;
+            font-family: "K2D", sans-serif;
+            grid-template-columns: 120px 1fr;
+            min-height: 100vh;
+            background-color: #0f172a;
+        }
+
+        /* --- MAIN CONTENT --- */
+        main {
+            padding: 20px;
+            position: relative;
+            margin-right: 20px;
+        }
+
+        .info-block {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-gap: 15px;
+            max-width: 1800px;
+            margin: 0 auto;
+            padding-top: 50px;
+        }
+
+        .info-block>div {
+            background-color: #1e2533;
+            border-radius: 20px;
+            padding: 20px;
+            color: #d1d5db;
+        }
+
+        .name-block {
+            display: flex;
+            align-items: center;
+            grid-column: 1 / 3;
+            justify-content: space-between;
+            background: linear-gradient(90deg, rgba(30, 41, 59, 1) 0%, rgba(15, 23, 42, 1) 100%);
+            border: 1px solid #2D313E;
+        }
+
+        .name-avatar {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .avatar {
+            height: 100px;
+            width: 100px;
+            border: 4px solid #2D313E;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .name h2 {
+            color: #ffffff;
+            font-size: 28px;
+            margin: 0;
+        }
+
+        .name p {
+            color: #94a3b8;
+            font-size: 14px;
+            margin: 0;
+        }
+
+        .line {
+            display: flex;
+            gap: 10px;
+        }
+
+        .logout-btn,
+        .modif-btn {
+            height: 35px;
+            width: 180px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .logout-btn {
+            background-color: #F25F61;
+        }
+
+        .modif-btn {
+            background-color: #5F7EF2;
+        }
+
+        .last-visit-block {
+            grid-column: 3;
+            grid-row: 1/4;
+        }
+
+        .progress-block {
+            grid-row: 2;
+        }
+
+        .continent-stats-block {
+            grid-column: 2;
+            grid-row: 2/4;
+        }
+
+        .continent-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 40px 20px;
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .item {
+            width: 60px;
+            height: 60px;
+            background-color: #68bff8;
+            border-radius: 50%;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .continent-text {
+            margin-top: 70px;
+            font-size: 14px;
+            white-space: nowrap;
+        }
+
+        .general-stats-block {
+            grid-column: 2/4;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            background-color: transparent !important;
+            padding: 0 !important;
+        }
+
+        .stat-card {
+            background-color: #1e2533;
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .map-list-block {
+            max-width: 1800px;
+            height: 400px;
+            background-color: #1e2533;
+            margin: 20px auto;
+            border-radius: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    {{-- Sidebar placeholder --}}
+    <aside></aside>
+
+    <main>
+        <div class="info-block">
+            {{-- Header Profil --}}
+            <div class="name-block">
+                <div class="name-avatar">
+                    <img class="avatar" src="" alt="Avatar" />
+                    <div class="name">
+                        <h2></h2>
+                    </div>
+                </div>
+                <div class="line">
+                    <a href="" class="logout-btn">Se déconnecter</a>
+                    <a href="" class="modif-btn">Modifier le compte</a>
+                </div>
+            </div>
+
+            {{-- Dernière visite --}}
+            <div class="last-visit-block">
+                <h3>Dernière visite</h3>
+                <p></p>
+            </div>
+
+            {{-- Progression --}}
+            <div class="progress-block">
+                <h3>Progression Globale</h3>
+                <p>%</p>
+            </div>
+
+            {{-- Stats par Continent --}}
+            <div class="continent-stats-block">
+                <p>Exploration par continent</p>
+                <div class="continent-grid">
+
+                </div>
+            </div>
+
+            {{-- Historique récent --}}
+            <div class="few-last-visits-block">
+                <h3>Visites récentes</h3>
+                {{-- Boucle sur les dernières visites --}}
+            </div>
+
+            {{-- Stats Générales --}}
+            <div class="general-stats-block">
+                <div class="stat-card">
+                    <span>Sites visités</span>
+
+                </div>
+                <div class="stat-card">
+                    <span>Continents</span>
+
+                </div>
+                <div class="stat-card">
+                    <span>Taux de complétion</span>
+
+                </div>
+                <div class="stat-card">
+                    <span>Pays explorés</span>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="map-list-block">
+            {{-- Contenu Carte --}}
+        </div>
+    </main>
+</body>
+
+</html>

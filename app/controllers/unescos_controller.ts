@@ -13,6 +13,9 @@ export default class UnescosController {
     return view.render('pages/home', { unescos })
   }
 
+  async profile({ view }: HttpContext) {
+    return view.render('pages/profile')
+  }
   /**
    * Display form to create a new record
    */
