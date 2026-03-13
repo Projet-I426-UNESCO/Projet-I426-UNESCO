@@ -3,22 +3,7 @@ import { BaseCommand } from '@adonisjs/core/ace'
 import type { CommandOptions } from '@adonisjs/core/types/ace'
 import fs from 'node:fs'
 
-export default class GetData extends BaseCommand {
-  static commandName = 'get:data'
-  static description = ''
-
-  static options: CommandOptions = {}
-
-  async run() {
-    return getData()
-  }
-}
-
-// URL API de l'Unesco limit=100 et sans offset
-const UNESCO_URL =
-  'https://data.unesco.org/api/explore/v2.1/catalog/datasets/whc001/records?limit=100'
-
-async function getData() {
+export default async function getData() {
   const firstResponse = await fetch(UNESCO_URL)
   let objA = await firstResponse.json()
 
