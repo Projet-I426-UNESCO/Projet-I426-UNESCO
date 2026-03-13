@@ -1,179 +1,177 @@
-@layout('components/layout/index', { title: 'Accueil' })
-  <div class="controls">
-    <div>
-      <input type="checkbox" id="markerToggle" class="chckbx-toggle" />
-      Show/Hide All Markers
-    </div>
+@layout('components/layout/index', { title: 'Accueil', page: 'home' })
 
+<div class="controls">
+  <div>
+    <input type="checkbox" id="markerToggle" class="chckbx-toggle" />
+    Show/Hide All Markers
   </div>
 
-  <div class="explorer-container">
-    <div class="map-container">
-      <div id="map">
+</div>
+
+<div class="explorer-container">
+  <div class="map-container">
+    <div id="map">
+    </div>
+  </div>
+
+</div>
+<aside>
+  <div id="aside-dynamic-content">
+
+    @each(unesco in unescos)
+    <div class="site-card" onclick="zoomToLocation({{ unesco.coordinates.lon }}, {{ unesco.coordinates.lat }})">
+
+      <img src="{{ unesco.main_image_url }}" />
+
+      <div class="card-info">
+        <h4>
+          {{ unesco.site }}
+        </h4>
+        <p>
+          {{ unesco.states }}
+        </p>
       </div>
+
     </div>
+    @end
 
   </div>
-  <aside>
-    <div id="aside-dynamic-content">
+</aside>
+<script>
+  // Gets all the markers 
+  const unescosData = {{{ JSON.stringify(unescos) }}};
 
-      @each(unesco in unescos)
-        <div
-          class="site-card"
-          onclick="zoomToLocation({{ unesco.coordinates.lon }}, {{ unesco.coordinates.lat }})"
-        >
+  mapboxgl.accessToken = "pk.eyJ1IjoiNjdza2liaWRpc2NydW0iLCJhIjoiY21sYXdlamR3MGcyOTNlcXoxdHQ2bXliaiJ9.BXx6EzzxvsFrDg5yeo1LUQ";
 
-          <img src="{{ unesco.main_image_url }}" />
+  const map = new mapboxgl.Map({
+    // Make the map
+    container: "map",
+    style: "mapbox://styles/mapbox/standard",
+    projection: "globe",
+    zoom: 1.8,
+    center: [10, 20]
+  });
+  // Gets the checkbox toggle 
 
-          <div class="card-info">
-            <h4>
-              {{ unesco.site }}
-            </h4>
-            <p>
-              {{ unesco.states }}
-            </p>
-          </div>
+  document.getElementById("markerToggle").addEventListener("click", () => {
+    // Toggles the markers
+    toggleMarkers();
+  });
+  // Loads markers on page load
 
-        </div>
-      @end
-      
-    </div>
-  </aside>
-  <script>
-    // Gets all the markers 
-    const unescosData = {{{ JSON.stringify(unescos) }}};
+  map.on("load", () => {
+    loadMarkers(unescosData);
+    toggleMarkers();
+  });
 
-    mapboxgl.accessToken = "pk.eyJ1IjoiNjdza2liaWRpc2NydW0iLCJhIjoiY21sYXdlamR3MGcyOTNlcXoxdHQ2bXliaiJ9.BXx6EzzxvsFrDg5yeo1LUQ";
+  let markerInstances = [];
 
-    const map = new mapboxgl.Map({
-      // Make the map
-      container: "map",
-      style: "mapbox://styles/mapbox/standard",
-      projection: "globe",
-      zoom: 1.8,
-      center: [ 10, 20 ]
-    });
-    // Gets the checkbox toggle 
+  let markersVisible = true;
 
-    document.getElementById("markerToggle").addEventListener("click", () => {
-      // Toggles the markers
-      toggleMarkers();
-    });
-    // Loads markers on page load
+  const allMarkersColor = "#61afef";
 
-    map.on("load", () => {
-      loadMarkers(unescosData);
-      toggleMarkers();
-    });
+  const visitedMarkersColor = "#fe8d50";
 
-    let markerInstances = [];
-
-    let markersVisible = true;
-
-    const allMarkersColor = "#61afef";
-
-    const visitedMarkersColor = "#fe8d50";
-
-    function loadMarkers(unescos) {
-      // Clear existing instances for reload
-      markerInstances.forEach(m => m.remove());
-      markerInstances = [];
-      unescos.forEach(heritage => {
-        if (heritage.coordinates) {
-          const marker = new mapboxgl.Marker({
-            // Marker color
-            color: allMarkersColor
-          }).setLngLat([ heritage.coordinates.lon, heritage.coordinates.lat ]).addTo(map);
-          // Push marker into array
-          markerInstances.push(marker);
-        }
-      });
-    }
-    // Toggles the markers.
-
-    function toggleMarkers() {
-      markersVisible = !markersVisible;
-      markerInstances.forEach(marker => {
-        if (markersVisible) {
-          marker.addTo(map);
-        } else {
-          marker.remove(); // Removes from map but still in array
-        }
-      });
-    }
-
-    function loadMarker(lng, lat) {
-      // Loads a single marker
-      const marker = new mapboxgl.Marker().setLngLat([ lng, lat ]).addTo(map);
-    }
-
-    map.addControl(new mapboxgl.NavigationControl());
-
-    function zoomToLocation(lng, lat) {
-      map.flyTo({
-        center: [ lng, lat ],
-        zoom: 12,
-        essential: true,
-        duration: 3500,
-        curve: 1.5
-      });
-    }
-
-    let rainbowEnabled = false;
-
-    map.on("style.load", () => {
-      function animateFog() {
-        map.setFog({
-          range: [ .5, 10 ],
-          color: rainbowEnabled ? rainbowColor() : "white",
-          "high-color": "#245cdf",
-          "space-color": "#000000"
-        });
-        requestAnimationFrame(animateFog);
+  function loadMarkers(unescos) {
+    // Clear existing instances for reload
+    markerInstances.forEach(m => m.remove());
+    markerInstances = [];
+    unescos.forEach(heritage => {
+      if (heritage.coordinates) {
+        const marker = new mapboxgl.Marker({
+          // Marker color
+          color: allMarkersColor
+        }).setLngLat([heritage.coordinates.lon, heritage.coordinates.lat]).addTo(map);
+        // Push marker into array
+        markerInstances.push(marker);
       }
-      animateFog();
     });
+  }
+  // Toggles the markers.
 
-    const konamiCode = [ "ArrowUp", "ArrowUp", "ArrowDown", "ArrowDown", "ArrowLeft", "ArrowRight", "ArrowLeft", "ArrowRight", "b", "a" ];
-
-    let konamiIndex = 0;
-
-    function rainbowColor() {
-      const t = Date.now() / 1e3;
-      const hue = t % 5 * 360 / 5;
-      const rgb = hslToRgb(hue / 360, 1, .5);
-      return `rgb(${rgb[0]}, ${rgb[1]}, ${rgb[2]})`;
-    }
-
-    function hslToRgb(h, s, l) {
-      let r, g, b;
-      const hue2rgb = (p, q, t) => {
-        if (t < 0) t += 1;
-        if (t > 1) t -= 1;
-        if (t < 1 / 6) return p + (q - p) * 6 * t;
-        if (t < 1 / 2) return q;
-        if (t < 2 / 3) return p + (q - p) * (2 / 3 - t) * 6;
-        return p;
-      };
-      const q = l < .5 ? l * (1 + s) : l + s - l * s;
-      const p = 2 * l - q;
-      r = hue2rgb(p, q, h + 1 / 3);
-      g = hue2rgb(p, q, h);
-      b = hue2rgb(p, q, h - 1 / 3);
-      return [ Math.round(r * 255), Math.round(g * 255), Math.round(b * 255) ];
-    }
-
-    window.addEventListener("keydown", e => {
-      if (e.key === konamiCode[konamiIndex]) {
-        konamiIndex++;
-        if (konamiIndex === konamiCode.length) {
-          rainbowEnabled = !rainbowEnabled;
-          konamiIndex = 0;
-          console.log("Konami Code activated!");
-        }
+  function toggleMarkers() {
+    markersVisible = !markersVisible;
+    markerInstances.forEach(marker => {
+      if (markersVisible) {
+        marker.addTo(map);
       } else {
-        konamiIndex = 0;
+        marker.remove(); // Removes from map but still in array
       }
     });
-  </script>
+  }
+
+  function loadMarker(lng, lat) {
+    // Loads a single marker
+    const marker = new mapboxgl.Marker().setLngLat([lng, lat]).addTo(map);
+  }
+
+  map.addControl(new mapboxgl.NavigationControl());
+
+  function zoomToLocation(lng, lat) {
+    map.flyTo({
+      center: [lng, lat],
+      zoom: 12,
+      essential: true,
+      duration: 3500,
+      curve: 1.5
+    });
+  }
+
+  let rainbowEnabled = false;
+
+  map.on("style.load", () => {
+    function animateFog() {
+      map.setFog({
+        range: [.5, 10],
+        color: rainbowEnabled ? rainbowColor() : "white",
+        "high-color": "#245cdf",
+        "space-color": "#000000"
+      });
+      requestAnimationFrame(animateFog);
+    }
+    animateFog();
+  });
+
+  const konamiCode = ["ArrowUp", "ArrowUp", "ArrowDown", "ArrowDown", "ArrowLeft", "ArrowRight", "ArrowLeft", "ArrowRight", "b", "a"];
+
+  let konamiIndex = 0;
+
+  function rainbowColor() {
+    const t = Date.now() / 1e3;
+    const hue = t % 5 * 360 / 5;
+    const rgb = hslToRgb(hue / 360, 1, .5);
+    return `rgb(${rgb[0]}, ${rgb[1]}, ${rgb[2]})`;
+  }
+
+  function hslToRgb(h, s, l) {
+    let r, g, b;
+    const hue2rgb = (p, q, t) => {
+      if (t < 0) t += 1;
+      if (t > 1) t -= 1;
+      if (t < 1 / 6) return p + (q - p) * 6 * t;
+      if (t < 1 / 2) return q;
+      if (t < 2 / 3) return p + (q - p) * (2 / 3 - t) * 6;
+      return p;
+    };
+    const q = l < .5 ? l * (1 + s) : l + s - l * s;
+    const p = 2 * l - q;
+    r = hue2rgb(p, q, h + 1 / 3);
+    g = hue2rgb(p, q, h);
+    b = hue2rgb(p, q, h - 1 / 3);
+    return [Math.round(r * 255), Math.round(g * 255), Math.round(b * 255)];
+  }
+
+  window.addEventListener("keydown", e => {
+    if (e.key === konamiCode[konamiIndex]) {
+      konamiIndex++;
+      if (konamiIndex === konamiCode.length) {
+        rainbowEnabled = !rainbowEnabled;
+        konamiIndex = 0;
+        console.log("Konami Code activated!");
+      }
+    } else {
+      konamiIndex = 0;
+    }
+  });
+</script>
 @end

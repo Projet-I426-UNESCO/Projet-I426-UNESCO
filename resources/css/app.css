@@ -21,10 +21,15 @@ body {
   margin: 0;
   display: grid;
   font-family: 'K2D', sans-serif;
-  grid-template-columns: 8% 74% 18%;
+  grid-template-columns: 8% 1fr;
   min-height: 100vh;
-  overflow: hidden;
+  overflow-x: hidden;
   background-color: #0f172a;
+}
+
+body.page-home {
+  grid-template-columns: 8% 74% 18%;
+  overflow: hidden;
 }
 
 header {
