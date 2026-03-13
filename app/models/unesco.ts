@@ -1,8 +1,10 @@
 import { DateTime } from 'luxon'
 import { BaseModel, column } from '@adonisjs/lucid/orm'
 
+// Modèle généré avec Gemini et modifié pour des erreurs de json dans la table
+// https://gemini.google.com/share/79ebc5eccbaf
+
 export default class Unesco extends BaseModel {
-  // Optionnel : si le nom de la table ne suit pas la convention de nommage classique d'Adonis
   public static table = 'whc_sites'
 
   @column({ isPrimary: true })

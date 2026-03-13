@@ -2,13 +2,12 @@ import { BaseSeeder } from '@adonisjs/lucid/seeders'
 import Unesco from '#models/unesco'
 import unescos from '../../public/data/whc001.json' with { type: 'json' }
 
+// Seeder généré avec Gemini
+// https://gemini.google.com/share/79ebc5eccbaf
+
 export default class extends BaseSeeder {
   async run() {
-    // Petit utilitaire pour convertir les chaînes "True"/"False" en vrais booléens
     const parseBoolean = (val: any) => val === 'True' || val === true
-
-    // Si tu n'as pas filtré le "total_count" en amont et que ton JSON a la forme
-    // { "total_count": 1154, "results": [...] }, remplace "unescos.map" par "unescos.results.map"
 
     await Unesco.createMany(
       unescos.results.map((item: any) => ({
