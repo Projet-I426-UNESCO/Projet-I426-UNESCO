@@ -3,7 +3,7 @@
     Exploration du Patrimoine Mondial
   </h3>
 
-  <div class="explorer-container" onload="loadMarkers({{ unesco }})">
+  <div class="explorer-container">
     <div class="map-container">
       <div id="map">
       </div>
@@ -42,11 +42,13 @@
   </div>
 
   <script>
-    console.log("ouinonbof");
+    // Gets all the markers 
+    const unescosData = {{{ JSON.stringify(unescos) }}};
 
     mapboxgl.accessToken = "pk.eyJ1IjoiNjdza2liaWRpc2NydW0iLCJhIjoiY21sYXdlamR3MGcyOTNlcXoxdHQ2bXliaiJ9.BXx6EzzxvsFrDg5yeo1LUQ";
 
     const map = new mapboxgl.Map({
+      // Make the map
       container: "map",
       style: "mapbox://styles/mapbox/standard",
       projection: "globe",
@@ -54,15 +56,31 @@
       center: [ 10, 20 ]
     });
 
+    map.on("load", () => {
+      // Loads markers on page load
+      loadMarkers(unescosData);
+    });
+
     function loadMarker(lng, lat) {
       const marker = new mapboxgl.Marker().setLngLat([ lng, lat ]).addTo(map);
     }
 
+    function getRandomColor() {
+      var letters = "0123456789ABCDEF";
+      var color = "#";
+      for (var i = 0; i < 6; i++) {
+        color += letters[Math.floor(Math.random() * 16)];
+      }
+      return color;
+    }
+
     function loadMarkers(unescos) {
-      console.log(unescos);
-      unescos.forEach(heritage => {
-        console.log(heritage);
-        const marker = new mapboxgl.Marker().setLngLat([ heritage.coordinates.lon, heritage.coordinates.lat ]).addTo(map);
+      unescosData.forEach(heritage => {
+        if (heritage.coordinates) {
+          new mapboxgl.Marker({
+            color: getRandomColor()
+          }).setLngLat([ heritage.coordinates.lon, heritage.coordinates.lat ]).addTo(map);
+        }
       });
     }
 
