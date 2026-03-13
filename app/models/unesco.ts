@@ -5,7 +5,7 @@ import { BaseModel, column } from '@adonisjs/lucid/orm'
 // https://gemini.google.com/share/79ebc5eccbaf
 
 export default class Unesco extends BaseModel {
-  public static table = 'whc_sites'
+  public static table = 'unescos'
 
   @column({ isPrimary: true })
   declare id: number
