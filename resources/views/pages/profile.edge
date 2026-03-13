@@ -10,29 +10,23 @@
     <style>
         @import url("https://fonts.googleapis.com/css2?family=K2D:wght@300;400;500&display=swap");
 
-        body {
-            margin: 0;
-            display: grid;
-            font-family: "K2D", sans-serif;
-            grid-template-columns: 120px 1fr;
-            min-height: 100vh;
-            background-color: #0f172a;
-        }
-
-        /* --- MAIN CONTENT --- */
         main {
-            padding: 20px;
-            position: relative;
-            margin-right: 20px;
+            margin-right: 240px;
+            padding: 25px 0 0 25px;
         }
 
         .info-block {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            grid-gap: 15px;
+            grid-gap: 10px;
+            grid-auto-rows: minmax(150px, auto);
             max-width: 1800px;
             margin: 0 auto;
-            padding-top: 50px;
+            flex-direction: row;
+            align-items: flex-start;
+            justify-content: space-around;
+            justify-items: stretch;
+            align-items: stretch;
         }
 
         .info-block>div {
@@ -42,6 +36,14 @@
             color: #d1d5db;
         }
 
+        .info-block>div:last-child {
+            background-color: #0f172a;
+            border-radius: 20px;
+            padding: 0px;
+            color: #d1d5db;
+        }
+
+        /*background-color: #0f172a;*/
         .name-block {
             display: flex;
             align-items: center;
@@ -77,6 +79,88 @@
             margin: 0;
         }
 
+        .last-visit-block {
+            grid-column: 3;
+            grid-row: 1/4;
+        }
+
+        .progress-block {
+            grid-column: 1/2;
+            grid-row: 2;
+        }
+
+        .continent-stats-block {
+            grid-column: 2;
+            grid-row: 2/4;
+
+        }
+
+        .continent-stats-block .boss {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 5vh;
+            text-align: center;
+            justify-content: stretch;
+        }
+
+        .continent-stats-block>div {
+            justify-self: center;
+            align-self: center;
+
+        }
+
+        .few-last-visits-block {
+            grid-column: 1;
+            grid-row: 3/5;
+        }
+
+        .general-stats-block {
+            grid-column: 2/4;
+            grid-row: 4;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            background-color: #ffffff;
+            gap: 10px;
+
+        }
+
+        .general-stats-block>div {
+            background-color: #1e2533;
+            border-radius: 12px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #d1d5db;
+            font-size: 18px;
+
+        }
+
+        .item {
+            width: 60px;
+            height: 60px;
+            background-color: #68bff8;
+            border-radius: 50%;
+            align-items: center;
+            flex-direction: column;
+
+        }
+
+        .continent-text {
+            margin-top: 60px;
+            justify-self: center;
+        }
+
+        .map-list-block {
+            max-width: 1800px;
+            height: 500px;
+            background-color: #1e2533;
+            max-width: 1800px;
+            margin: 0 auto;
+            padding-top: 50px;
+            border-radius: 20px;
+            margin-top: 10px;
+        }
+
         .line {
             display: flex;
             gap: 10px;
@@ -102,70 +186,6 @@
         .modif-btn {
             background-color: #5F7EF2;
         }
-
-        .last-visit-block {
-            grid-column: 3;
-            grid-row: 1/4;
-        }
-
-        .progress-block {
-            grid-row: 2;
-        }
-
-        .continent-stats-block {
-            grid-column: 2;
-            grid-row: 2/4;
-        }
-
-        .continent-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 40px 20px;
-            margin-top: 20px;
-            text-align: center;
-        }
-
-        .item {
-            width: 60px;
-            height: 60px;
-            background-color: #68bff8;
-            border-radius: 50%;
-            margin: 0 auto;
-            position: relative;
-        }
-
-        .continent-text {
-            margin-top: 70px;
-            font-size: 14px;
-            white-space: nowrap;
-        }
-
-        .general-stats-block {
-            grid-column: 2/4;
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 10px;
-            background-color: transparent !important;
-            padding: 0 !important;
-        }
-
-        .stat-card {
-            background-color: #1e2533;
-            border-radius: 12px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-        }
-
-        .map-list-block {
-            max-width: 1800px;
-            height: 400px;
-            background-color: #1e2533;
-            margin: 20px auto;
-            border-radius: 20px;
-        }
     </style>
 </head>
 
@@ -175,7 +195,6 @@
 
     <main>
         <div class="info-block">
-            {{-- Header Profil --}}
             <div class="name-block">
                 <div class="name-avatar">
                     <img class="avatar" src="" alt="Avatar" />
@@ -189,19 +208,16 @@
                 </div>
             </div>
 
-            {{-- Dernière visite --}}
             <div class="last-visit-block">
                 <p>Dernière visite</p>
                 <p></p>
             </div>
 
-            {{-- Progression --}}
             <div class="progress-block">
                 <p>Progression Globale</p>
                 <p>%</p>
             </div>
 
-            {{-- Stats par Continent --}}
             <div class="continent-stats-block">
                 <p>Exploration par continent</p>
                 <div class="continent-grid">
@@ -209,13 +225,10 @@
                 </div>
             </div>
 
-            {{-- Historique récent --}}
             <div class="few-last-visits-block">
                 <p>Visites récentes</p>
-                {{-- Boucle sur les dernières visites --}}
             </div>
 
-            {{-- Stats Générales --}}
             <div class="general-stats-block">
                 <div class="stat-card">
                     <span>Sites visités</span>
@@ -237,7 +250,6 @@
         </div>
 
         <div class="map-list-block">
-            {{-- Contenu Carte --}}
         </div>
     </main>
 </body>
