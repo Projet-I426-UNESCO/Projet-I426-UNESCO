@@ -3,6 +3,19 @@
     Exploration du Patrimoine Mondial
   </h3>
 
+  <div class="controls">
+    <div style="display: flex; align-items: center;">
+      <input
+        type="checkbox"
+        id="markerToggle"
+        class="chckbx-toggle"
+        style="cursor: pointer; width: 25px; height: 25px; margin-right: 10px;"
+      />
+      Show/Hide All Markers
+    </div>
+
+  </div>
+
   <div class="explorer-container">
     <div class="map-container">
       <div id="map">
@@ -56,32 +69,54 @@
       center: [ 10, 20 ]
     });
 
-    map.on("load", () => {
-      // Loads markers on page load
-      loadMarkers(unescosData);
+    // Gets the checkbox toggle 
+    document.getElementById("markerToggle").addEventListener("click", () => {
+      // Toggles the markers
+      toggleMarkers();
     });
 
-    function loadMarker(lng, lat) {
-      const marker = new mapboxgl.Marker().setLngLat([ lng, lat ]).addTo(map);
-    }
+    // Loads markers on page load
+    map.on("load", () => {
+      loadMarkers(unescosData);
+      toggleMarkers();
+    });
 
-    function getRandomColor() {
-      var letters = "0123456789ABCDEF";
-      var color = "#";
-      for (var i = 0; i < 6; i++) {
-        color += letters[Math.floor(Math.random() * 16)];
-      }
-      return color;
-    }
+    let markerInstances = [];
+    let markersVisible = true;
+    const allMarkersColor = "#61afef";
+    const visitedMarkersColor = "#fe8d50";
 
     function loadMarkers(unescos) {
-      unescosData.forEach(heritage => {
+      // Clear existing instances for reload
+      markerInstances.forEach(m => m.remove());
+      markerInstances = [];
+      unescos.forEach(heritage => {
         if (heritage.coordinates) {
-          new mapboxgl.Marker({
-            color: getRandomColor()
+          const marker = new mapboxgl.Marker({
+            // Marker color
+            color: allMarkersColor
           }).setLngLat([ heritage.coordinates.lon, heritage.coordinates.lat ]).addTo(map);
+          // Push marker into array
+          markerInstances.push(marker);
         }
       });
+    }
+
+    // Toggles the markers.
+    function toggleMarkers() {
+      markersVisible = !markersVisible;
+      markerInstances.forEach(marker => {
+        if (markersVisible) {
+          marker.addTo(map);
+        } else {
+          marker.remove(); // Removes from map but still in array
+        }
+      });
+    }
+
+    function loadMarker(lng, lat) {
+      // Loads a single marker
+      const marker = new mapboxgl.Marker().setLngLat([ lng, lat ]).addTo(map);
     }
 
     map.addControl(new mapboxgl.NavigationControl());
