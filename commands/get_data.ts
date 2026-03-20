@@ -5,7 +5,7 @@ import fs from 'node:fs'
 
 export default class GetData extends BaseCommand {
   static commandName = 'get:data'
-  static description = ''
+  static description = 'Get all the UNESCO whc001 data by merging thier LIMIT=100 requests'
 
   static options: CommandOptions = {}
 
@@ -23,7 +23,7 @@ export async function getData() {
   let objA = await firstResponse.json()
 
   for (let offset = 100; offset < 1300; offset += 100) {
-    const response = await fetch(`${UNESCO_URL}offset=${offset}`)
+    const response = await fetch(`${UNESCO_URL}&offset=${offset}`)
 
     let objB = await response.json()
     objA = deepMerge(objA, objB)
