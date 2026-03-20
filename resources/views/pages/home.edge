@@ -20,6 +20,26 @@
     position: relative;
   }
 
+  .map-search-overlay {
+    position: absolute;
+    top: 30px;
+    left: 30px;
+    z-index: 10;
+    width: 320px;
+  }
+
+  #searchInput {
+    width: 100%;
+    padding: 12px 18px;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    background: rgba(30, 37, 51, 0.85);
+    backdrop-filter: blur(10px);
+    color: white;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    outline: none;
+  }
+
   .map-container {
     width: 100%;
     height: 100%;
@@ -37,22 +57,27 @@
     border-left: 1px solid #334155;
     display: flex;
     flex-direction: column;
-    z-index: 10;
+    z-index: 5;
   }
 
   .sidebar-header {
     padding: 20px;
     border-bottom: 1px solid #334155;
-    background: #141827;
   }
 
-  #searchInput {
-    width: 100%;
-    padding: 12px;
-    border-radius: 8px;
-    border: 1px solid #334155;
-    background: #1e2533;
-    color: white;
+  .filter-group {
+    display: flex;
+    justify-content: space-around;
+  }
+
+  .check-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    color: #9ca3af;
+    font-size: 10px;
+    cursor: pointer;
   }
 
   #aside-dynamic-content {
@@ -70,9 +95,15 @@
     margin-bottom: 12px;
     cursor: pointer;
     transition: 0.2s;
+    border: 1px solid transparent;
   }
 
-  .site-card:hover { background: #2b3447; transform: translateX(-5px); }
+  .site-card:hover {
+    background: #2b3447;
+    transform: translateX(-5px);
+    border-color: #6366f1;
+  }
+
   .site-card img { width: 60px; height: 60px; border-radius: 8px; object-fit: cover; }
   .card-info h4 { color: white; margin: 0; font-size: 14px; }
   .card-info p { color: #9ca3af; font-size: 12px; margin: 4px 0 0; }
@@ -82,6 +113,9 @@
 </style>
 
 <main class="explorer-container">
+  <div class="map-search-overlay">
+    <input type="text" id="searchInput" placeholder="Rechercher un site..." />
+  </div>
   <div class="map-container">
     <div id="map"></div>
   </div>
@@ -89,11 +123,20 @@
 
 <aside>
   <div class="sidebar-header">
-    <div style="display: flex; align-items: center; gap: 10px; color: white; margin-bottom: 15px;">
-      <input type="checkbox" id="markerToggle" checked />
-      <span style="font-size: 13px;">Marqueurs</span>
+    <div class="filter-group">
+      <label class="check-item">
+        <input type="checkbox" id="checkNormal" checked />
+        <span>NORMAL</span>
+      </label>
+      <label class="check-item">
+        <input type="checkbox" id="checkVisites" />
+        <span>VISITÉS</span>
+      </label>
+      <label class="check-item">
+        <input type="checkbox" id="checkMarques" />
+        <span>MARQUÉS</span>
+      </label>
     </div>
-    <input type="text" id="searchInput" placeholder="Rechercher..." />
   </div>
 
   <div id="aside-dynamic-content">
@@ -102,7 +145,7 @@
         <div class="site-card" onclick="zoomToLocation({{ unesco.coordinates.lon }}, {{ unesco.coordinates.lat }})">
           <img src="{{ unesco.mainImageUrl }}" />
           <div class="card-info">
-            <h4>{{ unesco.nameEn }}</h4>
+            <h4>{{ unesco.nameFr }}</h4>
             <p>{{ unesco.statesNames }}</p>
           </div>
         </div>
@@ -124,16 +167,31 @@
   });
 
   let markerInstances = [];
-  let markersVisible = true;
   let rainbowEnabled = false;
 
+  // --- FILTRAGE AMÉLIORÉ ---
   function filterContent() {
     const searchTerm = document.getElementById("searchInput").value.toLowerCase();
+
+    // On récupère l'état des filtres (si tu as des propriétés isVisited ou isFavorite dans tes données)
+    const showNormal = document.getElementById("checkNormal").checked;
+    const showVisites = document.getElementById("checkVisites").checked;
+    const showMarques = document.getElementById("checkMarques").checked;
+
     const filteredData = unescosData.filter(item => {
-      const name = item.nameEn ? item.nameEn.toLowerCase() : "";
-      const states = item.states ? item.states.toLowerCase() : "";
-      return name.includes(searchTerm) || states.includes(searchTerm);
+      const name = item.nameFr ? item.nameFr.toLowerCase() : "";
+      const states = item.statesNames ? item.statesNames.toLowerCase() : "";
+
+      // Filtre textuel
+      const matchesSearch = name.includes(searchTerm) || states.includes(searchTerm);
+
+      // Filtre par catégorie (Si tu as ces champs en base, sinon ignore cette partie)
+      // let matchesCategory = true;
+      // if (!showNormal && !item.isVisited && !item.isFavorite) matchesCategory = false;
+
+      return matchesSearch;
     });
+
     updateMarkers(filteredData);
     updateAside(filteredData);
   }
@@ -141,31 +199,47 @@
   function updateMarkers(data) {
     markerInstances.forEach(m => m.remove());
     markerInstances = [];
-    if (!markersVisible) return;
+
     data.forEach(h => {
-      if (h.coordinates) {
-        const m = new mapboxgl.Marker({ color: "#6366f1" })
-          .setLngLat([h.coordinates.lon, h.coordinates.lat])
+      if (h.coordinates && h.coordinates.lon && h.coordinates.lat) {
+        const marker = new mapboxgl.Marker({ color: "#61afef" })
+          .setLngLat([parseFloat(h.coordinates.lon), parseFloat(h.coordinates.lat)])
           .addTo(map);
-        markerInstances.push(m);
+        markerInstances.push(marker);
       }
     });
   }
 
   function updateAside(data) {
     const content = document.getElementById("aside-dynamic-content");
-    content.innerHTML = '';
+    content.innerHTML = ''; // On vide la liste
+
     data.forEach(u => {
+      if (!u.coordinates) return;
+
       const card = document.createElement('div');
       card.className = 'site-card';
+
+      // Correction du clic : on passe directement les coordonnées de l'objet u
       card.onclick = () => zoomToLocation(u.coordinates.lon, u.coordinates.lat);
-      card.innerHTML = `<img src="${u.mainImageUrl}" /><div class="card-info"><h4>${u.nameEn}</h4><p>${u.states}</p></div>`;
+
+      card.innerHTML = `
+        <img src="${u.mainImageUrl}" alt="${u.nameFr}" />
+        <div class="card-info">
+          <h4>${u.nameFr || 'Sans nom'}</h4>
+          <p>${u.statesNames || 'Lieu inconnu'}</p>
+        </div>`;
       content.appendChild(card);
     });
   }
 
   function zoomToLocation(lng, lat) {
-    map.flyTo({ center: [lng, lat], zoom: 10, duration: 3000, essential: true });
+    map.flyTo({
+        center: [parseFloat(lng), parseFloat(lat)],
+        zoom: 12,
+        duration: 3500,
+        essential: true
+    });
   }
 
   const konamiCode = ["ArrowUp", "ArrowUp", "ArrowDown", "ArrowDown", "ArrowLeft", "ArrowRight", "ArrowLeft", "ArrowRight", "b", "a"];
@@ -177,7 +251,6 @@
       if (konamiIndex === konamiCode.length) {
         rainbowEnabled = !rainbowEnabled;
         konamiIndex = 0;
-        console.log("Konami Activated 🌈");
       }
     } else { konamiIndex = 0; }
   });
@@ -201,15 +274,18 @@
     animate();
   });
 
-  document.getElementById("searchInput").addEventListener("input", filterContent);
-  document.getElementById("markerToggle").addEventListener("change", (e) => {
-    markersVisible = e.target.checked;
-    filterContent();
+  document.addEventListener("DOMContentLoaded", () => {
+    document.getElementById("searchInput").addEventListener("input", filterContent);
+
+    ['checkNormal', 'checkVisites', 'checkMarques'].forEach(id => {
+      const el = document.getElementById(id);
+      if(el) el.addEventListener('change', filterContent);
+    });
   });
 
   map.on("load", () => {
     map.resize();
-    filterContent();
+    filterContent(); // Premier filtrage pour afficher les données au chargement
   });
 </script>
 @end
