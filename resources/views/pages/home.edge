@@ -20,7 +20,7 @@
 
     @each(unesco in unescos)
       @if(unesco.coordinates) 
-        <div class="site-card" onclick="zoomToLocation({{ unesco.coordinates.lon }}, {{ unesco.coordinates.lat }}), loadMarker({{ unesco.coordinates.lon }}, {{ unesco.coordinates.lat }}), ">
+        <div class="site-card" onclick="zoomToLocation({{ unesco.coordinates.lon }}, {{ unesco.coordinates.lat }}), loadMarker({{ unesco.coordinates.lon }}, {{ unesco.coordinates.lat }})">
           <img src="{{ unesco.mainImageUrl }}" />
 
           <div class="card-info">
