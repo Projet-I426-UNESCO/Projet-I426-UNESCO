@@ -1,165 +1,175 @@
 @layout('components/layout/index', { title: 'Accueil', page: 'home' })
 
-<div class="controls">
-  <div>
-    <input type="checkbox" id="markerToggle" class="chckbx-toggle" />
-    Show/Hide All Markers
-  </div>
+<style>
+  body.page-home {
+    display: grid !important;
+    grid-template-columns: 7% 1fr 344px !important;
+    grid-template-rows: 100vh !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    margin: 0 !important;
+    overflow: hidden !important;
+    background-color: #0f172a;
+  }
 
-</div>
+  .explorer-container {
+    grid-column: 2;
+    height: 100vh;
+    padding: 15px;
+    box-sizing: border-box;
+    position: relative;
+  }
 
-<div class="explorer-container">
+  .map-container {
+    width: 100%;
+    height: 100%;
+    border-radius: 16px;
+    overflow: hidden;
+    border: 1px solid #334155;
+  }
+
+  #map { width: 100%; height: 100%; }
+
+  aside {
+    grid-column: 3;
+    height: 100vh;
+    background: #141827;
+    border-left: 1px solid #334155;
+    display: flex;
+    flex-direction: column;
+    z-index: 10;
+  }
+
+  .sidebar-header {
+    padding: 20px;
+    border-bottom: 1px solid #334155;
+    background: #141827;
+  }
+
+  #searchInput {
+    width: 100%;
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid #334155;
+    background: #1e2533;
+    color: white;
+  }
+
+  #aside-dynamic-content {
+    flex: 1;
+    overflow-y: auto !important;
+    padding: 15px;
+  }
+
+  .site-card {
+    display: flex;
+    gap: 12px;
+    background: #1e2533;
+    border-radius: 12px;
+    padding: 10px;
+    margin-bottom: 12px;
+    cursor: pointer;
+    transition: 0.2s;
+  }
+
+  .site-card:hover { background: #2b3447; transform: translateX(-5px); }
+  .site-card img { width: 60px; height: 60px; border-radius: 8px; object-fit: cover; }
+  .card-info h4 { color: white; margin: 0; font-size: 14px; }
+  .card-info p { color: #9ca3af; font-size: 12px; margin: 4px 0 0; }
+
+  #aside-dynamic-content::-webkit-scrollbar { width: 6px; }
+  #aside-dynamic-content::-webkit-scrollbar-thumb { background: #6366f1; border-radius: 10px; }
+</style>
+
+<main class="explorer-container">
   <div class="map-container">
-    <div id="map">
+    <div id="map"></div>
+  </div>
+</main>
+
+<aside>
+  <div class="sidebar-header">
+    <div style="display: flex; align-items: center; gap: 10px; color: white; margin-bottom: 15px;">
+      <input type="checkbox" id="markerToggle" checked />
+      <span style="font-size: 13px;">Marqueurs</span>
     </div>
+    <input type="text" id="searchInput" placeholder="Rechercher..." />
   </div>
 
-</div>
-<aside>
   <div id="aside-dynamic-content">
-
     @each(unesco in unescos)
-      @if(unesco.coordinates) 
+      @if(unesco.coordinates)
         <div class="site-card" onclick="zoomToLocation({{ unesco.coordinates.lon }}, {{ unesco.coordinates.lat }})">
-          <img src="{{ unesco.main_image_url }}" />
-
+          <img src="{{ unesco.mainImageUrl }}" />
           <div class="card-info">
-            <h4>
-              {{ unesco.site }}
-            </h4>
-            <p>
-              {{ unesco.states }}
-            </p>
+            <h4>{{ unesco.nameEn }}</h4>
+            <p>{{ unesco.statesNames }}</p>
           </div>
         </div>
       @end
     @end
-
   </div>
 </aside>
-<script>
-  // Gets all the markers 
-  const unescosData = {{{ JSON.stringify(unescos) }}};
 
+<script>
+  const unescosData = {{{ JSON.stringify(unescos) }}};
   mapboxgl.accessToken = "pk.eyJ1IjoiNjdza2liaWRpc2NydW0iLCJhIjoiY21sYXdlamR3MGcyOTNlcXoxdHQ2bXliaiJ9.BXx6EzzxvsFrDg5yeo1LUQ";
 
   const map = new mapboxgl.Map({
-    // Make the map
     container: "map",
     style: "mapbox://styles/mapbox/standard",
     projection: "globe",
     zoom: 1.8,
     center: [10, 20]
   });
-  // Gets the checkbox toggle 
-
-  document.getElementById("markerToggle").addEventListener("click", () => {
-    // Toggles the markers
-    toggleMarkers();
-  });
-  // Loads markers on page load
-
-  map.on("load", () => {
-    loadMarkers(unescosData);
-    toggleMarkers();
-  });
 
   let markerInstances = [];
-
   let markersVisible = true;
-
-  const allMarkersColor = "#61afef";
-
-  const visitedMarkersColor = "#fe8d50";
-
-  function loadMarkers(unescos) {
-    // Clear existing instances for reload
-    markerInstances.forEach(m => m.remove());
-    markerInstances = [];
-    unescos.forEach(heritage => {
-      if (heritage.coordinates) {
-        const marker = new mapboxgl.Marker({
-          // Marker color
-          color: allMarkersColor
-        }).setLngLat([heritage.coordinates.lon, heritage.coordinates.lat]).addTo(map);
-        // Push marker into array
-        markerInstances.push(marker);
-      }
-    });
-  }
-  // Toggles the markers.
-
-  function toggleMarkers() {
-    markersVisible = !markersVisible;
-    markerInstances.forEach(marker => {
-      if (markersVisible) {
-        marker.addTo(map);
-      } else {
-        marker.remove(); // Removes from map but still in array
-      }
-    });
-  }
-
-  function loadMarker(lng, lat) {
-    // Loads a single marker
-    const marker = new mapboxgl.Marker().setLngLat([lng, lat]).addTo(map);
-  }
-
-  map.addControl(new mapboxgl.NavigationControl());
-
-  function zoomToLocation(lng, lat) {
-    map.flyTo({
-      center: [lng, lat],
-      zoom: 12,
-      essential: true,
-      duration: 3500,
-      curve: 1.5
-    });
-  }
-
   let rainbowEnabled = false;
 
-  map.on("style.load", () => {
-    function animateFog() {
-      map.setFog({
-        range: [.5, 10],
-        color: rainbowEnabled ? rainbowColor() : "white",
-        "high-color": "#245cdf",
-        "space-color": "#000000"
-      });
-      requestAnimationFrame(animateFog);
-    }
-    animateFog();
-  });
+  function filterContent() {
+    const searchTerm = document.getElementById("searchInput").value.toLowerCase();
+    const filteredData = unescosData.filter(item => {
+      const name = item.nameEn ? item.nameEn.toLowerCase() : "";
+      const states = item.states ? item.states.toLowerCase() : "";
+      return name.includes(searchTerm) || states.includes(searchTerm);
+    });
+    updateMarkers(filteredData);
+    updateAside(filteredData);
+  }
+
+  function updateMarkers(data) {
+    markerInstances.forEach(m => m.remove());
+    markerInstances = [];
+    if (!markersVisible) return;
+    data.forEach(h => {
+      if (h.coordinates) {
+        const m = new mapboxgl.Marker({ color: "#6366f1" })
+          .setLngLat([h.coordinates.lon, h.coordinates.lat])
+          .addTo(map);
+        markerInstances.push(m);
+      }
+    });
+  }
+
+  function updateAside(data) {
+    const content = document.getElementById("aside-dynamic-content");
+    content.innerHTML = '';
+    data.forEach(u => {
+      const card = document.createElement('div');
+      card.className = 'site-card';
+      card.onclick = () => zoomToLocation(u.coordinates.lon, u.coordinates.lat);
+      card.innerHTML = `<img src="${u.mainImageUrl}" /><div class="card-info"><h4>${u.nameEn}</h4><p>${u.states}</p></div>`;
+      content.appendChild(card);
+    });
+  }
+
+  function zoomToLocation(lng, lat) {
+    map.flyTo({ center: [lng, lat], zoom: 10, duration: 3000, essential: true });
+  }
 
   const konamiCode = ["ArrowUp", "ArrowUp", "ArrowDown", "ArrowDown", "ArrowLeft", "ArrowRight", "ArrowLeft", "ArrowRight", "b", "a"];
-
   let konamiIndex = 0;
-
-  function rainbowColor() {
-    const t = Date.now() / 1e3;
-    const hue = t % 5 * 360 / 5;
-    const rgb = hslToRgb(hue / 360, 1, .5);
-    return `rgb(${rgb[0]}, ${rgb[1]}, ${rgb[2]})`;
-  }
-
-  function hslToRgb(h, s, l) {
-    let r, g, b;
-    const hue2rgb = (p, q, t) => {
-      if (t < 0) t += 1;
-      if (t > 1) t -= 1;
-      if (t < 1 / 6) return p + (q - p) * 6 * t;
-      if (t < 1 / 2) return q;
-      if (t < 2 / 3) return p + (q - p) * (2 / 3 - t) * 6;
-      return p;
-    };
-    const q = l < .5 ? l * (1 + s) : l + s - l * s;
-    const p = 2 * l - q;
-    r = hue2rgb(p, q, h + 1 / 3);
-    g = hue2rgb(p, q, h);
-    b = hue2rgb(p, q, h - 1 / 3);
-    return [Math.round(r * 255), Math.round(g * 255), Math.round(b * 255)];
-  }
 
   window.addEventListener("keydown", e => {
     if (e.key === konamiCode[konamiIndex]) {
@@ -167,11 +177,39 @@
       if (konamiIndex === konamiCode.length) {
         rainbowEnabled = !rainbowEnabled;
         konamiIndex = 0;
-        console.log("Konami Code activated!");
+        console.log("Konami Activated 🌈");
       }
-    } else {
-      konamiIndex = 0;
+    } else { konamiIndex = 0; }
+  });
+
+  function rainbowColor() {
+    const t = Date.now() / 1000;
+    const hue = (t % 5) * 360 / 5;
+    return `hsl(${hue}, 100%, 50%)`;
+  }
+
+  map.on("style.load", () => {
+    function animate() {
+      map.setFog({
+        range: [0.5, 10],
+        color: rainbowEnabled ? rainbowColor() : "white",
+        "high-color": "#245cdf",
+        "space-color": "#000000"
+      });
+      requestAnimationFrame(animate);
     }
+    animate();
+  });
+
+  document.getElementById("searchInput").addEventListener("input", filterContent);
+  document.getElementById("markerToggle").addEventListener("change", (e) => {
+    markersVisible = e.target.checked;
+    filterContent();
+  });
+
+  map.on("load", () => {
+    map.resize();
+    filterContent();
   });
 </script>
 @end

@@ -1,0 +1,346 @@
+warning: in the working copy of 'resources/css/app.css', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'resources/views/pages/home.edge', LF will be replaced by CRLF the next time Git touches it
+[1mdiff --git a/resources/views/pages/home.edge b/resources/views/pages/home.edge[m
+[1mindex 750c668..e85bb42 100644[m
+[1m--- a/resources/views/pages/home.edge[m
+[1m+++ b/resources/views/pages/home.edge[m
+[36m@@ -1,177 +1,220 @@[m
+ @layout('components/layout/index', { title: 'Accueil', page: 'home' })[m
+ [m
+[31m-<div class="controls">[m
+[31m-  <div>[m
+[31m-    <input type="checkbox" id="markerToggle" class="chckbx-toggle" />[m
+[31m-    Show/Hide All Markers[m
+[31m-  </div>[m
+[32m+[m[32m<style>[m
+[32m+[m[32m  /* FORCE LE LAYOUT SUR LE BODY */[m
+[32m+[m[32m  body.page-home {[m
+[32m+[m[32m    display: grid !important;[m
+[32m+[m[32m    grid-template-columns: 7% 1fr 344px !important; /* Header | Map | Sidebar */[m
+[32m+[m[32m    grid-template-rows: 100vh !important;[m
+[32m+[m[32m    width: 100vw !important;[m
+[32m+[m[32m    height: 100vh !important;[m
+[32m+[m[32m    margin: 0 !important;[m
+[32m+[m[32m    overflow: hidden !important;[m
+[32m+[m[32m    background-color: #0f172a;[m
+[32m+[m[32m  }[m
+[32m+[m
+[32m+[m[32m  /* LA CARTE (COLONNE 2) */[m
+[32m+[m[32m  .explorer-container {[m
+[32m+[m[32m    grid-column: 2;[m
+[32m+[m[32m    height: 100vh;[m
+[32m+[m[32m    padding: 15px;[m
+[32m+[m[32m    box-sizing: border-box;[m
+[32m+[m[32m    position: relative;[m
+[32m+[m[32m  }[m
+[32m+[m
+[32m+[m[32m  .map-container {[m
+[32m+[m[32m    width: 100%;[m
+[32m+[m[32m    height: 100%;[m
+[32m+[m[32m    border-radius: 16px;[m
+[32m+[m[32m    overflow: hidden;[m
+[32m+[m[32m    border: 1px solid #334155;[m
+[32m+[m[32m  }[m
+ [m
+[31m-</div>[m
+[32m+[m[32m  #map { width: 100%; height: 100%; }[m
+[32m+[m
+[32m+[m[32m  /* LA SIDEBAR (COLONNE 3) */[m
+[32m+[m[32m  aside {[m
+[32m+[m[32m    grid-column: 3;[m
+[32m+[m[32m    height: 100vh;[m
+[32m+[m[32m    background: #141827;[m
+[32m+[m[32m    border-left: 1px solid #334155;[m
+[32m+[m[32m    display: flex;[m
+[32m+[m[32m    flex-direction: column;[m
+[32m+[m[32m    z-index: 10;[m
+[32m+[m[32m  }[m
+ [m
+[31m-<div class="explorer-container">[m
+[32m+[m[32m  .sidebar-header {[m
+[32m+[m[32m    padding: 20px;[m
+[32m+[m[32m    border-bottom: 1px solid #334155;[m
+[32m+[m[32m    background: #141827;[m
+[32m+[m[32m  }[m
+[32m+[m
+[32m+[m[32m  #searchInput {[m
+[32m+[m[32m    width: 100%;[m
+[32m+[m[32m    padding: 12px;[m
+[32m+[m[32m    border-radius: 8px;[m
+[32m+[m[32m    border: 1px solid #334155;[m
+[32m+[m[32m    background: #1e2533;[m
+[32m+[m[32m    color: white;[m
+[32m+[m[32m  }[m
+[32m+[m
+[32m+[m[32m  /* LISTE SCROLLABLE */[m
+[32m+[m[32m  #aside-dynamic-content {[m
+[32m+[m[32m    flex: 1;[m
+[32m+[m[32m    overflow-y: auto !important;[m
+[32m+[m[32m    padding: 15px;[m
+[32m+[m[32m  }[m
+[32m+[m
+[32m+[m[32m  .site-card {[m
+[32m+[m[32m    display: flex;[m
+[32m+[m[32m    gap: 12px;[m
+[32m+[m[32m    background: #1e2533;[m
+[32m+[m[32m    border-radius: 12px;[m
+[32m+[m[32m    padding: 10px;[m
+[32m+[m[32m    margin-bottom: 12px;[m
+[32m+[m[32m    cursor: pointer;[m
+[32m+[m[32m    transition: 0.2s;[m
+[32m+[m[32m  }[m
+[32m+[m
+[32m+[m[32m  .site-card:hover { background: #2b3447; transform: translateX(-5px); }[m
+[32m+[m[32m  .site-card img { width: 60px; height: 60px; border-radius: 8px; object-fit: cover; }[m
+[32m+[m[32m  .card-info h4 { color: white; margin: 0; font-size: 14px; }[m
+[32m+[m[32m  .card-info p { color: #9ca3af; font-size: 12px; margin: 4px 0 0; }[m
+[32m+[m
+[32m+[m[32m  /* Scrollbar */[m
+[32m+[m[32m  #aside-dynamic-content::-webkit-scrollbar { width: 6px; }[m
+[32m+[m[32m  #aside-dynamic-content::-webkit-scrollbar-thumb { background: #6366f1; border-radius: 10px; }[m
+[32m+[m[32m</style>[m
+[32m+[m
+[32m+[m[32m<main class="explorer-container">[m
+   <div class="map-container">[m
+[31m-    <div id="map">[m
+[31m-    </div>[m
+[32m+[m[32m    <div id="map"></div>[m
+   </div>[m
+[32m+[m[32m</main>[m
+ [m
+[31m-</div>[m
+ <aside>[m
+[31m-  <div id="aside-dynamic-content">[m
+[32m+[m[32m  <div class="sidebar-header">[m
+[32m+[m[32m    <div style="display: flex; align-items: center; gap: 10px; color: white; margin-bottom: 15px;">[m
+[32m+[m[32m      <input type="checkbox" id="markerToggle" checked />[m
+[32m+[m[32m      <span style="font-size: 13px;">Marqueurs</span>[m
+[32m+[m[32m    </div>[m
+[32m+[m[32m    <input type="text" id="searchInput" placeholder="Rechercher..." />[m
+[32m+[m[32m  </div>[m
+ [m
+[32m+[m[32m  <div id="aside-dynamic-content">[m
+     @each(unesco in unescos)[m
+[31m-      @if(unesco.coordinates) [m
+[32m+[m[32m      @if(unesco.coordinates)[m
+         <div class="site-card" onclick="zoomToLocation({{ unesco.coordinates.lon }}, {{ unesco.coordinates.lat }})">[m
+[31m-          <img src="{{ unesco.main_image_url }}" />[m
+[31m-[m
+[32m+[m[32m          <img src="{{ unesco.mainImageUrl }}" />[m
+           <div class="card-info">[m
+[31m-            <h4>[m
+[31m-              {{ unesco.site }}[m
+[31m-            </h4>[m
+[31m-            <p>[m
+[31m-              {{ unesco.states }}[m
+[31m-            </p>[m
+[32m+[m[32m            <h4>{{ unesco.nameEn }}</h4>[m
+[32m+[m[32m            <p>{{ unesco.states }}</p>[m
+           </div>[m
+         </div>[m
+       @end[m
+     @end[m
+[31m-[m
+   </div>[m
+ </aside>[m
+[32m+[m
+ <script>[m
+[31m-  // Gets all the markers [m
+   const unescosData = {{{ JSON.stringify(unescos) }}};[m
+[31m-[m
+   mapboxgl.accessToken = "pk.eyJ1IjoiNjdza2liaWRpc2NydW0iLCJhIjoiY21sYXdlamR3MGcyOTNlcXoxdHQ2bXliaiJ9.BXx6EzzxvsFrDg5yeo1LUQ";[m
+ [m
+   const map = new mapboxgl.Map({[m
+[31m-    // Make the map[m
+     container: "map",[m
+     style: "mapbox://styles/mapbox/standard",[m
+     projection: "globe",[m
+     zoom: 1.8,[m
+     center: [10, 20][m
+   });[m
+[31m-  // Gets the checkbox toggle [m
+[31m-[m
+[31m-  document.getElementById("markerToggle").addEventListener("click", () => {[m
+[31m-    // Toggles the markers[m
+[31m-    toggleMarkers();[m
+[31m-  });[m
+[31m-  // Loads markers on page load[m
+[31m-[m
+[31m-  map.on("load", () => {[m
+[31m-    loadMarkers(unescosData);[m
+[31m-    toggleMarkers();[m
+[31m-  });[m
+ [m
+   let markerInstances = [];[m
+[31m-[m
+   let markersVisible = true;[m
+[32m+[m[32m  let rainbowEnabled = false;[m
+ [m
+[31m-  const allMarkersColor = "#61afef";[m
+[31m-[m
+[31m-  const visitedMarkersColor = "#fe8d50";[m
+[32m+[m[32m  function filterContent() {[m
+[32m+[m[32m    const searchTerm = document.getElementById("searchInput").value.toLowerCase();[m
+[32m+[m[32m    const filteredData = unescosData.filter(item => {[m
+[32m+[m[32m      const name = item.nameEn ? item.nameEn.toLowerCase() : "";[m
+[32m+[m[32m      const states = item.states ? item.states.toLowerCase() : "";[m
+[32m+[m[32m      return name.includes(searchTerm) || states.includes(searchTerm);[m
+[32m+[m[32m    });[m
+[32m+[m[32m    updateMarkers(filteredData);[m
+[32m+[m[32m    updateAside(filteredData);[m
+[32m+[m[32m  }[m
+ [m
+[31m-  function loadMarkers(unescos) {[m
+[31m-    // Clear existing instances for reload[m
+[32m+[m[32m  function updateMarkers(data) {[m
+     markerInstances.forEach(m => m.remove());[m
+     markerInstances = [];[m
+[31m-    unescos.forEach(heritage => {[m
+[31m-      if (heritage.coordinates) {[m
+[31m-        const marker = new mapboxgl.Marker({[m
+[31m-          // Marker color[m
+[31m-          color: allMarkersColor[m
+[31m-        }).setLngLat([heritage.coordinates.lon, heritage.coordinates.lat]).addTo(map);[m
+[31m-        // Push marker into array[m
+[31m-        markerInstances.push(marker);[m
+[32m+[m[32m    if (!markersVisible) return;[m
+[32m+[m[32m    data.forEach(h => {[m
+[32m+[m[32m      if (h.coordinates) {[m
+[32m+[m[32m        const m = new mapboxgl.Marker({ color: "#6366f1" })[m
+[32m+[m[32m          .setLngLat([h.coordinates.lon, h.coordinates.lat])[m
+[32m+[m[32m          .addTo(map);[m
+[32m+[m[32m        markerInstances.push(m);[m
+       }[m
+     });[m
+   }[m
+[31m-  // Toggles the markers.[m
+[31m-[m
+[31m-  function toggleMarkers() {[m
+[31m-    markersVisible = !markersVisible;[m
+[31m-    markerInstances.forEach(marker => {[m
+[31m-      if (markersVisible) {[m
+[31m-        marker.addTo(map);[m
+[31m-      } else {[m
+[31m-        marker.remove(); // Removes from map but still in array[m
+[31m-      }[m
+[32m+[m
+[32m+[m[32m  function updateAside(data) {[m
+[32m+[m[32m    const content = document.getElementById("aside-dynamic-content");[m
+[32m+[m[32m    content.innerHTML = '';[m
+[32m+[m[32m    data.forEach(u => {[m
+[32m+[m[32m      const card = document.createElement('div');[m
+[32m+[m[32m      card.className = 'site-card';[m
+[32m+[m[32m      card.onclick = () => zoomToLocation(u.coordinates.lon, u.coordinates.lat);[m
+[32m+[m[32m      card.innerHTML = `<img src="${u.mainImageUrl}" /><div class="card-info"><h4>${u.nameEn}</h4><p>${u.states}</p></div>`;[m
+[32m+[m[32m      content.appendChild(card);[m
+     });[m
+   }[m
+ [m
+[31m-  function loadMarker(lng, lat) {[m
+[31m-    // Loads a single marker[m
+[31m-    const marker = new mapboxgl.Marker().setLngLat([lng, lat]).addTo(map);[m
+[32m+[m[32m  function zoomToLocation(lng, lat) {[m
+[32m+[m[32m    map.flyTo({ center: [lng, lat], zoom: 10, duration: 3000, essential: true });[m
+   }[m
+ [m
+[31m-  map.addControl(new mapboxgl.NavigationControl());[m
+[32m+[m[32m  const konamiCode = ["ArrowUp", "ArrowUp", "ArrowDown", "ArrowDown", "ArrowLeft", "ArrowRight", "ArrowLeft", "ArrowRight", "b", "a"];[m
+[32m+[m[32m  let konamiIndex = 0;[m
+ [m
+[31m-  function zoomToLocation(lng, lat) {[m
+[31m-    map.flyTo({[m
+[31m-      center: [lng, lat],[m
+[31m-      zoom: 12,[m
+[31m-      essential: true,[m
+[31m-      duration: 3500,[m
+[31m-      curve: 1.5[m
+[31m-    });[m
+[31m-  }[m
+[32m+[m[32m  window.addEventListener("keydown", e => {[m
+[32m+[m[32m    if (e.key === konamiCode[konamiIndex]) {[m
+[32m+[m[32m      konamiIndex++;[m
+[32m+[m[32m      if (konamiIndex === konamiCode.length) {[m
+[32m+[m[32m        rainbowEnabled = !rainbowEnabled;[m
+[32m+[m[32m        konamiIndex = 0;[m
+[32m+[m[32m        console.log("Konami Activated 🌈");[m
+[32m+[m[32m      }[m
+[32m+[m[32m    } else { konamiIndex = 0; }[m
+[32m+[m[32m  });[m
+ [m
+[31m-  let rainbowEnabled = false;[m
+[32m+[m[32m  function rainbowColor() {[m
+[32m+[m[32m    const t = Date.now() / 1000;[m
+[32m+[m[32m    const hue = (t % 5) * 360 / 5;[m
+[32m+[m[32m    return `hsl(${hue}, 100%, 50%)`;[m
+[32m+[m[32m  }[m
+ [m
+   map.on("style.load", () => {[m
+[31m-    function animateFog() {[m
+[32m+[m[32m    function animate() {[m
+       map.setFog({[m
+[31m-        range: [.5, 10],[m
+[32m+[m[32m        range: [0.5, 10],[m
+         color: rainbowEnabled ? rainbowColor() : "white",[m
+         "high-color": "#245cdf",[m
+         "space-color": "#000000"[m
+       });[m
+[31m-      requestAnimationFrame(animateFog);[m
+[32m+[m[32m      requestAnimationFrame(animate);[m
+     }[m
+[31m-    animateFog();[m
+[32m+[m[32m    animate();[m
+   });[m
+ [m
+[31m-  const konamiCode = ["ArrowUp", "ArrowUp", "ArrowDown", "ArrowDown", "ArrowLeft", "ArrowRight", "ArrowLeft", "ArrowRight", "b", "a"];[m
+[31m-[m
+[31m-  let konamiIndex = 0;[m
+[31m-[m
+[31m-  function rainbowColor() {[m
+[31m-    const t = Date.now() / 1e3;[m
+[31m-    const hue = t % 5 * 360 / 5;[m
+[31m-    const rgb = hslToRgb(hue / 360, 1, .5);[m
+[31m-    return `rgb(${rgb[0]}, ${rgb[1]}, ${rgb[2]})`;[m
+[31m-  }[m
+[31m-[m
+[31m-  function hslToRgb(h, s, l) {[m
+[31m-    let r, g, b;[m
+[31m-    const hue2rgb = (p, q, t) => {[m
+[31m-      if (t < 0) t += 1;[m
+[31m-      if (t > 1) t -= 1;[m
+[31m-      if (t < 1 / 6) return p + (q - p) * 6 * t;[m
+[31m-      if (t < 1 / 2) return q;[m
+[31m-      if (t < 2 / 3) return p + (q - p) * (2 / 3 - t) * 6;[m
+[31m-      return p;[m
+[31m-    };[m
+[31m-    const q = l < .5 ? l * (1 + s) : l + s - l * s;[m
+[31m-    const p = 2 * l - q;[m
+[31m-    r = hue2rgb(p, q, h + 1 / 3);[m
+[31m-    g = hue2rgb(p, q, h);[m
+[31m-    b = hue2rgb(p, q, h - 1 / 3);[m
+[31m-    return [Math.round(r * 255), Math.round(g * 255), Math.round(b * 255)];[m
+[31m-  }[m
+[32m+[m[32m  document.getElementById("searchInput").addEventListener("input", filterContent);[m
+[32m+[m[32m  document.getElementById("markerToggle").addEventListener("change", (e) => {[m
+[32m+[m[32m    markersVisible = e.target.checked;[m
+[32m+[m[32m    filterContent();[m
+[32m+[m[32m  });[m
+ [m
+[31m-  window.addEventListener("keydown", e => {[m
+[31m-    if (e.key === konamiCode[konamiIndex]) {[m
+[31m-      konamiIndex++;[m
+[31m-      if (konamiIndex === konamiCode.length) {[m
+[31m-        rainbowEnabled = !rainbowEnabled;[m
+[31m-        konamiIndex = 0;[m
+[31m-        console.log("Konami Code activated!");[m
+[31m-      }[m
+[31m-    } else {[m
+[31m-      konamiIndex = 0;[m
+[31m-    }[m
+[32m+[m[32m  map.on("load", () => {[m
+[32m+[m[32m    map.resize();[m
+[32m+[m[32m    filterContent();[m
+   });[m
+ </script>[m
+[31m-@end[m
+\ No newline at end of file[m
+[32m+[m[32m@end[m
