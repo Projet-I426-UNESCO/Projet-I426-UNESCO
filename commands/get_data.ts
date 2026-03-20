@@ -22,7 +22,7 @@ export async function getData() {
   const firstResponse = await fetch(UNESCO_URL)
   let objA = await firstResponse.json()
 
-  for (let offset = 100; offset < 1300; offset += 100) {
+  for (let offset = 100; offset <= objA.total_count; offset += 100) {
     const response = await fetch(`${UNESCO_URL}&offset=${offset}`)
 
     let objB = await response.json()
