@@ -10,8 +10,6 @@ export default class UnescosController {
     await auth.check()
     const unescos = await Unesco.query().exec()
 
-    dd(unescos)
-
     // Appel de la vue
     return view.render('pages/home', { unescos })
   }

@@ -19,20 +19,20 @@
   <div id="aside-dynamic-content">
 
     @each(unesco in unescos)
-    {{--  <div class="site-card" onclick="zoomToLocation({{ unesco.coordinates.lon }}, {{ unesco.coordinates.lat }})">  --}}
-    <div class="site-card" onclick="zoomToLocation({{ unesco.coordinates.lon }}, {{ unesco.coordinates.lat }})">
-      <img src="{{ unesco.main_image_url }}" />
+      @if(unesco.coordinates) 
+        <div class="site-card" onclick="zoomToLocation({{ unesco.coordinates.lon }}, {{ unesco.coordinates.lat }})">
+          <img src="{{ unesco.main_image_url }}" />
 
-      <div class="card-info">
-        <h4>
-          {{ unesco.site }}
-        </h4>
-        <p>
-          {{ unesco.states }}
-        </p>
-      </div>
-
-    </div>
+          <div class="card-info">
+            <h4>
+              {{ unesco.site }}
+            </h4>
+            <p>
+              {{ unesco.states }}
+            </p>
+          </div>
+        </div>
+      @end
     @end
 
   </div>
