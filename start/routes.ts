@@ -14,12 +14,18 @@ import UnescosController from '#controllers/unescos_controller'
 import AuthMiddleware from '#middleware/auth_middleware'
 import router from '@adonisjs/core/services/router'
 import { middleware } from './kernel.js'
+import MarkersController from '#controllers/markers_controller'
 
-router.get('/', [UnescosController, 'index']).as('home').use(middleware.guest())
+router.get('/', [UnescosController, 'index']).as('home')
 
 router.get('/profile', [UnescosController, 'profile']).as('profile.show').use(middleware.auth())
 
 router.get('/site/:id', [UnescosController, 'show']).as('site.show')
+
+router.post('/marker/add/visited', [MarkersController, 'visit']).as('marker.visit')
+router.post('/marker/add/marked', [MarkersController, 'mark']).as('marker.mark')
+router.post('/marker/remove/visited', [MarkersController, 'unvisit']).as('marker.unvisit')
+router.post('/marker/remove/marked', [MarkersController, 'unmark']).as('marker.unmark')
 
 router
   .group(() => {
