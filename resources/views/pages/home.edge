@@ -6,10 +6,10 @@
         <div id="map">
         </div>
       </div>
-      <div class="controls" style="position:absolute; top:10px; left:10px; z-index:10;">
+      <div class="controls">
         <div class="search-container">
           <div class="search-pill">
-            <span class="material-symbols-outlined" style="font-size: 24px !important; color: white;">search</span>
+            <span class="material-symbols-outlined">search</span>
             <input type="text" placeholder="Rechercher un site..." />
           </div>
 
@@ -24,9 +24,41 @@
           </div>
 
           <label class="toggle-pill" for="markerToggle">
-            <input type="checkbox" id="markerToggle" class="chckbx-toggle" checked />
-            <span>Show/Hide All Markers</span>
+            <input type="checkbox" id="markerToggle" checked />
+            <span>Markers</span>
           </label>
+        </div>
+
+        <div class="user-profile">
+          @if(auth.user)
+            <div class="auth-pill logged-in">
+              <a href="{{ route('profile.show') }}" class="user-trigger">
+                <div class="avatar-circle">
+                  {{ auth.user.fullName.charAt(0).toUpperCase() }}
+                </div>
+                <div class="user-details">
+                  <span class="user-name">{{ auth.user.fullName }}</span>
+                  <span class="user-status">En ligne</span>
+                </div>
+              </a>
+              <form method="POST" action="{{ route('auth.logout') }}">
+                {{ csrfField() }}
+        <button type="submit" class="logout-icon-btn" title="Se déconnecter">
+                  <span class="material-symbols-outlined">logout</span>
+                </button>
+              </form>
+            </div>
+          @else
+            <div class="auth-pill-group">
+              <a href="{{ route('auth.login.show') }}" class="auth-pill login">
+                <span class="material-symbols-outlined">login</span>
+                Se connecter
+      </a>
+              <a href="{{ route('auth.register.show') }}" class="auth-pill register">
+                Créer un compte
+      </a>
+            </div>
+          @end
         </div>
       </div>
     </div>

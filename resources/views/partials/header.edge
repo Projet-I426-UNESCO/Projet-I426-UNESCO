@@ -1,5 +1,7 @@
-<link rel="stylesheet"
-  href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+<link
+  rel="stylesheet"
+  href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
+/>
 <header>
   <div class="top-nav">
     <div class="logo">
@@ -49,27 +51,7 @@
         </div>
       </a>
     </nav>
-    <div class="login-container">
-      @if(auth.user)
-        <span class="user-info">
-          Connecté en tant que <strong>{{ auth.user.fullName }}</strong>
-        </span>
 
-        <form method="POST" action="{{ route('auth.logout') }}">
-          {{ csrfField() }}
-          <button type="submit" class="btn-logout">Se déconnecter</button>
-        </form>
-      @else
-        <div class="auth-links">
-          <div style="margin-bottom:20px">
-            <a href="{{ route('auth.register.show') }}">Créer un compte</a>
-          </div>
-          <div>
-            <a href="{{ route('auth.login.show') }}">Se connecter</a>
-          </div>
-        </div>
-      @end
-    </div>
   </div>
 
   <!-- <div class="lang-container">
