@@ -19,6 +19,8 @@ router.get('/', [UnescosController, 'index']).as('home').use(middleware.auth())
 
 router.get('/profile', [UnescosController, 'profile']).as('profile.show').use(middleware.auth())
 
+router.get('/site/:id', [UnescosController, 'show']).as('site.show')
+
 router
   .group(() => {
     router.get('/register', [RegisterController, 'show']).as('register.show').use(middleware.guest())
