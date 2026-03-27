@@ -354,25 +354,37 @@ aside {
 
 .action-btn {
   width: 100%;
-  padding: 12px;
-  border-radius: 8px;
+  padding: 14px 20px;
+  border-radius: 12px;
   border: none;
   cursor: pointer;
   font-family: inherit;
-  font-weight: 500;
-  margin-bottom: 10px;
+  font-size: 20px;
+  font-weight: 400;
+  margin-bottom: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  transition:
+    filter 0.2s ease,
+    transform 0.1s ease;
 }
 
 .btn-add {
-  background-color: #6366f1;
+  background-color: #737df3;
   color: white;
 }
 
 .btn-visit {
-  background-color: #334155;
+  background-color: #313644;
   color: white;
 }
-
+.action-btn .material-symbols-outlined {
+  font-size: 32px;
+  color: white;
+  font-variation-settings: 'wght' 400;
+}
 /* --- STATISTIQUES (PIED DE PAGE ASIDE) --- */
 .stats-footer {
   padding: 20px;
