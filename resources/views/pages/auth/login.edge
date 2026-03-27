@@ -1,40 +1,62 @@
 @layout({ title: "Connexion"})
-  <div class="auth-page-container">
-    <h1>
-      Connexion
-    </h1>
+<div class="auth-page-container">
+  <h1>
+    Connexion
+  </h1>
 
-    <form method="POST" action="{{ route('auth.login.store') }}">
-      {{ csrfField() }}
+  <form method="POST" action="{{ route('auth.login.store') }}">
+    {{ csrfField() }}
 
-      <label>
-        <span>Nom d'utilisateur</span>
-        <input
-          type="fullName"
-          name="fullName"
-          value="{{ old('fullName') || '' }}"
-          placeholder="ex. xXx67Erdem67xXx-LFT"
-        />
-        @inputError('fullName')
-          <span class="error-message">{{ $messages.join(', ') }}</span>
-        @end
-      </label>
-
-      <label>
-        <span>Mot de passe</span>
-        <input type="password" name="password" placeholder="••••••••" />
-        @inputError('password')
-          <span class="error-message">{{ $messages.join(', ') }}</span>
-        @end
-      </label>
-
-      <button type="submit" class="form-button">Se connecter</button>
-
-      @error('E_INVALID_CREDENTIALS')
-        <p class="error-message" style="text-align:center; margin-top:1rem;">
-          Identifiants invalides.
-        </p>
+    <label>
+      <span>Nom d'utilisateur</span>
+      <input type="fullName" name="fullName" value="{{ old('fullName') || '' }}"
+        placeholder="ex. xXx67Erdem67xXx-LFT" />
+      @inputError('fullName')
+      <span class="error-message">{{ $messages.join(', ') }}</span>
       @end
-    </form>
-  </div>
+    </label>
+
+    <label>
+      <span>Mot de passe</span>
+      <input type="password" name="password" placeholder="••••••••" />
+      @inputError('password')
+      <span class="error-message">{{ $messages.join(', ') }}</span>
+      @end
+    </label>
+
+    <button type="submit" class="form-button">Se connecter</button>
+
+    @error('E_INVALID_CREDENTIALS')
+    <p class="error-message" style="text-align:center; margin-top:1rem;">
+      Identifiants invalides.
+    </p>
+    @end
+  </form>
+</div>
 @end
+
+<style>
+  .auth-page-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+  }
+
+  h1 {
+    color: white;
+  }
+
+  span {
+    color: white;
+    font-size: 14px;
+  }
+
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    align-items: center;
+  }
+</style>
