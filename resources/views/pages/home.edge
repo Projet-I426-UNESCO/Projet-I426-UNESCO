@@ -96,35 +96,35 @@
       const item = unescosData[index];
       const container = document.getElementById("aside-dynamic-content");
       container.innerHTML = `
-                    <div class="detail-view">
-                        <button class="back-btn" onclick="restoreList()">
-                            <span class="material-symbols-outlined">arrow_back</span>
-                            Retour en arrière
-                        </button>
-
-                        <div class="detail-image-container">
-                        <img src="https://placehold.co/600x400" class="detail-img" >
-                        </div>
-
-                        <div class="detail-view-content">
-                            <h2>${item.nameFr}</h2>
-                            <span class="region">${item.statesNames}, Europe</span>
-
-                            <p class="desc">
-                                ${item.shortDescriptionFr || "Située au large des côtes, cette formation géologique est une structure monumentale unique au monde."}
-                            </p>
-
-                            <button class="action-btn btn-add">
-                                <span class="material-symbols-outlined">add</span>
-                                Ajouter à ma liste
+                        <div class="detail-view">
+                            <button class="back-btn" onclick="restoreList()">
+                                <span class="material-symbols-outlined">arrow_back</span>
+                                Retour en arrière
                             </button>
-                            <button class="action-btn btn-visit">
-                                <span class="material-symbols-outlined">check</span>
-                                Marquer comme visité
-                            </button>
+
+                            <div class="detail-image-container">
+                            <img src="https://placehold.co/600x400" class="detail-img" >
+                            </div>
+
+                            <div class="detail-view-content">
+                                <h2>${item.nameFr}</h2>
+                                <span class="region">${item.statesNames}</span>
+
+                                <p class="desc">
+                                    ${item.shortDescriptionFr || "Située au large des côtes, cette formation géologique est une structure monumentale unique au monde."}
+                                </p>
+
+                                <button class="action-btn btn-add">
+                                    <span class="material-symbols-outlined">add</span>
+                                    Ajouter à ma liste
+                                </button>
+                                <button class="action-btn btn-visit">
+                                    <span class="material-symbols-outlined">check</span>
+                                    Marquer comme visité
+                                </button>
+                            </div>
                         </div>
-                    </div>
-                `;
+                    `;
       container.scrollTop = 0;
     }
 
