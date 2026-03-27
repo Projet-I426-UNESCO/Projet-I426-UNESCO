@@ -168,19 +168,18 @@ header {
 }
 
 .filter-pill.active {
-  color: #ffffff;
+  color: white;
   position: relative;
 }
-
 .filter-pill.active::after {
   content: '';
   position: absolute;
-  bottom: -4px;
+  bottom: -10px;
   left: 20%;
   right: 20%;
-  height: 3px;
-  background-color: #505667;
-  border-radius: 4px;
+  height: 4px;
+  background-color: #222937;
+  border-radius: 2px;
 }
 
 /* --- SÉLECTEUR DE LANGUE --- */
