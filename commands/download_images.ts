@@ -13,11 +13,12 @@ export default class DownloadImages extends BaseCommand {
   static options: CommandOptions = { startApp: true }
 
   async run() {
-    const BASEPATH = 'public/unesco/images'
+    const STOREPATH = 'public/unesco/images'
+    const BASEPATH = 'unesco/images'
 
     // Définition des chemins
-    const publicImagesPath = app.makePath(`${BASEPATH}/main`)
-    const publicImagesThumbPath = app.makePath(`${BASEPATH}/thumb`)
+    const publicImagesPath = app.makePath(`${STOREPATH}/main`)
+    const publicImagesThumbPath = app.makePath(`${STOREPATH}/thumb`)
 
     // Créer le dossier de destination s'il n'existe pas
     await fs.mkdir(publicImagesPath, { recursive: true })
@@ -26,14 +27,13 @@ export default class DownloadImages extends BaseCommand {
     // Récupérer tous les sites de la base de données
     const sites = await Unesco.all()
 
-    this.logger.info(`Début du traitement pour ${sites.length} sites...`)
+    this.logger.info(`${sites.length} sites en traitement`)
 
     for (const site of sites) {
       if (site.mainImageUrl && site.mainImageUrl.startsWith('http')) {
         try {
           const response = await fetch(site.mainImageUrl, {
             headers: {
-              // User-Agent complet simulant un navigateur sur Mac
               'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)',
               'Accept': 'image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8',
               'Accept-Language': 'fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7',
@@ -63,8 +63,9 @@ export default class DownloadImages extends BaseCommand {
             .webp({ quality: 80 })
             .toFile(path.join(publicImagesThumbPath, filenameThumb))
 
-          //site.mainImageUrl = `/images/unesco/${filenameThumb}`
-          //await site.save()
+          site.localImageMain = `${BASEPATH}/main/${filenameHd}`
+          site.localImageThumb = `${BASEPATH}/thumb/${filenameThumb}`
+          await site.save()
 
           this.logger.success(`[${site.idNo}] Succès`)
         } catch (error) {

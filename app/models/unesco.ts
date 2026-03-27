@@ -195,4 +195,11 @@ export default class Unesco extends BaseModel {
 
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   declare updatedAt: DateTime
+
+  //////// LOCAL IMAGES ////////
+  @column()
+  declare localImageMain: string | null
+
+  @column()
+  declare localImageThumb: string | null
 }
