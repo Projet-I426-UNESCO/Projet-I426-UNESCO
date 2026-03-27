@@ -3,6 +3,7 @@
 <head>
   <link rel="stylesheet"
         href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+        <link href="https://api.mapbox.com/mapbox-gl-js/v3.3.0/mapbox-gl.css" rel="stylesheet">
 </head>
 
 <main class="site_main">
@@ -12,9 +13,19 @@
       <p>{{ unesco.shortDescriptionFr }}</p>
     </div>
     <div class="right_page">
-
+      <img src="https://media.sudouest.fr/10126973/1000x625/so-57ece51666a4bd19541a234f-ph0.jpg" alt="" class="site_img">
+      <div class="site_information">
+        <p>Pays : {{ unesco.statesNames }}</p>
+        <p>Date d'inscription : {{ unesco.dateInscribed }}</p>
+        <p>Critères : </p> <a href="https://whc.unesco.org/fr/criteres">{{ unesco.criteriaTxt }}</a>
+        <p>Taille : {{ unesco.areaHectares }} he</p>
+        <p>No de dossier : {{ unesco.idNo }}</p>
+        <p>Catégorie : {{ unesco.category }}</p>
+      </div>
     </div>
   </div>
+  <div id="map">
+        </div>
 </main>
 
 <style>
@@ -23,6 +34,10 @@
 
   html {
     color: white;
+  }
+
+  a {
+    color: #aebfe2ff;
   }
 
 .site_main {
@@ -40,6 +55,36 @@
 
   .right_page {
     background-color: #2c303d;
+    margin-top: 30px;
+    padding: 30px;
+    border-radius: 7px;
   }
+
+  .site_img {
+    width: 100%;
+    border: solid 3px black;
+    border-radius: 7px;
+  }
+
+  .site_information {
+    background-color: #222937;
+    padding: 20px;
+    margin-top: 20px;
+  }
+
 </style>
+<script>
+
+  mapboxgl.accessToken = "pk.eyJ1IjoiNjdza2liaWRpc2NydW0iLCJhIjoiY21sYXdlamR3MGcyOTNlcXoxdHQ2bXliaiJ9.BXx6EzzxvsFrDg5yeo1LUQ";
+
+  const map = new mapboxgl.Map({
+    // Make the map
+    container: "map",
+    style: "mapbox://styles/mapbox/standard",
+    projection: "globe",
+    zoom: 3,
+    center: [ unesco.coordinates.lon, unesco.coordinates.lat ] //TODO : unesco n'est pas chargé
+  });
+
+</script>
 @end
