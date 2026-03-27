@@ -15,7 +15,7 @@ import AuthMiddleware from '#middleware/auth_middleware'
 import router from '@adonisjs/core/services/router'
 import { middleware } from './kernel.js'
 
-router.get('/', [UnescosController, 'index']).as('home').use(middleware.auth())
+router.get('/', [UnescosController, 'index']).as('home').use(middleware.guest())
 
 router.get('/profile', [UnescosController, 'profile']).as('profile.show').use(middleware.auth())
 
