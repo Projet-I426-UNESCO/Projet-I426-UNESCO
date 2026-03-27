@@ -1,6 +1,7 @@
 import type { HttpContext } from '@adonisjs/core/http'
 import Unesco from '#models/unesco'
 import { dd } from '@adonisjs/core/services/dumper'
+import Marker from '#models/marker'
 
 export default class UnescosController {
   /**
@@ -10,8 +11,13 @@ export default class UnescosController {
     await auth.check()
     const unescos = await Unesco.query().exec()
 
+    let markers = null
+    if (auth.user) { // Gets the user's markers if he's logged in
+      markers = await Marker.query().where('user_id', auth.user.id).exec()
+    }
+
     // Appel de la vue
-    return view.render('pages/home', { unescos })
+    return view.render('pages/home', { unescos, markers })
   }
 
   async profile({ view }: HttpContext) {
