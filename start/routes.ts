@@ -29,8 +29,14 @@ router.post('/marker/remove/marked', [MarkersController, 'unmark']).as('marker.u
 
 router
   .group(() => {
-    router.get('/register', [RegisterController, 'show']).as('register.show').use(middleware.guest())
-    router.post('/register', [RegisterController, 'store']).as('register.store').use(middleware.guest())
+    router
+      .get('/register', [RegisterController, 'show'])
+      .as('register.show')
+      .use(middleware.guest())
+    router
+      .post('/register', [RegisterController, 'store'])
+      .as('register.store')
+      .use(middleware.guest())
 
     router.get('/login', [LoginController, 'show']).as('login.show').use(middleware.guest())
     router.post('/login', [LoginController, 'store']).as('login.store').use(middleware.guest())
