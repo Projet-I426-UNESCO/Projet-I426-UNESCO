@@ -56,8 +56,8 @@ export default class DownloadImages extends BaseCommand {
 
           await sharp(buffer)
             .resize({
-              width: 68,
-              height: 68,
+              width: 180,
+              height: 180,
               fit: 'cover',
             })
             .webp({ quality: 80 })
