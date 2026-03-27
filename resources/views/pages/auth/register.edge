@@ -31,6 +31,10 @@
 
     <button type="submit">Register</button>
 
+    <div class="already-has-account">
+      <p>Vous avez déjà un compte ?</p>
+      <p><u><a href="/login">Se connecter</a></u></p>
+    </div>
   </form>
 </div>
 @end
@@ -57,5 +61,19 @@
     flex-direction: column;
     gap: 20px;
     align-items: center;
+  }
+
+  .already-has-account {
+    display: flex;
+    gap: 10px;
+    color: white;
+  }
+
+  .already-has-account p a {
+    color: rgb(255, 255, 255);
+  }
+
+  .already-has-account p {
+    font-size: 14px;
   }
 </style>

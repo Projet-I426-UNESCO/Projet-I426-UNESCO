@@ -26,6 +26,11 @@
 
     <button type="submit" class="form-button">Se connecter</button>
 
+    <div class="no-account-yet">
+      <p>Pas de compte ?</p>
+      <p><u><a href="/register">S'inscrire</a></u></p>
+    </div>
+
     @error('E_INVALID_CREDENTIALS')
     <p class="error-message" style="text-align:center; margin-top:1rem;">
       Identifiants invalides.
@@ -58,5 +63,19 @@
     flex-direction: column;
     gap: 20px;
     align-items: center;
+  }
+
+  .no-account-yet {
+    display: flex;
+    gap: 10px;
+    color: white;
+  }
+
+  .no-account-yet p a {
+    color: rgb(255, 255, 255);
+  }
+
+  .no-account-yet p {
+    font-size: 14px;
   }
 </style>
