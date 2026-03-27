@@ -2,7 +2,6 @@
 <div class="auth-page-container">
   <div class="auth-card">
     <h1>Connexion</h1>
-    <p class="subtitle">Heureux de vous revoir !</p>
 
     <form method="POST" action="{{ route('auth.login.store') }}">
       {{ csrfField() }}
@@ -18,14 +17,12 @@
       <div class="input-group">
         <div class="password-wrapper">
           <input type="password" name="password" placeholder="Mot de passe" required />
-          <button type="button" class="toggle-password">Afficher</button>
         </div>
         @inputError('password')
         <span class="error-text">{{ $messages.join(', ') }}</span>
         @end
       </div>
 
-      <a href="#" class="forgot-password">Mot de passe oublié ?</a>
 
       <button type="submit" class="btn-primary">Se connecter</button>
 
@@ -43,116 +40,55 @@
 @end
 
 <style>
-  :root {
-    --primary: #6366f1;
-    --text-main: #111827;
-    --text-muted: #6b7280;
-    --border: #d1d5db;
-  }
-
   .auth-page-container {
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    display: grid;
+    place-items: center;
     min-height: 100vh;
-    font-family: sans-serif;
-  }
-
-  .auth-card {
-    background: white;
-    padding: 2.5rem;
-    border-radius: 12px;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-    width: 100%;
-    max-width: 400px;
-  }
-
-  h1 {
-    font-size: 1.8rem;
-    font-weight: 700;
-    color: var(--text-main);
-    margin-bottom: 0.5rem;
-  }
-
-  .subtitle {
-    color: var(--text-muted);
-    margin-bottom: 2rem;
   }
 
   form {
     display: flex;
     flex-direction: column;
-    gap: 1.2rem;
+    gap: 1rem;
   }
 
-  .input-group input {
-    width: 100%;
+  .auth-card {
+    background: rgb(235, 235, 235);
+    padding: 2rem;
+    border-radius: 7px;
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+    box-shadow: 0 10px 25px rgba(255, 255, 255, 0.2);
+  }
+
+  input {
     padding: 12px;
-    border: 1px solid var(--border);
+    border: 1px solid #ddd;
     border-radius: 8px;
-    font-size: 1rem;
-    box-sizing: border-box;
+    font-size: 16px;
+    width: 350px;
+    background-color: rgb(245, 245, 245);
   }
 
-  .password-wrapper {
-    position: relative;
-  }
-
-  .toggle-password {
-    position: absolute;
-    right: 12px;
-    top: 50%;
-    transform: translateY(-50%);
-    background: none;
+  .btn {
+    background: #6366f1;
+    color: white;
     border: none;
-    color: var(--primary);
-    font-weight: 600;
+    padding: 12px;
+    border-radius: 25px;
+    font-weight: bold;
     cursor: pointer;
-    font-size: 0.85rem;
   }
 
-  .forgot-password {
-    color: var(--primary);
+  .link {
+    color: #6366f1;
     text-decoration: none;
     font-weight: 600;
-    font-size: 0.9rem;
-    align-self: flex-start;
   }
 
-  .btn-primary {
-    background-color: var(--primary);
-    padding: 14px;
-    border: none;
-    border-radius: 50px;
-    /* Style arrondi comme l'image */
-    font-size: 1rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: opacity 0.2s;
-  }
-
-  .btn-primary:hover {
-    opacity: 0.9;
-  }
-
-  .auth-footer {
-    margin-top: 2rem;
-    text-align: center;
-    font-size: 0.95rem;
-    padding-top: 1.5rem;
-  }
-
-  .auth-footer a {
-    color: var(--primary);
-    text-decoration: none;
-    font-weight: 600;
-    margin-left: 5px;
-  }
-
-  .error-text,
-  .error-message {
-    color: #ef4444;
-    font-size: 0.85rem;
-    margin-top: 5px;
+  h1 {
+    margin: 0;
+    font-size: 1.5rem;
   }
 </style>
