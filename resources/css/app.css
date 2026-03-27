@@ -1,4 +1,8 @@
-/* --- VARIABLES ET CONFIGURATION GLOBALE --- */
+@import url('https://fonts.googleapis.com/css2?family=K2D:wght@300;400;500&display=swap');
+* {
+  font-family: 'K2D', sans-serif;
+}
+
 :root {
   --primary: #2563eb;
   --primary-hover: #1d4ed8;
@@ -13,12 +17,9 @@
 }
 
 @import url('https://fonts.googleapis.com/css2?family=K2D:wght@300;400;500&display=swap');
-
 * {
   font-family: 'K2D', sans-serif;
-  box-sizing: border-box;
 }
-
 body {
   margin: 0;
   display: grid;
