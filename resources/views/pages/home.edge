@@ -7,9 +7,26 @@
         </div>
       </div>
       <div class="controls" style="position:absolute; top:10px; left:10px; z-index:10;">
-        <div>
-          <input type="checkbox" id="markerToggle" class="chckbx-toggle" />
-          Show/Hide All Markers
+        <div class="search-container">
+          <div class="search-pill">
+            <span class="material-symbols-outlined" style="font-size: 24px !important; color: white;">search</span>
+            <input type="text" placeholder="Rechercher un site..." />
+          </div>
+
+          <div class="filter-pill active">
+            <span>Normal</span>
+          </div>
+          <div class="filter-pill">
+            <span>à visiter</span>
+          </div>
+          <div class="filter-pill">
+            <span>visités</span>
+          </div>
+
+          <label class="toggle-pill" for="markerToggle">
+            <input type="checkbox" id="markerToggle" class="chckbx-toggle" checked />
+            <span>Show/Hide All Markers</span>
+          </label>
         </div>
       </div>
     </div>
@@ -38,7 +55,14 @@
     </aside>
   </main>
   <script>
-    // Gets all the markers 
+    document.querySelectorAll(".filter-pill").forEach(pill => {
+      pill.addEventListener("click", () => {
+        document.querySelectorAll(".filter-pill").forEach(p => p.classList.remove("active"));
+        pill.classList.add("active");
+      });
+    });
+    // Gets all the markers
+
     const unescosData = {{{ JSON.stringify(unescos) }}};
 
     mapboxgl.accessToken = "pk.eyJ1IjoiNjdza2liaWRpc2NydW0iLCJhIjoiY21sYXdlamR3MGcyOTNlcXoxdHQ2bXliaiJ9.BXx6EzzxvsFrDg5yeo1LUQ";
@@ -51,7 +75,7 @@
       zoom: 1.8,
       center: [ 10, 20 ]
     });
-    // Gets the checkbox toggle 
+    // Gets the checkbox toggle
 
     document.getElementById("markerToggle").addEventListener("click", () => {
       // Toggles the markers

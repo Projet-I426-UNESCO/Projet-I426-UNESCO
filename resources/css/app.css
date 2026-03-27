@@ -117,7 +117,60 @@ header a {
   color: #9ca3af;
   font-variation-settings: 'wght' 300;
 }
+.search-container {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
 
+.search-pill,
+.filter-pill {
+  background-color: #222937;
+  border-radius: 50px;
+  display: flex;
+  align-items: center;
+  padding: 10px 20px;
+  color: #9ca3af; /* Dimmed color for inactive */
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+/* When active, make text white and add the bottom bar */
+.filter-pill.active {
+  color: white;
+  position: relative;
+  background-color: #313a4f; /* Slightly lighter to show it's selected */
+}
+
+.filter-pill.active::after {
+  content: '';
+  position: absolute;
+  bottom: -5px; /* Adjusted so it's visible */
+  left: 25%;
+  right: 25%;
+  height: 3px;
+  background-color: #3b82f6; /* Changed to a blue/active color */
+  border-radius: 2px;
+}
+
+.search-pill input {
+  background: transparent;
+  border: none;
+  color: white;
+  outline: none;
+  margin-left: 10px;
+  font-size: 18px;
+  width: 250px;
+}
+
+.chckbx-toggle {
+  background: none;
+  border: none;
+  color: inherit;
+  cursor: pointer;
+  font-size: inherit;
+  padding: 0;
+}
 .lang-container {
   position: relative;
   margin-bottom: 20px;
@@ -480,3 +533,61 @@ a {
   overflow: hidden;
 }
 /* Adaptabilité Mobile */
+.search-container {
+  display: flex;
+  gap: 12px;
+  align-items: center; /* Ensures everything stays level */
+  flex-wrap: wrap;
+}
+
+.search-pill,
+.filter-pill,
+.toggle-pill {
+  background-color: #222937;
+  border-radius: 50px;
+  display: flex;
+  align-items: center;
+  padding: 10px 20px;
+  color: #9ca3af;
+  cursor: pointer;
+  user-select: none;
+  font-family: sans-serif;
+}
+
+/* Specific styles for the checkbox pill */
+.toggle-pill {
+  gap: 8px;
+  color: white; /* Making the text white to stand out */
+  font-size: 14px;
+}
+
+.toggle-pill input {
+  cursor: pointer;
+  accent-color: #3b82f6; /* Optional: gives the checkbox a blue pop */
+}
+
+.filter-pill.active {
+  color: white;
+  position: relative;
+}
+
+.filter-pill.active::after {
+  content: '';
+  position: absolute;
+  bottom: -10px;
+  left: 20%;
+  right: 20%;
+  height: 4px;
+  background-color: #222937;
+  border-radius: 2px;
+}
+
+.search-pill input {
+  background: transparent;
+  border: none;
+  color: white;
+  outline: none;
+  margin-left: 10px;
+  font-size: 18px;
+  width: 300px;
+}
