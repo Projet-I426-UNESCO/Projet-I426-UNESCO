@@ -14,8 +14,6 @@
   --font-size-h3: clamp(1.5rem, 1.3rem + 1vw, 2.25rem);
 }
 
-
-
 * {
   font-family: 'K2D', sans-serif;
   box-sizing: border-box;
@@ -109,6 +107,7 @@ header {
 
 /* --- BARRE DE RECHERCHE ET FILTRES (CONTROLS) --- */
 .controls {
+  user-select: none;
   position: absolute;
   top: 0;
   left: 0;
