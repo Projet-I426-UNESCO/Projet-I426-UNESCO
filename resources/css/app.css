@@ -113,13 +113,17 @@ header {
   top: 0;
   left: 0;
   width: 100%;
-  padding: 15px 25px;
+  padding: 15px 60px 15px 25px;
   display: flex;
   justify-content: space-between;
   align-items: center;
   z-index: 10;
+  pointer-events: none;
 }
-
+.search-container,
+.user-profile {
+  pointer-events: auto;
+}
 .search-container {
   display: flex;
   gap: 12px;
