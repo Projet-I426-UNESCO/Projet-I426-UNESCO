@@ -4,6 +4,9 @@ import unescoSeeder from '#database/seeders/unesco_seeder';
 import db from '@adonisjs/lucid/services/db';
 import { getData, UNESCO_URL } from '../commands/get_data.js';
 
+// command for tst : node ace scheduler:run
+// command in production :node ace scheduler:work
+
 
 scheduler.call(async () => {
     // pull the data from the unesco api

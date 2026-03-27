@@ -1,0 +1,45 @@
+@layout('components/layout/index', { title: 'Accueil', page: title })
+
+<head>
+  <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+</head>
+
+<main class="site_main">
+  <div class="site_grid">
+    <div class="left_page">
+      <h1>{{ unesco.nameFr}}</h1>
+      <p>{{ unesco.shortDescriptionFr }}</p>
+    </div>
+    <div class="right_page">
+
+    </div>
+  </div>
+</main>
+
+<style>
+  
+  @import url("https://fonts.googleapis.com/css2?family=K2D:wght@300;400;500&display=swap");
+
+  html {
+    color: white;
+  }
+
+.site_main {
+  padding: 100px 100px 0 100px;
+  background-color: #2c303d;
+  height: 100vh;
+}
+
+  .site_grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    background-color: #222937;
+    padding: 10px
+  }
+
+  .right_page {
+    background-color: #2c303d;
+  }
+</style>
+@end

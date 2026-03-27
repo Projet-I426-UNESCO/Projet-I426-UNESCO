@@ -11,6 +11,12 @@ export default class Marker extends BaseModel {
   @column()
   declare userId: number // Colonne correspondant à la clé étrangère
 
+  @column()
+  declare isMarked: boolean
+
+  @column()
+  declare isVisited: boolean
+
   @belongsTo(() => User)
   declare user: BelongsTo<typeof User> // Relation vers le modèle User
 
