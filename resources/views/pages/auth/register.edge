@@ -1,4 +1,5 @@
 @layout({ title: "Inscription"})
+<div class="auth-page-container">
   <h1>Register</h1>
 
   <form method="POST" action="{{ route('auth.register.store') }}">
@@ -8,7 +9,7 @@
       <span>Full Name</span>
       <input type="text" name="fullName" value="{{ old('fullName') || '' }}" />
       @inputError('fullName')
-        {{ $messages.join(', ')}}
+      {{ $messages.join(', ')}}
       @end
     </label>
 
@@ -16,7 +17,7 @@
       <span>Email</span>
       <input type="email" name="email" value="{{ old('email') || '' }}" />
       @inputError('email')
-        {{ $messages.join(', ')}}
+      {{ $messages.join(', ')}}
       @end
     </label>
 
@@ -24,11 +25,55 @@
       <span>Password</span>
       <input type="password" name="password" value="{{ old('password') || '' }}" />
       @inputError('password')
-        {{ $messages.join(', ')}}
+      {{ $messages.join(', ')}}
       @end
     </label>
 
     <button type="submit">Register</button>
 
+    <div class="already-has-account">
+      <p>Vous avez déjà un compte ?</p>
+      <p><u><a href="/login">Se connecter</a></u></p>
+    </div>
   </form>
+</div>
 @end
+<style>
+  .auth-page-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+  }
+
+  h1 {
+    color: white;
+  }
+
+  span {
+    color: white;
+    font-size: 14px;
+  }
+
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    align-items: center;
+  }
+
+  .already-has-account {
+    display: flex;
+    gap: 10px;
+    color: white;
+  }
+
+  .already-has-account p a {
+    color: rgb(255, 255, 255);
+  }
+
+  .already-has-account p {
+    font-size: 14px;
+  }
+</style>
