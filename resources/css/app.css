@@ -1,8 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=K2D:wght@300;400;500&display=swap');
-* {
-  font-family: 'K2D', sans-serif;
-}
-
+/* --- VARIABLES ET CONFIGURATION GLOBALE --- */
 :root {
   --primary: #2563eb;
   --primary-hover: #1d4ed8;
@@ -17,9 +13,12 @@
 }
 
 @import url('https://fonts.googleapis.com/css2?family=K2D:wght@300;400;500&display=swap');
+
 * {
   font-family: 'K2D', sans-serif;
+  box-sizing: border-box;
 }
+
 body {
   margin: 0;
   display: grid;
@@ -36,11 +35,9 @@ a {
 /* --- MISE EN PAGE PRINCIPALE (GRID) --- */
 .home-main {
   display: grid;
-  grid-template-columns: 1fr 344px;
+  grid-template-columns: 1fr auto;
   grid-template-rows: 100vh;
   overflow: hidden;
-  height: 100vh;
-  min-width: 0;
 }
 
 .explorer-container {
