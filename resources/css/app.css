@@ -14,8 +14,6 @@
   --font-size-h3: clamp(1.5rem, 1.3rem + 1vw, 2.25rem);
 }
 
-
-
 * {
   font-family: 'K2D', sans-serif;
   box-sizing: border-box;
@@ -55,9 +53,6 @@ a {
 header {
   background-color: #1e2533;
   color: #d1d5db;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
   align-items: center;
   padding: 20px 0;
   background-image:
