@@ -24,7 +24,7 @@
           </div>
 
           <label class="toggle-pill" for="markerToggle">
-            <input type="checkbox" id="markerToggle" checked />
+            <input type="checkbox" id="markerToggle" />
             <span>Markers</span>
           </label>
         </div>
@@ -53,10 +53,10 @@
               <a href="{{ route('auth.login.show') }}" class="auth-pill login">
                 <span class="material-symbols-outlined">login</span>
                 Se connecter
-      </a>
+              </a>
               <a href="{{ route('auth.register.show') }}" class="auth-pill register">
                 Créer un compte
-      </a>
+              </a>
             </div>
           @end
         </div>
@@ -65,13 +65,12 @@
 
     <aside>
       <div id="aside-dynamic-content">
-        @each(unesco in unescos)
+        @each((unesco, index) in unescos)
           @if(unesco.coordinates)
             <div
               class="site-card"
-              onclick="zoomToLocation({{ unesco.coordinates.lon }}, {{ unesco.coordinates.lat }}), loadMarker({{ unesco.coordinates.lon }}, {{ unesco.coordinates.lat }})"
+              onclick="handleCardClick({{ index }}, {{ unesco.coordinates.lon }}, {{ unesco.coordinates.lat }})"
             >
-              {{--  <!-- <img src="{{ unesco.mainImageUrl }}" /> -->  --}}
               <div class="card-info">
                 <h4>
                   {{ unesco.nameFr }}
@@ -87,6 +86,52 @@
     </aside>
   </main>
   <script>
+    const initialAsideContent = document.getElementById("aside-dynamic-content").innerHTML;
+
+    function handleCardClick(index, lon, lat) {
+      // 1. Zoom et Marker (Tes fonctions originales)
+      zoomToLocation(lon, lat);
+      loadMarker(lon, lat);
+      // 2. Extension de la carte (Vue détaillée)
+      const item = unescosData[index];
+      const container = document.getElementById("aside-dynamic-content");
+      container.innerHTML = `
+                        <div class="detail-view">
+                            <button class="back-btn" onclick="restoreList()">
+                                <span class="material-symbols-outlined">arrow_back</span>
+                                Retour en arrière
+                            </button>
+
+                            <div class="detail-image-container">
+                            <img src="https://placehold.co/600x400" class="detail-img" >
+                            </div>
+
+                            <div class="detail-view-content">
+                                <h2>${item.nameFr}</h2>
+                                <span class="region">${item.statesNames}</span>
+
+                                <p class="desc">
+                                    ${item.shortDescriptionFr || "Située au large des côtes, cette formation géologique est une structure monumentale unique au monde."}
+                                </p>
+
+                                <button class="action-btn btn-add">
+                                    <span class="material-symbols-outlined">add</span>
+                                    Ajouter à ma liste
+                                </button>
+                                <button class="action-btn btn-visit">
+                                    <span class="material-symbols-outlined">check</span>
+                                    Marquer comme visité
+                                </button>
+                            </div>
+                        </div>
+                    `;
+      container.scrollTop = 0;
+    }
+
+    function restoreList() {
+      document.getElementById("aside-dynamic-content").innerHTML = initialAsideContent;
+    }
+
     document.querySelectorAll(".filter-pill").forEach(pill => {
       pill.addEventListener("click", () => {
         document.querySelectorAll(".filter-pill").forEach(p => p.classList.remove("active"));
@@ -121,12 +166,15 @@
     });
 
     let markerInstances = [];
+
     let markersVisible = true;
 
     const allMarkersColor = "#61afef";
+
     const visitedMarkersColor = "#fe8d50";
 
     function markAsMarked() {}
+
     function markAsVisited() {}
 
     function loadMarkers(unescos) {
