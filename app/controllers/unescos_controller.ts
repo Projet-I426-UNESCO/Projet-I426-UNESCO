@@ -12,14 +12,17 @@ export default class UnescosController {
     const unescos = await Unesco.query().exec()
 
     let markers = null
-    if (auth.user) { // Gets the user's markers if he's logged in
+    if (auth.user) {
+      // Gets the user's markers if he's logged in
       markers = await Marker.query().where('user_id', auth.user.id).exec()
     }
 
     // Appel de la vue
     return view.render('pages/home', { unescos, markers })
   }
-
+  async sites({ view }: HttpContext) {
+    return view.render('pages/sites')
+  }
   async profile({ view }: HttpContext) {
     return view.render('pages/profile')
   }
@@ -37,7 +40,6 @@ export default class UnescosController {
    * Show individual record
    */
   async show({ params, view }: HttpContext) {
-    
     const unesco = await Unesco.query().where('id', params.id).firstOrFail()
 
     return view.render('pages/site', { unesco })

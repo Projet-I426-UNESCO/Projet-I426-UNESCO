@@ -1,0 +1,25 @@
+@layout('components/layout/index', { title: 'Sites', page: 'sites' })
+
+  <main class="sites-main">
+    <div class="sites-grid">
+      @each((unesco) in unescos)
+        <a href="{{ route('site.show', { id: unesco.id }) }}" class="site-box">
+          @if(unesco.localImageThumb)
+            <img src="{{ unesco.localImageThumb }}" class="site-box-img" />
+          @else
+            <img src="https://placehold.co/300x200" class="site-box-img" />
+          @end
+          <div class="site-box-info">
+            <h3>
+              {{ unesco.nameFr }}
+            </h3>
+            <p>
+              {{ unesco.statesNames }}
+            </p>
+          </div>
+        </a>
+      @end
+    </div>
+  </main>
+
+@end
