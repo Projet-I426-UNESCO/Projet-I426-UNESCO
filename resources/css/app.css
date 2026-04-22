@@ -264,10 +264,10 @@ aside {
   padding: 15px 15px 0 15px;
 }
 .stats-footer-container {
-  background-color: #141827; /* Même couleur que l'aside */
+  background-color: #141827;
   padding: 20px 15px;
-  border-top: 1px solid rgba(255, 255, 255, 0.1); /* Ligne de séparation */
-  flex-shrink: 0; /* Empêche la réduction de la zone */
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  flex-shrink: 0;
 }
 
 .stats-title {
@@ -294,7 +294,7 @@ aside {
 }
 
 .stat-number {
-  color: #737df3; /* Couleur bleue des chiffres sur votre image */
+  color: #737df3;
   font-size: 32px;
   font-weight: 600;
   line-height: 1;
@@ -355,7 +355,9 @@ aside {
   line-height: 1.3;
   word-break: break-word;
 }
-
+.region {
+  word-break: break-word;
+}
 /* --- VUE DÉTAILLÉE --- */
 .back-btn {
   display: flex;
@@ -563,7 +565,7 @@ aside {
 /* Logged In State */
 .auth-pill.logged-in {
   background-color: #2b2d3c;
-  padding: 4px 4px 4px 12px; /* Less left padding to balance logout btn */
+  padding: 4px 4px 4px 12px;
   border-radius: 50px;
   display: flex;
   align-items: center;
