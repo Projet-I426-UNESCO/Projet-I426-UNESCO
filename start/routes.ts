@@ -22,10 +22,8 @@ router.get('/profile', [UnescosController, 'profile']).as('profile.show').use(mi
 
 router.get('/site/:id', [UnescosController, 'show']).as('site.show')
 
-router.post('/marker/add/visited', [MarkersController, 'visit']).as('marker.visit')
-router.post('/marker/add/marked', [MarkersController, 'mark']).as('marker.mark')
-router.post('/marker/remove/visited', [MarkersController, 'unvisit']).as('marker.unvisit')
-router.post('/marker/remove/marked', [MarkersController, 'unmark']).as('marker.unmark')
+router.post('/marker/add/visited/:unescoId', [MarkersController, 'visit']).as('marker.visit')
+router.post('/marker/add/marked/:unescoId', [MarkersController, 'mark']).as('marker.mark')
 
 router
   .group(() => {
