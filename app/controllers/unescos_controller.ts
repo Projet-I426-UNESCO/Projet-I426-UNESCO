@@ -21,7 +21,8 @@ export default class UnescosController {
     return view.render('pages/home', { unescos, markers })
   }
   async sites({ view }: HttpContext) {
-    return view.render('pages/sites')
+    const unescos = await Unesco.query().exec()
+    return view.render('pages/sites', { unescos })
   }
   async profile({ view }: HttpContext) {
     return view.render('pages/profile')
