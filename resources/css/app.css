@@ -54,9 +54,11 @@ a {
 header {
   width: var(--sidebar-width);
   min-width: var(--sidebar-width);
+  height: 100vh;
   background-color: #1e2533;
   color: #d1d5db;
-  align-items: center;
+  display: flex;
+  flex-direction: column;
   padding: 20px 0;
   background-image:
     linear-gradient(rgba(255, 0, 0, 0.05) 1px, transparent 1px),
@@ -64,12 +66,16 @@ header {
   background-size: 20px 20px;
   border-right: 1px solid #334155;
   position: relative;
+  box-sizing: border-box;
+  overflow: visible;
 }
 
 .top-nav {
   width: 100%;
   text-align: center;
-  height: 95vh;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
 }
 
 .logo h1 {
@@ -187,7 +193,8 @@ header {
 /* --- SÉLECTEUR DE LANGUE --- */
 .lang-container {
   position: relative;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
+  user-select: none;
 }
 
 .language-picker {
@@ -203,9 +210,9 @@ header {
 
 .lang-popup {
   position: absolute;
-  bottom: 60px;
-  left: 50%;
-  transform: translateX(-50%) translateY(10px);
+  bottom: 30px;
+  right: -25px;
+  transform: translateY(10px);
   background-color: #1e2533;
   border: 1px solid #334155;
   border-radius: 12px;
@@ -221,7 +228,7 @@ header {
 .lang-popup.show {
   opacity: 1;
   visibility: visible;
-  transform: translateX(-50%) translateY(0);
+  transform: translateY(0);
 }
 
 .lang-option {
@@ -264,10 +271,10 @@ aside {
   padding: 15px 15px 0 15px;
 }
 .stats-footer-container {
-  background-color: #141827; /* Même couleur que l'aside */
+  background-color: #141827;
   padding: 20px 15px;
-  border-top: 1px solid rgba(255, 255, 255, 0.1); /* Ligne de séparation */
-  flex-shrink: 0; /* Empêche la réduction de la zone */
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  flex-shrink: 0;
 }
 
 .stats-title {
@@ -294,7 +301,7 @@ aside {
 }
 
 .stat-number {
-  color: #737df3; /* Couleur bleue des chiffres sur votre image */
+  color: #737df3;
   font-size: 32px;
   font-weight: 600;
   line-height: 1;
@@ -355,7 +362,9 @@ aside {
   line-height: 1.3;
   word-break: break-word;
 }
-
+.region {
+  word-break: break-word;
+}
 /* --- VUE DÉTAILLÉE --- */
 .back-btn {
   display: flex;
@@ -563,7 +572,7 @@ aside {
 /* Logged In State */
 .auth-pill.logged-in {
   background-color: #2b2d3c;
-  padding: 4px 4px 4px 12px; /* Less left padding to balance logout btn */
+  padding: 4px 4px 4px 12px;
   border-radius: 50px;
   display: flex;
   align-items: center;
