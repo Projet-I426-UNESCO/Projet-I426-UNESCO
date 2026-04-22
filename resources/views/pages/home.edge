@@ -1,272 +1,270 @@
 @layout('components/layout/index', { title: 'Accueil', page: 'home' })
 
-  <main class="home-main">
-    <div class="explorer-container">
-      <div class="map-container">
-        <div id="map">
+<main class="home-main">
+  <div class="explorer-container">
+    <div class="map-container">
+      <div id="map">
+      </div>
+    </div>
+    <div class="controls">
+      <div class="search-container">
+        <div class="search-pill">
+          <span class="material-symbols-outlined">search</span>
+          <input type="text" placeholder="Rechercher un site..." />
+        </div>
+
+        <div class="filter-pill active">
+          <span>Sites</span>
+        </div>
+        <div class="filter-pill">
+          <span>À visiter</span>
+        </div>
+        <div class="filter-pill">
+          <span>Visités</span>
+        </div>
+
+        <label class="toggle-pill" for="markerToggle">
+          <input type="checkbox" id="markerToggle" />
+          <span>Markers</span>
+        </label>
+      </div>
+
+      <div class="user-profile">
+        @if(auth.user)
+        <div class="auth-pill logged-in">
+          <a href="{{ route('profile.show') }}" class="user-trigger">
+            <div class="avatar-circle">
+              {{-- {{ auth.user.avatar("backend, faites-le") }} --}}
+            </div>
+            <div class="user-details">
+              <span class="user-name">{{ auth.user.fullName }}</span>
+            </div>
+          </a>
+          <form method="POST" action="{{ route('auth.logout') }}">
+            {{ csrfField() }}
+            <button type="submit" class="logout-icon-btn" title="Se déconnecter">
+              <span class="material-symbols-outlined">logout</span>
+            </button>
+          </form>
+        </div>
+        @else
+        <div class="auth-pill-group">
+          <a href="{{ route('auth.login.show') }}" class="auth-pill login">
+            <span class="material-symbols-outlined">login</span>
+            Se connecter
+          </a>
+          <a href="{{ route('auth.register.show') }}" class="auth-pill register">
+            Créer un compte
+          </a>
+        </div>
+        @end
+      </div>
+    </div>
+  </div>
+
+  <aside>
+    <div id="aside-dynamic-content">
+      @each((unesco, index) in unescos)
+      @if(unesco.coordinates)
+      <div class="site-card"
+        onclick="handleCardClick({{ index }}, {{ unesco.id }}, {{ unesco.coordinates.lon }}, {{ unesco.coordinates.lat }})">
+        <div class="card-info">
+          @if(unesco.localImageThumb)
+          <img src="{{ unesco.localImageThumb }}" class="card-img" />
+          @else
+          <img src="https://placehold.co/600x400" class="card-img" />
+          @end
+          <h4>
+            {{ unesco.nameFr }}
+          </h4>
+          <p>
+            {{ unesco.statesNames }}
+          </p>
         </div>
       </div>
-      <div class="controls">
-        <div class="search-container">
-          <div class="search-pill">
-            <span class="material-symbols-outlined">search</span>
-            <input type="text" placeholder="Rechercher un site..." />
-          </div>
-
-          <div class="filter-pill active">
-            <span>Sites</span>
-          </div>
-          <div class="filter-pill">
-            <span>À visiter</span>
-          </div>
-          <div class="filter-pill">
-            <span>Visités</span>
-          </div>
-
-          <label class="toggle-pill" for="markerToggle">
-            <input type="checkbox" id="markerToggle" />
-            <span>Markers</span>
-          </label>
+      @end
+      @end
+    </div>
+    <div class="stats-footer-container">
+      <h3 class="stats-title">
+        Mes statistiques
+      </h3>
+      <div class="stats-grid">
+        <div class="stat-box">
+          <span class="stat-number">13/160</span>
+          <span class="stat-label">Site visités</span>
         </div>
-
-        <div class="user-profile">
-          @if(auth.user)
-            <div class="auth-pill logged-in">
-              <a href="{{ route('profile.show') }}" class="user-trigger">
-                <div class="avatar-circle">
-                  {{-- {{ auth.user.avatar("backend, faites-le") }} --}}
-                </div>
-                <div class="user-details">
-                  <span class="user-name">{{ auth.user.fullName }}</span>
-                </div>
-              </a>
-              <form method="POST" action="{{ route('auth.logout') }}">
-                {{ csrfField() }}
-            <button type="submit" class="logout-icon-btn" title="Se déconnecter">
-                  <span class="material-symbols-outlined">logout</span>
-                </button>
-              </form>
-            </div>
-          @else
-            <div class="auth-pill-group">
-              <a href="{{ route('auth.login.show') }}" class="auth-pill login">
-                <span class="material-symbols-outlined">login</span>
-                Se connecter
-          </a>
-              <a href="{{ route('auth.register.show') }}" class="auth-pill register">
-                Créer un compte
-          </a>
-            </div>
-          @end
+        <div class="stat-box">
+          <span class="stat-number">7/192</span>
+          <span class="stat-label">Pays visités</span>
         </div>
       </div>
     </div>
+  </aside>
+</main>
+<template id="unesco-detail-template">
+  @!unesco.detail()
+</template>
+<script>
+  const initialAsideContent = document.getElementById("aside-dynamic-content").innerHTML;
 
-    <aside>
-      <div id="aside-dynamic-content">
-        @each((unesco, index) in unescos)
-          @if(unesco.coordinates)
-            <div
-              class="site-card"
-              onclick="handleCardClick({{ index }}, {{ unesco.id }}, {{ unesco.coordinates.lon }}, {{ unesco.coordinates.lat }})"
-            >
-              <div class="card-info">
-                @if(unesco.localImageThumb)
-                  <img src="{{ unesco.localImageThumb }}" class="card-img" />
-                @else
-                  <img src="https://placehold.co/600x400" class="card-img" />
-                @end
-                <h4>
-                  {{ unesco.nameFr }}
-                </h4>
-                <p>
-                  {{ unesco.statesNames }}
-                </p>
-              </div>
-            </div>
-          @end
-        @end
-      </div>
-      <div class="stats-footer-container">
-        <h3 class="stats-title">
-          Mes statistiques
-        </h3>
-        <div class="stats-grid">
-          <div class="stat-box">
-            <span class="stat-number">13/160</span>
-            <span class="stat-label">Site visités</span>
-          </div>
-          <div class="stat-box">
-            <span class="stat-number">7/192</span>
-            <span class="stat-label">Pays visités</span>
-          </div>
-        </div>
-      </div>
-    </aside>
-  </main>
-  <template id="unesco-detail-template">
-    @!unesco.detail()
-  </template>
-  <script>
-    const initialAsideContent = document.getElementById("aside-dynamic-content").innerHTML;
+  function handleCardClick(index, lon, lat) {
+    zoomToLocation(lon, lat);
+    loadMarker(lon, lat);
+    const item = unescosData[index];
+    const container = document.getElementById("aside-dynamic-content");
+    if (!initialAsideContent) {
+      initialAsideContent = container.innerHTML;
+    }
+    const templateHtml = document.getElementById("unesco-detail-template").innerHTML;
+    const renderedHtml = new Function("item", `return \`${templateHtml}\``)(item);
+    container.innerHTML = renderedHtml;
+    container.scrollTop = 0;
+  }
 
-    function handleCardClick(index, lon, lat) {
-      zoomToLocation(lon, lat);
-      loadMarker(lon, lat);
-      const item = unescosData[index];
+  function restoreList() {
+    if (initialAsideContent) {
       const container = document.getElementById("aside-dynamic-content");
-      if (!initialAsideContent) {
-        initialAsideContent = container.innerHTML;
+      container.innerHTML = initialAsideContent;
+      initialAsideContent = "";
+    }
+  }
+
+  document.querySelectorAll(".filter-pill").forEach(pill => {
+    pill.addEventListener("click", () => {
+      document.querySelectorAll(".filter-pill").forEach(p => p.classList.remove("active"));
+      pill.classList.add("active");
+    });
+  });
+
+  const unescosData = {{{ JSON.stringify(unescos) }}};
+
+  mapboxgl.accessToken = "pk.eyJ1IjoiNjdza2liaWRpc2NydW0iLCJhIjoiY21sYXdlamR3MGcyOTNlcXoxdHQ2bXliaiJ9.BXx6EzzxvsFrDg5yeo1LUQ";
+
+  const map = new mapboxgl.Map({
+    container: "map",
+    style: "mapbox://styles/mapbox/standard",
+    projection: "globe",
+    zoom: 1.8,
+    center: [10, 20]
+  });
+
+  document.getElementById("markerToggle").addEventListener("click", () => {
+    toggleMarkers();
+  });
+
+  map.on("load", () => {
+    loadMarkers(unescosData);
+    toggleMarkers();
+  });
+
+  let markerInstances = [];
+
+  let markersVisible = true;
+
+  const allMarkersColor = "#61afef";
+
+  const visitedMarkersColor = "#fe8d50";
+
+  function markAsMarked() { }
+
+  function markAsVisited() { }
+
+  function loadMarkers(unescos) {
+    markerInstances.forEach(m => m.remove());
+    markerInstances = [];
+    unescos.forEach(heritage => {
+      if (heritage.coordinates) {
+        const marker = new mapboxgl.Marker({
+          color: allMarkersColor
+        }).setLngLat([heritage.coordinates.lon, heritage.coordinates.lat]).addTo(map);
+        markerInstances.push(marker);
       }
-      const templateHtml = document.getElementById("unesco-detail-template").innerHTML;
-      const renderedHtml = new Function("item", `return \`${templateHtml}\``)(item);
-      container.innerHTML = renderedHtml;
-      container.scrollTop = 0;
-    }
-
-    function restoreList() {
-      if (initialAsideContent) {
-        const container = document.getElementById("aside-dynamic-content");
-        container.innerHTML = initialAsideContent;
-        initialAsideContent = "";
-      }
-    }
-
-    document.querySelectorAll(".filter-pill").forEach(pill => {
-      pill.addEventListener("click", () => {
-        document.querySelectorAll(".filter-pill").forEach(p => p.classList.remove("active"));
-        pill.classList.add("active");
-      });
     });
+  }
 
-    const unescosData = {{{ JSON.stringify(unescos) }}};
-
-    mapboxgl.accessToken = "pk.eyJ1IjoiNjdza2liaWRpc2NydW0iLCJhIjoiY21sYXdlamR3MGcyOTNlcXoxdHQ2bXliaiJ9.BXx6EzzxvsFrDg5yeo1LUQ";
-
-    const map = new mapboxgl.Map({
-      container: "map",
-      style: "mapbox://styles/mapbox/standard",
-      projection: "globe",
-      zoom: 1.8,
-      center: [ 10, 20 ]
-    });
-
-    document.getElementById("markerToggle").addEventListener("click", () => {
-      toggleMarkers();
-    });
-
-    map.on("load", () => {
-      loadMarkers(unescosData);
-      toggleMarkers();
-    });
-
-    let markerInstances = [];
-
-    let markersVisible = true;
-
-    const allMarkersColor = "#61afef";
-
-    const visitedMarkersColor = "#fe8d50";
-
-    function markAsMarked() {}
-
-    function markAsVisited() {}
-
-    function loadMarkers(unescos) {
-      markerInstances.forEach(m => m.remove());
-      markerInstances = [];
-      unescos.forEach(heritage => {
-        if (heritage.coordinates) {
-          const marker = new mapboxgl.Marker({
-            color: allMarkersColor
-          }).setLngLat([ heritage.coordinates.lon, heritage.coordinates.lat ]).addTo(map);
-          markerInstances.push(marker);
-        }
-      });
-    }
-
-    function toggleMarkers() {
-      markersVisible = !markersVisible;
-      markerInstances.forEach(marker => {
-        if (markersVisible) {
-          marker.addTo(map);
-        } else {
-          marker.remove();
-        }
-      });
-    }
-
-    function loadMarker(lng, lat) {
-      const marker = new mapboxgl.Marker().setLngLat([ lng, lat ]).addTo(map);
-    }
-
-    map.addControl(new mapboxgl.NavigationControl());
-
-    function zoomToLocation(lng, lat) {
-      map.flyTo({
-        center: [ lng, lat ],
-        zoom: 12,
-        essential: true,
-        duration: 3500,
-        curve: 1.5
-      });
-    }
-
-    let rainbowEnabled = false;
-
-    map.on("style.load", () => {
-      function animateFog() {
-        map.setFog({
-          range: [ .5, 10 ],
-          color: rainbowEnabled ? rainbowColor() : "white",
-          "high-color": "#245cdf",
-          "space-color": "#000000"
-        });
-        requestAnimationFrame(animateFog);
-      }
-      animateFog();
-    });
-
-    const konamiCode = [ "ArrowUp", "ArrowUp", "ArrowDown", "ArrowDown", "ArrowLeft", "ArrowRight", "ArrowLeft", "ArrowRight", "b", "a" ];
-
-    let konamiIndex = 0;
-
-    function rainbowColor() {
-      const t = Date.now() / 1e3;
-      const hue = t % 5 * 360 / 5;
-      const rgb = hslToRgb(hue / 360, 1, .5);
-      return `rgb(${rgb[0]}, ${rgb[1]}, ${rgb[2]})`;
-    }
-
-    function hslToRgb(h, s, l) {
-      let r, g, b;
-      const hue2rgb = (p, q, t) => {
-        if (t < 0) t += 1;
-        if (t > 1) t -= 1;
-        if (t < 1 / 6) return p + (q - p) * 6 * t;
-        if (t < 1 / 2) return q;
-        if (t < 2 / 3) return p + (q - p) * (2 / 3 - t) * 6;
-        return p;
-      };
-      const q = l < .5 ? l * (1 + s) : l + s - l * s;
-      const p = 2 * l - q;
-      r = hue2rgb(p, q, h + 1 / 3);
-      g = hue2rgb(p, q, h);
-      b = hue2rgb(p, q, h - 1 / 3);
-      return [ Math.round(r * 255), Math.round(g * 255), Math.round(b * 255) ];
-    }
-
-    window.addEventListener("keydown", e => {
-      if (e.key === konamiCode[konamiIndex]) {
-        konamiIndex++;
-        if (konamiIndex === konamiCode.length) {
-          rainbowEnabled = !rainbowEnabled;
-          konamiIndex = 0;
-          console.log("Konami Code activated!");
-        }
+  function toggleMarkers() {
+    markersVisible = !markersVisible;
+    markerInstances.forEach(marker => {
+      if (markersVisible) {
+        marker.addTo(map);
       } else {
-        konamiIndex = 0;
+        marker.remove();
       }
     });
-  </script>
+  }
+
+  function loadMarker(lng, lat) {
+    const marker = new mapboxgl.Marker().setLngLat([lng, lat]).addTo(map);
+  }
+
+  map.addControl(new mapboxgl.NavigationControl());
+
+  function zoomToLocation(lng, lat) {
+    map.flyTo({
+      center: [lng, lat],
+      zoom: 12,
+      essential: true,
+      duration: 3500,
+      curve: 1.5
+    });
+  }
+
+  let rainbowEnabled = false;
+
+  map.on("style.load", () => {
+    function animateFog() {
+      map.setFog({
+        range: [.5, 10],
+        color: rainbowEnabled ? rainbowColor() : "white",
+        "high-color": "#245cdf",
+        "space-color": "#000000"
+      });
+      requestAnimationFrame(animateFog);
+    }
+    animateFog();
+  });
+
+  const konamiCode = ["ArrowUp", "ArrowUp", "ArrowDown", "ArrowDown", "ArrowLeft", "ArrowRight", "ArrowLeft", "ArrowRight", "b", "a"];
+
+  let konamiIndex = 0;
+
+  function rainbowColor() {
+    const t = Date.now() / 1e3;
+    const hue = t % 5 * 360 / 5;
+    const rgb = hslToRgb(hue / 360, 1, .5);
+    return `rgb(${rgb[0]}, ${rgb[1]}, ${rgb[2]})`;
+  }
+
+  function hslToRgb(h, s, l) {
+    let r, g, b;
+    const hue2rgb = (p, q, t) => {
+      if (t < 0) t += 1;
+      if (t > 1) t -= 1;
+      if (t < 1 / 6) return p + (q - p) * 6 * t;
+      if (t < 1 / 2) return q;
+      if (t < 2 / 3) return p + (q - p) * (2 / 3 - t) * 6;
+      return p;
+    };
+    const q = l < .5 ? l * (1 + s) : l + s - l * s;
+    const p = 2 * l - q;
+    r = hue2rgb(p, q, h + 1 / 3);
+    g = hue2rgb(p, q, h);
+    b = hue2rgb(p, q, h - 1 / 3);
+    return [Math.round(r * 255), Math.round(g * 255), Math.round(b * 255)];
+  }
+
+  window.addEventListener("keydown", e => {
+    if (e.key === konamiCode[konamiIndex]) {
+      konamiIndex++;
+      if (konamiIndex === konamiCode.length) {
+        rainbowEnabled = !rainbowEnabled;
+        konamiIndex = 0;
+        console.log("Konami Code activated!");
+      }
+    } else {
+      konamiIndex = 0;
+    }
+  });
+</script>
 @end
