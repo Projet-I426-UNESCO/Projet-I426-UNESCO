@@ -425,6 +425,13 @@ aside {
   color: white;
   font-variation-settings: 'wght' 400;
 }
+.detail-link {
+  color: #9ca3af;
+  font-size: 14px;
+  text-decoration: underline;
+  display: inline-block;
+  margin-bottom: 10px;
+}
 /* --- STATISTIQUES (PIED DE PAGE ASIDE) --- */
 .stats-footer {
   padding: 20px;

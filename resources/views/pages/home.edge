@@ -112,42 +112,36 @@
       loadMarker(lon, lat);
       const item = unescosData[index];
       const container = document.getElementById("aside-dynamic-content");
+      // prettier-ignore
       container.innerHTML = `
-                                                                                            <div class="detail-view">
-                                                                                                <button class="back-btn" onclick="restoreList()">
-                                                                                                    <span class="material-symbols-outlined">arrow_back</span>
-                                                                                                    Retour en arrière
-                                                                                                </button>
+                        <div class="detail-view">
+                            <button class="back-btn" onclick="restoreList()">
+                                <span class="material-symbols-outlined">arrow_back</span>
+                                Retour en arrière
+                            </button>
 
-                                                                                                <div class="detail-image-container">
+                            <div class="detail-image-container"></div>
 
+                            <div class="detail-view-content">
+                                <h2>${item.nameFr}</h2>
+                                <span class="region">${item.statesNames}</span>
 
+                                <p class="desc">
+                                    ${item.shortDescriptionFr || "Située au large des côtes, cette formation géologique est une structure monumentale unique au monde."}
+                                </p>
+                                <a href="/site/${item.id}" class="detail-link">En savoir plus</a>   <!-- remplacer avec bon id -->
+                                <button class="action-btn btn-add">
+                                    <span class="material-symbols-outlined">add</span>
+                                    Ajouter à ma liste
+                                </button>
 
-
-
-
-
-                                                                                                </div>
-
-                                                                                                <div class="detail-view-content">
-                                                                                                    <h2>${item.nameFr}</h2>
-                                                                                                    <span class="region">${item.statesNames}</span>
-
-                                                                                                    <p class="desc">
-                                                                                                        ${item.shortDescriptionFr || "Située au large des côtes, cette formation géologique est une structure monumentale unique au monde."}
-                                                                                                    </p>
-
-                                                                                                    <button class="action-btn btn-add">
-                                                                                                        <span class="material-symbols-outlined">add</span>
-                                                                                                        Ajouter à ma liste
-                                                                                                    </button>
-                                                                                                    <button class="action-btn btn-visit">
-                                                                                                        <span class="material-symbols-outlined">check</span>
-                                                                                                        Marquer comme visité
-                                                                                                    </button>
-                                                                                                </div>
-                                                                                            </div>
-                                                                                        `;
+                                <button class="action-btn btn-visit">
+                                    <span class="material-symbols-outlined">check</span>
+                                    Marquer comme visité
+                                </button>
+                            </div>
+                        </div>
+                        `;
       container.scrollTop = 0;
     }
 
