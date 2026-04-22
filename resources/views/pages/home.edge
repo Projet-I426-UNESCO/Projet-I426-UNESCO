@@ -93,6 +93,28 @@
         <div class="stat-box">
           <span class="stat-number">13/160</span>
           <span class="stat-label">Site visités</span>
+      <div class="controls">
+        <div class="search-container">
+          <div class="search-pill">
+            <span class="material-symbols-outlined">search</span>
+            <input type="text" placeholder="Rechercher un site..." />
+          </div>
+
+          <div class="filter-pill active">
+            <span>Normal</span>
+          </div>
+          <div class="filter-pill">
+            <span>à visiter</span>
+          </div>
+          <div class="filter-pill">
+            <span>visités</span>
+          </div>
+
+          <label class="toggle-pill" for="markerToggle">
+            <input type="checkbox" id="markerToggle" />
+            <span>Markers</span>
+          </label>
+
         </div>
         <div class="stat-box">
           <span class="stat-number">7/192</span>
@@ -108,26 +130,69 @@
 <script>
   const initialAsideContent = document.getElementById("aside-dynamic-content").innerHTML;
 
-  function handleCardClick(index, lon, lat) {
+  // function handleCardClick(index, lon, lat) {
+  //   zoomToLocation(lon, lat);
+  //   loadMarker(lon, lat);
+  //   const item = unescosData[index];
+  //   const container = document.getElementById("aside-dynamic-content");
+  //   if (!initialAsideContent) {
+  //     initialAsideContent = container.innerHTML;
+  //   }
+  //   const templateHtml = document.getElementById("unesco-detail-template").innerHTML;
+  //   const renderedHtml = new Function("item", `return \`${templateHtml}\``)(item);
+  //   container.innerHTML = renderedHtml;
+  //   container.scrollTop = 0;
+  // }
+
+  // Take the CSRF token to give to the injected js
+  const csrfToken = "{{ csrfToken }}";
+
+  // Set up the routes for markers
+  const visitUrlTemplate = "{{ route('marker.visit', { unescoId: '__ID__' }) }}";
+  const markUrlTemplate = "{{ route('marker.mark', { unescoId: '__ID__' }) }}";
+
+  function handleCardClick(index, unescoId, lon, lat) {
+    // 1. Zoom et Marker (Tes fonctions originales)
     zoomToLocation(lon, lat);
     loadMarker(lon, lat);
+
+    // Modify the text in the routes to add the ID's
+    const visitUrl = visitUrlTemplate.replace('__ID__', unescoId);
+    const markUrl = markUrlTemplate.replace('__ID__', unescoId);
+    console.log(`adding with Id ${unescoId}`)
+
     const item = unescosData[index];
     const container = document.getElementById("aside-dynamic-content");
-    if (!initialAsideContent) {
-      initialAsideContent = container.innerHTML;
-    }
-    const templateHtml = document.getElementById("unesco-detail-template").innerHTML;
-    const renderedHtml = new Function("item", `return \`${templateHtml}\``)(item);
-    container.innerHTML = renderedHtml;
-    container.scrollTop = 0;
-  }
+    container.innerHTML = `
+              <div class="detail-view">
+                  <button class="back-btn" onclick="restoreList()">
+                      <span class="material-symbols-outlined">arrow_back</span>
+                      Retour en arrière
+                  </button>
+                  <div class="detail-image-container">
+                  <p class="desc">
+                      ${item.shortDescriptionFr || "Située au large des côtes, cette formation géologique est une structure monumentale unique au monde."}
+                  </p>
+                <button class="action-btn btn-add" id="visitSiteBtn" onclick="visitSite('${visitUrl}', '${unescoId}')">
+                  <span class="material-symbols-outlined">add</span>
+                  Ajouter à mes visites
+                </button>
 
-  function restoreList() {
-    if (initialAsideContent) {
-      const container = document.getElementById("aside-dynamic-content");
-      container.innerHTML = initialAsideContent;
-      initialAsideContent = "";
+                <button class="action-btn btn-visit" id="markSiteBtn" onclick="markSite('${markUrl}', '${unescoId}')">
+                  <span class="material-symbols-outlined">check</span>
+                  Marquer le Site
+                </button>
+              </div>
+          </div>
+      `;
+    container.scrollTop = 0;
+
+    for (let i = 0; i < 2; i++) {
+      flipVisitSiteUI(unescoId)
+      flipMarkSiteUI(unescoId)
     }
+
+
   }
 
   document.querySelectorAll(".filter-pill").forEach(pill => {
@@ -137,7 +202,8 @@
     });
   });
 
-  const unescosData = {{{ JSON.stringify(unescos) }}};
+    const unescosData = {{{ JSON.stringify(unescos) }}};
+    const markersData = {{{ JSON.stringify(markers) }}};
 
   mapboxgl.accessToken = "pk.eyJ1IjoiNjdza2liaWRpc2NydW0iLCJhIjoiY21sYXdlamR3MGcyOTNlcXoxdHQ2bXliaiJ9.BXx6EzzxvsFrDg5yeo1LUQ";
 
@@ -153,10 +219,11 @@
     toggleMarkers();
   });
 
-  map.on("load", () => {
-    loadMarkers(unescosData);
-    toggleMarkers();
-  });
+    map.on("load", () => {
+      loadMarkers(unescosData);
+      toggleMarkers();
+      console.log(markersData);
+    });
 
   let markerInstances = [];
 
@@ -166,19 +233,126 @@
 
   const visitedMarkersColor = "#fe8d50";
 
-  function markAsMarked() { }
+    function loadMarkers(unescos) {
+      markerInstances.forEach(m => m.remove());
+      markerInstances = [];
+      unescos.forEach(heritage => {
+        if (heritage.coordinates) {
+          const marker = new mapboxgl.Marker({
+            color: allMarkersColor
+          }).setLngLat([ heritage.coordinates.lon, heritage.coordinates.lat ]).addTo(map);
+          markerInstances.push(marker);
+        }
+      });
+    }
 
-  function markAsVisited() { }
+    function toggleMarkers() {
+      markersVisible = !markersVisible;
+      markerInstances.forEach(marker => {
+        if (markersVisible) {
+          marker.addTo(map);
+        } else {
+          marker.remove();
+        }
+      });
+    }
 
-  function loadMarkers(unescos) {
-    markerInstances.forEach(m => m.remove());
-    markerInstances = [];
-    unescos.forEach(heritage => {
-      if (heritage.coordinates) {
-        const marker = new mapboxgl.Marker({
-          color: allMarkersColor
-        }).setLngLat([heritage.coordinates.lon, heritage.coordinates.lat]).addTo(map);
-        markerInstances.push(marker);
+    function loadMarker(lng, lat) {
+      const marker = new mapboxgl.Marker().setLngLat([ lng, lat ]).addTo(map);
+    }
+
+    map.addControl(new mapboxgl.NavigationControl());
+
+    function zoomToLocation(lng, lat) {
+      map.flyTo({
+        center: [ lng, lat ],
+        zoom: 12,
+        essential: true,
+        duration: 3500,
+        curve: 1.5
+      });
+    }
+
+    async function visitSite(url, unescoId) {
+      try {
+        const res = await fetch(url, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "x-csrf-token": csrfToken
+          }
+        });
+
+        if (!res.ok) throw new Error("Request failed");
+
+        console.log(`Visiting sequence with unescoId : ${unescoId} `);
+
+        flipVisitSiteUI(unescoId)
+        
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    async function markSite(url, unescoId) {
+      try {
+        const res = await fetch(url, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "x-csrf-token": csrfToken
+          }
+        });
+
+        if (!res.ok) throw new Error("Request failed");
+
+        console.log(`Marking sequence with unescoId : ${unescoId} `);
+
+        flipMarkSiteUI(unescoId)
+
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    function flipVisitSiteUI(unescoId) {
+      // if the marker exists Flip the isVisited value in UI
+      if (markersData) {
+        const marker = markersData.find((marker) => marker.unescoId == unescoId)
+        if (marker) {
+          const button = document.getElementById("visitSiteBtn")
+          button.innerText = marker.isVisited ? "Enlever de mes visites" : "Ajouter à mes visites"
+          // Flips the isVisited in the gotten data, it modifies the now local data, not the distant one, simply to keep the UI up to date.
+          markersData[markersData.findIndex((marker) => marker.unescoId == unescoId)].isVisited = !marker.isVisited
+        } 
+      }
+    }
+
+    function flipMarkSiteUI(unescoId) {
+      // if the marker exists Flip the isMarked value in UI
+      if (markersData) {
+        const marker = markersData.find((marker) => marker.unescoId == unescoId)
+        if (marker) {
+          const button = document.getElementById("markSiteBtn")
+          button.innerText = marker.isMarked ? "Démarquer le Site" : "Marquer le Site"
+          // Flips the isMarked in the gotten data, it modifies the now local data, not the distant one, simply to keep the UI up to date.
+          markersData[markersData.findIndex((marker) => marker.unescoId == unescoId)].isMarked = !marker.isMarked
+        }
+      }
+    }
+
+
+    let rainbowEnabled = false;
+
+    map.on("style.load", () => {
+      function animateFog() {
+        map.setFog({
+          range: [ .5, 10 ],
+          color: rainbowEnabled ? rainbowColor() : "white",
+          "high-color": "#245cdf",
+          "space-color": "#000000"
+        });
+        requestAnimationFrame(animateFog);
       }
     });
   }

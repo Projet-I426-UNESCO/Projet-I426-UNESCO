@@ -21,7 +21,7 @@ export default class extends BaseSchema {
         .integer('unesco_id') // Clé étrangère
         .unsigned() // La clé ne doit pas être négative
         .references('id') // Référence la colonne `id` de la table `unesco`
-        .inTable('unesco') // Nom de la table de référence
+        .inTable('unescos') // Nom de la table de référence
         .onDelete('CASCADE')
         .onUpdate('CASCADE')
 
