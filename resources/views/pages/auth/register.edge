@@ -1,79 +1,104 @@
-@layout({ title: "Inscription"})
+@layout({ title: "Inscription" })
 <div class="auth-page-container">
-  <h1>Register</h1>
+  <div class="auth-card">
+    <h1>Inscription</h1>
 
-  <form method="POST" action="{{ route('auth.register.store') }}">
-    {{ csrfField() }}
+    <form method="POST" action="{{ route('auth.register.store') }}">
+      {{ csrfField() }}
 
-    <label>
-      <span>Full Name</span>
-      <input type="text" name="fullName" value="{{ old('fullName') || '' }}" />
-      @inputError('fullName')
-      {{ $messages.join(', ')}}
-      @end
-    </label>
+      <div class="input-group">
+        <input type="text" name="fullName" value="{{ old('fullName') || '' }}" placeholder="Nom complet" required />
+        @inputError('fullName')
+        <span class="error-text">{{ $messages.join(', ') }}</span>
+        @end
+      </div>
 
-    <label>
-      <span>Email</span>
-      <input type="email" name="email" value="{{ old('email') || '' }}" />
-      @inputError('email')
-      {{ $messages.join(', ')}}
-      @end
-    </label>
+      <div class="input-group">
+        <input type="email" name="email" value="{{ old('email') || '' }}" placeholder="Email" required />
+        @inputError('email')
+        <span class="error-text">{{ $messages.join(', ') }}</span>
+        @end
+      </div>
 
-    <label>
-      <span>Password</span>
-      <input type="password" name="password" value="{{ old('password') || '' }}" />
-      @inputError('password')
-      {{ $messages.join(', ')}}
-      @end
-    </label>
+      <div class="input-group">
+        <div class="password-wrapper">
+          <input type="password" name="password" placeholder="Mot de passe" required />
+        </div>
+        @inputError('password')
+        <span class="error-text">{{ $messages.join(', ') }}</span>
+        @end
+      </div>
 
-    <button type="submit">Register</button>
+      <button type="submit" class="btn">S'inscrire</button>
+    </form>
 
-    <div class="already-has-account">
-      <p>Vous avez déjà un compte ?</p>
-      <p><u><a href="/login">Se connecter</a></u></p>
+    <div class="auth-footer">
+      <span>Déjà un compte ?</span>
+      <a href="/login" class="link">Se connecter</a>
     </div>
-  </form>
+  </div>
 </div>
 @end
+
 <style>
   .auth-page-container {
+    display: grid;
+    place-items: center;
+    min-height: 100vh;
+  }
+
+  .auth-card {
+    background: rgb(235, 235, 235);
+    padding: 2rem;
+    border-radius: 7px;
     display: flex;
     flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 100vh;
-  }
-
-  h1 {
-    color: white;
-  }
-
-  span {
-    color: white;
-    font-size: 14px;
+    gap: 25px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
   }
 
   form {
     display: flex;
     flex-direction: column;
-    gap: 20px;
-    align-items: center;
+    gap: 1rem;
   }
 
-  .already-has-account {
-    display: flex;
-    gap: 10px;
+  input {
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 16px;
+    width: 350px;
+    background-color: rgb(245, 245, 245);
+  }
+
+  .btn {
+    background: #6366f1;
     color: white;
+    border: none;
+    padding: 12px;
+    border-radius: 10px;
+    cursor: pointer;
   }
 
-  .already-has-account p a {
-    color: rgb(255, 255, 255);
+  .link {
+    color: #6366f1;
+    text-decoration: none;
+    text-align: left
   }
 
-  .already-has-account p {
-    font-size: 14px;
+  .error-text {
+    color: #dc2626;
+    font-size: 0.8rem;
+    margin-top: 4px;
+    display: block;
+  }
+
+
+
+  h1 {
+    margin: 0;
+    font-size: 1.5rem;
+    color: #000;
   }
 </style>
