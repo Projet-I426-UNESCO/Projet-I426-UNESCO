@@ -1,7 +1,5 @@
-<link
-  rel="stylesheet"
-  href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
-/>
+<link rel="stylesheet"
+  href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
 <header>
   <a href="{{ route('home') }}">
     <div class="top-nav">
@@ -10,61 +8,60 @@
           ACD
         </h1>
       </div>
+  </a>
+  <nav>
+    <a href="{{ route('home') }}">
+      <div class="menu-item {{ request.url() === '/' ? 'active' : '' }}">
+        <span class="material-symbols-outlined">map</span>
+        <p>
+          Explorer
+        </p>
+      </div>
     </a>
-    <nav>
-      <a href="{{ route('home') }}">
-        <div class="menu-item {{ request.url() === '/' ? 'active' : '' }}">
-          <span class="material-symbols-outlined">map</span>
-          <p>
-            Explorer
-          </p>
-        </div>
-      </a>
-      <a href="#">
-        <div class="menu-item">
-          <span class="material-symbols-outlined">list</span>
-          <p>
-            Liste des sites
-          </p>
-        </div>
-      </a>
-      <a href="{{ route('profile.show') }}">
-        <div
-          class="menu-item {{ request.url() === '/profile' || request.url() === '/login' || request.url() === '/register' ? 'active' : '' }}"
-        >
-          <span class="material-symbols-outlined">account_circle</span>
-          <p>
-            Mon compte
-          </p>
-        </div>
-      </a>
-      <a href="#">
-        <div class="menu-item">
-          <span class="material-symbols-outlined">list_alt_check</span>
-          <p>
-            Sites marqués
-          </p>
-        </div>
-      </a>
-      <a href="#">
-        <div class="menu-item">
-          <span class="material-symbols-outlined">patient_list</span>
-          <p>
-            Sites visités
-          </p>
-        </div>
-      </a>
-    </nav>
+    <a href="#">
+      <div class="menu-item">
+        <span class="material-symbols-outlined">list</span>
+        <p>
+          Liste
+        </p>
+      </div>
+    </a>
+    <a href="{{ route('profile.show') }}">
+      <div
+        class="menu-item {{ request.url() === '/profile' || request.url() === '/login' || request.url() === '/register' ? 'active' : '' }}">
+        <span class="material-symbols-outlined">account_circle</span>
+        <p>
+          Profil
+        </p>
+      </div>
+    </a>
+    <a href="#">
+      <div class="menu-item">
+        <span class="material-symbols-outlined">list_alt_check</span>
+        <p>
+          Sites marqués
+        </p>
+      </div>
+    </a>
+    <a href="#">
+      <div class="menu-item">
+        <span class="material-symbols-outlined">patient_list</span>
+        <p>
+          Sites visités
+        </p>
+      </div>
+    </a>
+  </nav>
 
   </div>
 
   <div class="lang-container">
     <div class="lang-popup" id="langPopup">
       <div class="lang-option" onclick="changeLang('EN', 'us')">
-        <img src="https://flagcdn.com/w80/us.png" class="flag-icon" />        <span class="lang-text">EN</span>
+        <img src="https://flagcdn.com/w80/us.png" class="flag-icon" /> <span class="lang-text">EN</span>
       </div>
       <div class="lang-option" onclick="changeLang('FR', 'fr')">
-        <img src="https://flagcdn.com/w80/fr.png" class="flag-icon" />        <span class="lang-text">FR</span>
+        <img src="https://flagcdn.com/w80/fr.png" class="flag-icon" /> <span class="lang-text">FR</span>
       </div>
     </div>
 
