@@ -39,7 +39,7 @@ export default class UnescosController {
   async show({ params, view }: HttpContext) {
     
     const unesco = await Unesco.query().where('id', params.id).firstOrFail()
-
+    
     return view.render('pages/site', { unesco })
   }
 
