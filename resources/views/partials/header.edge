@@ -1,78 +1,91 @@
 <link rel="stylesheet"
   href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
-<header>
-  <a href="{{ route('home') }}">
-    <div class="top-nav">
+<header class="main-header" id="mainHeader">
+  <div class="header-top">
+    <a href="{{ route('home') }}" class="logo-link" aria-label="Retour a l'accueil">
       <div class="logo">
         <h1>
           ACD
         </h1>
       </div>
-  </a>
-  <nav>
-    <a href="{{ route('home') }}">
-      <div class="menu-item {{ request.url() === '/' ? 'active' : '' }}">
-        <span class="material-symbols-outlined">map</span>
-        <p>
-          Explorer
-        </p>
-      </div>
     </a>
-    <a href="#">
-      <div class="menu-item">
-        <span class="material-symbols-outlined">list</span>
-        <p>
-          Liste
-        </p>
-      </div>
-    </a>
-    <a href="{{ route('profile.show') }}">
-      <div
-        class="menu-item {{ request.url() === '/profile' || request.url() === '/login' || request.url() === '/register' ? 'active' : '' }}">
-        <span class="material-symbols-outlined">account_circle</span>
-        <p>
-          Profil
-        </p>
-      </div>
-    </a>
-    <a href="#">
-      <div class="menu-item">
-        <span class="material-symbols-outlined">list_alt_check</span>
-        <p>
-          Sites marqués
-        </p>
-      </div>
-    </a>
-    <a href="#">
-      <div class="menu-item">
-        <span class="material-symbols-outlined">patient_list</span>
-        <p>
-          Sites visités
-        </p>
-      </div>
-    </a>
-  </nav>
 
+    <button type="button" class="menu-toggle" id="menuToggle" aria-label="Ouvrir le menu" aria-expanded="false"
+      aria-controls="headerContent">
+      <span class="material-symbols-outlined">menu</span>
+    </button>
   </div>
 
-  <div class="lang-container">
-    <div class="lang-popup" id="langPopup">
-      <div class="lang-option" onclick="changeLang('EN', 'us')">
-        <img src="https://flagcdn.com/w80/us.png" class="flag-icon" /> <span class="lang-text">EN</span>
-      </div>
-      <div class="lang-option" onclick="changeLang('FR', 'fr')">
-        <img src="https://flagcdn.com/w80/fr.png" class="flag-icon" /> <span class="lang-text">FR</span>
-      </div>
-    </div>
+  <div class="header-content" id="headerContent">
+    <nav id="primaryNav">
+      <a href="{{ route('home') }}">
+        <div class="menu-item {{ request.url() === '/' ? 'active' : '' }}">
+          <span class="material-symbols-outlined">map</span>
+          <p>
+            Explorer
+          </p>
+        </div>
+      </a>
+      <a href="#">
+        <div class="menu-item">
+          <span class="material-symbols-outlined">list</span>
+          <p>
+            Liste
+          </p>
+        </div>
+      </a>
+      <a href="{{ route('profile.show') }}">
+        <div
+          class="menu-item {{ request.url() === '/profile' || request.url() === '/login' || request.url() === '/register' ? 'active' : '' }}">
+          <span class="material-symbols-outlined">account_circle</span>
+          <p>
+            Profil
+          </p>
+        </div>
+      </a>
+      <a href="#">
+        <div class="menu-item">
+          <span class="material-symbols-outlined">list_alt_check</span>
+          <p>
+            Sites marqués
+          </p>
+        </div>
+      </a>
+      <a href="#">
+        <div class="menu-item">
+          <span class="material-symbols-outlined">patient_list</span>
+          <p>
+            Sites visités
+          </p>
+        </div>
+      </a>
+    </nav>
 
-    <div class="language-picker" id="langTrigger">
-      <img src="https://flagcdn.com/w80/fr.png" id="mainFlag" class="flag-icon" />
-      <span class="lang-text" id="mainText">FR</span>
-      <span class="material-symbols-outlined" style="font-size: 20px; color: white;">expand_less</span>
+    <div class="lang-container">
+      <div class="lang-popup" id="langPopup">
+        <div class="lang-option" onclick="changeLang('EN', 'us')">
+          <img src="https://flagcdn.com/w80/us.png" class="flag-icon" /> <span class="lang-text">EN</span>
+        </div>
+        <div class="lang-option" onclick="changeLang('FR', 'fr')">
+          <img src="https://flagcdn.com/w80/fr.png" class="flag-icon" /> <span class="lang-text">FR</span>
+        </div>
+      </div>
+
+      <div class="language-picker" id="langTrigger">
+        <img src="https://flagcdn.com/w80/fr.png" id="mainFlag" class="flag-icon" />
+        <span class="lang-text" id="mainText">FR</span>
+        <span class="material-symbols-outlined" style="font-size: 20px; color: white;">expand_less</span>
+      </div>
     </div>
   </div>
 </header>
 <script>
+  const mainHeader = document.getElementById("mainHeader");
+
+  const menuToggle = document.getElementById("menuToggle");
+
+  const headerContent = document.getElementById("headerContent");
+
   const trigger = document.getElementById("langTrigger");
 
   const popup = document.getElementById("langPopup");
@@ -80,6 +93,28 @@
   const mainFlag = document.getElementById("mainFlag");
 
   const mainText = document.getElementById("mainText");
+
+  function closeMobileMenu() {
+    if (!mainHeader || !menuToggle) {
+      return;
+    }
+    mainHeader.classList.remove("is-open");
+    menuToggle.setAttribute("aria-expanded", "false");
+    menuToggle.querySelector(".material-symbols-outlined").textContent = "menu";
+  }
+
+  if (menuToggle && mainHeader && headerContent) {
+    menuToggle.addEventListener("click", e => {
+      e.stopPropagation();
+      const isOpen = mainHeader.classList.toggle("is-open");
+      menuToggle.setAttribute("aria-expanded", String(isOpen));
+      menuToggle.querySelector(".material-symbols-outlined").textContent = isOpen ? "close" : "menu";
+    });
+
+    headerContent.querySelectorAll("a").forEach(link => {
+      link.addEventListener("click", closeMobileMenu);
+    });
+  }
 
   trigger.addEventListener("click", e => {
     e.stopPropagation();
@@ -92,5 +127,16 @@
     popup.classList.remove("show");
   }
 
-  window.addEventListener("click", () => popup.classList.remove("show"));
+  window.addEventListener("resize", () => {
+    if (window.innerWidth > 900) {
+      closeMobileMenu();
+    }
+  });
+
+  window.addEventListener("click", e => {
+    popup.classList.remove("show");
+    if (mainHeader && mainHeader.classList.contains("is-open") && !mainHeader.contains(e.target)) {
+      closeMobileMenu();
+    }
+  });
 </script>
