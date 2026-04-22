@@ -592,7 +592,6 @@ aside {
 }
 
 .auth-pill:hover {
-  transform: translateY(-2px);
   filter: brightness(1.1);
 }
 
@@ -846,9 +845,26 @@ aside {
 }
 
 /* --- RESPONSIVE --- */
-@media (max-width: 900px) {
+
+@media screen and (max-width: 1460px) {
+  .user-profile {
+    display: none;
+  }
+}
+
+@media screen and (max-width: 900px) {
   body {
     display: block;
+    margin-left: 0;
+  }
+
+  body.page-home {
+    height: 100dvh;
+    overflow: hidden;
+  }
+
+  .auth-pill-group {
+    display: none;
   }
 
   .main-header {
@@ -861,6 +877,7 @@ aside {
     background-size: 16px 16px;
     position: sticky;
     top: 0;
+    z-index: 300;
   }
 
   .header-top {
@@ -893,14 +910,54 @@ aside {
     color: inherit;
   }
 
-  .header-content {
+  .menu-toggle .icon-close {
     display: none;
-    margin-top: 12px;
+  }
+
+  .menu-toggle.is-open .icon-open {
+    display: none;
+  }
+
+  .menu-toggle.is-open .icon-close {
+    display: block;
+  }
+
+  .header-content {
+    position: fixed;
+    top: 74px;
+    left: 12px;
+    right: 12px;
+    display: flex;
+    flex-direction: column;
     gap: 12px;
+    padding: 12px;
+    background-color: #1e2533;
+    border: 1px solid #334155;
+    border-radius: 14px;
+    box-shadow: 0 16px 38px rgba(0, 0, 0, 0.45);
+    max-height: calc(100dvh - 86px);
+    overflow-y: auto;
+    scrollbar-width: none;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transform: translateY(-8px);
+    transition:
+      opacity 0.2s ease,
+      transform 0.2s ease,
+      visibility 0.2s ease;
+    z-index: 250;
+  }
+
+  .header-content::-webkit-scrollbar {
+    display: none;
   }
 
   .main-header.is-open .header-content {
-    display: flex;
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transform: translateY(0);
   }
 
   #primaryNav {
@@ -943,11 +1000,14 @@ aside {
 
   .home-main {
     grid-template-columns: 1fr;
-    grid-template-rows: auto auto;
+    grid-template-rows: minmax(0, 55%) minmax(0, 45%);
+    height: calc(100dvh - 74px);
+    min-height: 0;
   }
 
   .explorer-container {
-    height: 55vh;
+    height: 100%;
+    min-height: 0;
   }
 
   .controls {
@@ -969,7 +1029,8 @@ aside {
 
   aside {
     width: 100%;
-    height: auto;
-    max-height: 45vh;
+    height: 100%;
+    max-height: none;
+    min-height: 0;
   }
 }

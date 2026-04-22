@@ -1,7 +1,5 @@
-<link
-  rel="stylesheet"
-  href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
-/>
+<link rel="stylesheet"
+  href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
 <header class="main-header" id="mainHeader">
   <div class="header-top">
     <a href="{{ route('home') }}" class="logo-link" aria-label="Retour a l'accueil">
@@ -12,15 +10,10 @@
       </div>
     </a>
 
-    <button
-      type="button"
-      class="menu-toggle"
-      id="menuToggle"
-      aria-label="Ouvrir le menu"
-      aria-expanded="false"
-      aria-controls="headerContent"
-    >
-      <span class="material-symbols-outlined">menu</span>
+    <button type="button" class="menu-toggle" id="menuToggle" aria-label="Ouvrir le menu" aria-expanded="false"
+      aria-controls="headerContent">
+      <span class="material-symbols-outlined icon-open">menu</span>
+      <span class="material-symbols-outlined icon-close">close</span>
     </button>
   </div>
 
@@ -44,8 +37,7 @@
       </a>
       <a href="{{ route('profile.show') }}">
         <div
-          class="menu-item {{ request.url() === '/profile' || request.url() === '/login' || request.url() === '/register' ? 'active' : '' }}"
-        >
+          class="menu-item {{ request.url() === '/profile' || request.url() === '/login' || request.url() === '/register' ? 'active' : '' }}">
           <span class="material-symbols-outlined">account_circle</span>
           <p>
             Profil
@@ -73,10 +65,10 @@
     <div class="lang-container">
       <div class="lang-popup" id="langPopup">
         <div class="lang-option" onclick="changeLang('EN', 'us')">
-          <img src="https://flagcdn.com/w80/us.png" class="flag-icon" />          <span class="lang-text">EN</span>
+          <img src="https://flagcdn.com/w80/us.png" class="flag-icon" /> <span class="lang-text">EN</span>
         </div>
         <div class="lang-option" onclick="changeLang('FR', 'fr')">
-          <img src="https://flagcdn.com/w80/fr.png" class="flag-icon" />          <span class="lang-text">FR</span>
+          <img src="https://flagcdn.com/w80/fr.png" class="flag-icon" /> <span class="lang-text">FR</span>
         </div>
       </div>
 
@@ -103,21 +95,23 @@
 
   const mainText = document.getElementById("mainText");
 
+  const mobileMedia = window.matchMedia("(max-width: 900px)");
+
   function closeMobileMenu() {
     if (!mainHeader || !menuToggle) {
       return;
     }
     mainHeader.classList.remove("is-open");
+    menuToggle.classList.remove("is-open");
     menuToggle.setAttribute("aria-expanded", "false");
-    menuToggle.querySelector(".material-symbols-outlined").textContent = "menu";
   }
 
   if (menuToggle && mainHeader && headerContent) {
     menuToggle.addEventListener("click", e => {
       e.stopPropagation();
       const isOpen = mainHeader.classList.toggle("is-open");
+      menuToggle.classList.toggle("is-open", isOpen);
       menuToggle.setAttribute("aria-expanded", String(isOpen));
-      menuToggle.querySelector(".material-symbols-outlined").textContent = isOpen ? "close" : "menu";
     });
     headerContent.querySelectorAll("a").forEach(link => {
       link.addEventListener("click", closeMobileMenu);
@@ -136,7 +130,7 @@
   }
 
   window.addEventListener("resize", () => {
-    if (window.innerWidth > 900) {
+    if (!mobileMedia.matches) {
       closeMobileMenu();
     }
   });
