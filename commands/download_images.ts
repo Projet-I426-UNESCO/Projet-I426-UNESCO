@@ -81,7 +81,7 @@ export default class DownloadImages extends BaseCommand {
 
     // Récupérer tous les sites depuis la db
     const sites = await Unesco.all()
-    const failedSites: Unesco[] = []
+    let failedSites: Unesco[] = []
 
     // Initialiser le navigateur
     const browser = await puppeteer.launch({
@@ -101,14 +101,12 @@ export default class DownloadImages extends BaseCommand {
     this.logger.info(`Cloudflare bypassed`)
     await sleep(4000)
 
-    this.logger.info(`${sites.length} sites en traitement`)
-
     // PREMIER PASSAGE
     for (const site of sites) {
       if (site.mainImageUrl?.startsWith('http')) {
         try {
           await this.processSite(page, site, paths)
-          this.logger.success(`[${site.idNo}]`)
+          this.logger.success(`[${site.id}/${sites.length}] [${site.idNo}]`)
           await sleep(1000)
         } catch (error) {
           this.logger.error(`[${site.idNo}] Failed ${error.message}`)
@@ -118,20 +116,25 @@ export default class DownloadImages extends BaseCommand {
       }
     }
 
-    // DEUXIÈME PASSAGE
-    if (failedSites.length > 0) {
+    // PASSAGES DES ECHECS
+    while (failedSites.length > 0) {
       this.logger.info(`Rattrapage pour ${failedSites.length} échecs`)
       await sleep(5000)
+
+      let failuresOfThisRound: Unesco[] = []
 
       for (const site of failedSites) {
         try {
           await this.processSite(page, site, paths)
-          this.logger.success(`[${site.idNo}]`)
+          this.logger.success(`[${site.id}/${sites.length}] [${site.idNo}]`)
           await sleep(2000)
         } catch (error) {
           this.logger.error(`[${site.idNo}] Failed ${error.message}`)
+
+          failuresOfThisRound.push(site)
         }
       }
+      failedSites = failuresOfThisRound
     }
     await browser.close()
   }
