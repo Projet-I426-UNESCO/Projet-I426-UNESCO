@@ -48,8 +48,8 @@ hideHeader: true
     </form>
 
     <div class="auth-footer">
-      <span>Pas de compte ?</span>
-      <a href="/register">S'inscrire</a>
+      <p>Pas de compte ?</p>
+      <a class="register-link" href="/register">S'inscrire</a>
     </div>
   </div>
 </div>
@@ -59,6 +59,10 @@ hideHeader: true
   body {
     display: flex;
     flex-direction: column;
+  }
+
+  p {
+    color: #c2c2c2;
   }
 
   .goback {
@@ -88,6 +92,17 @@ hideHeader: true
 
   }
 
+  .auth-footer {
+    display: flex;
+    gap: 5px;
+    align-items: center;
+  }
+
+  .register-link {
+    color: #6366f1;
+    text-decoration: none;
+  }
+
   form {
     display: flex;
     flex-direction: column;
@@ -95,12 +110,12 @@ hideHeader: true
   }
 
   .auth-card {
-    background: rgb(235, 235, 235);
+    background: #1e2533;
     padding: 2rem;
     border-radius: 7px;
     display: flex;
     flex-direction: column;
-    gap: 25px;
+    gap: 5px;
   }
 
   input {
@@ -112,15 +127,7 @@ hideHeader: true
     background-color: rgb(245, 245, 245);
   }
 
-  .btn {
-    background: #6366f1;
-    color: white;
-    border: none;
-    padding: 12px;
-    border-radius: 25px;
-    font-weight: bold;
-    cursor: pointer;
-  }
+
 
   .link {
     color: #6366f1;
@@ -131,5 +138,7 @@ hideHeader: true
   h1 {
     margin: 0;
     font-size: 1.5rem;
+    color: white;
+    margin-bottom: 20px;
   }
 </style>

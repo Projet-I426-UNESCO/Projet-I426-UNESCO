@@ -45,12 +45,12 @@ hideHeader: true
         @end
       </div>
 
-      <button type="submit" class="btn">S'inscrire</button>
+      <button type="submit" class="btn-primary">S'inscrire</button>
     </form>
 
     <div class="auth-footer">
-      <span>Déjà un compte ?</span>
-      <a href="/login" class="link">Se connecter</a>
+      <p>Déjà un compte ?</p>
+      <a href="/login" class="log-in-link">Se connecter</a>
     </div>
   </div>
 </div>
@@ -62,6 +62,10 @@ hideHeader: true
     flex-direction: column;
   }
 
+  p {
+    color: #c2c2c2;
+  }
+
   .goback {
     margin: 20px;
   }
@@ -71,16 +75,15 @@ hideHeader: true
     text-decoration: none;
   }
 
+  .goback-link p {
+    font-weight: 400
+  }
+
   .goback-link {
     display: flex;
     align-items: center;
     gap: 10px;
   }
-
-  .goback-link p {
-    font-weight: 400
-  }
-
 
   .auth-page-container {
     display: grid;
@@ -89,20 +92,30 @@ hideHeader: true
     margin-bottom: 100px;
   }
 
-  .auth-card {
-    background: rgb(235, 235, 235);
-    padding: 2rem;
-    border-radius: 7px;
+  .auth-footer {
     display: flex;
-    flex-direction: column;
-    gap: 25px;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    gap: 5px;
+    align-items: center;
+  }
+
+  .log-in-link {
+    color: #6366f1;
+    text-decoration: none;
   }
 
   form {
     display: flex;
     flex-direction: column;
     gap: 1rem;
+  }
+
+  .auth-card {
+    background: #1e2533;
+    padding: 2rem;
+    border-radius: 7px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
   }
 
   input {
@@ -114,33 +127,16 @@ hideHeader: true
     background-color: rgb(245, 245, 245);
   }
 
-  .btn {
-    background: #6366f1;
-    color: white;
-    border: none;
-    padding: 12px;
-    border-radius: 10px;
-    cursor: pointer;
-  }
-
   .link {
     color: #6366f1;
     text-decoration: none;
-    text-align: left
+    font-weight: 600;
   }
-
-  .error-text {
-    color: #dc2626;
-    font-size: 0.8rem;
-    margin-top: 4px;
-    display: block;
-  }
-
-
 
   h1 {
     margin: 0;
     font-size: 1.5rem;
-    color: #000;
+    color: white;
+    margin-bottom: 20px;
   }
 </style>
