@@ -24,6 +24,8 @@ export default class UnescosController {
     const unescos = await Unesco.query().exec()
     return view.render('pages/sites', { unescos })
   }
+
+  // TODO: à faire fetch des données des sites de user.
   async bookmarks({ view, auth }: HttpContext) {
     const unescos = await Unesco.query().exec()
     return view.render('pages/bookmarks', { unescos })
