@@ -91,12 +91,12 @@
       </h3>
       <div class="stats-grid">
         <div class="stat-box">
-          <span class="stat-number">13/160</span>
-          <span class="stat-label">Site visités</span>
+          <span class="stat-number" id="visitedCount"></span>
+          <span class="stat-label">Sites visités</span>
         </div>
         <div class="stat-box">
-          <span class="stat-number">7/192</span>
-          <span class="stat-label">Pays visités</span>
+          <span class="stat-number" id="markedCount"></span>
+          <span class="stat-label">Sites marqués</span>
         </div>
       </div>
     </div>
@@ -133,7 +133,7 @@
     // 1. Zoom et Marker (Tes fonctions originales)
     zoomToLocation(lon, lat);
     loadMarker(lon, lat);
-
+    
     // Modify the text in the routes to add the ID's
     const visitUrl = visitUrlTemplate.replace('__ID__', unescoId);
     const markUrl = markUrlTemplate.replace('__ID__', unescoId);
@@ -175,6 +175,7 @@
       flipVisitSiteUI(unescoId)
       flipMarkSiteUI(unescoId)
     }
+    updateStats()
   }
 
   function restoreList() {
@@ -263,6 +264,25 @@
     });
   }
 
+  // Returns the number of marked markers.
+  function getMarkedSitesCount() {
+    return markersData.filter((marker) => marker.isMarked == 1).length
+  }
+
+  // Returns the number of visited markers.
+  function getVisitedSitesCount() {
+    return markersData.filter((marker) => marker.isVisited == 1).length
+  }
+
+  function updateStats() {
+    const visited = getVisitedSitesCount();
+    const marked = getMarkedSitesCount();
+    const total = unescosData.length;
+
+    document.getElementById("visitedCount").innerText = `${visited}/${total}`;
+    document.getElementById("markedCount").innerText = `${marked}/${total}`;
+  }
+
   async function visitSite(url, unescoId) {
     try {
       const res = await fetch(url, {
@@ -278,7 +298,7 @@
       console.log(`Visiting sequence with unescoId : ${unescoId} `);
 
       flipVisitSiteUI(unescoId)
-      
+      updateStats()
     } catch (err) {
       console.error(err);
     }
@@ -299,7 +319,7 @@
       console.log(`Marking sequence with unescoId : ${unescoId} `);
 
       flipMarkSiteUI(unescoId)
-
+      updateStats()
     } catch (err) {
       console.error(err);
     }
