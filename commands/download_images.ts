@@ -113,6 +113,8 @@ export default class DownloadImages extends BaseCommand {
           failedSites.push(site)
           await sleep(2000)
         }
+      } else {
+        this.logger.warning(`${site.idNo} has no image url`)
       }
     }
 
