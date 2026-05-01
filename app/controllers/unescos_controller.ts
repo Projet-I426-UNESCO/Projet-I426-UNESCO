@@ -24,6 +24,32 @@ export default class UnescosController {
     const unescos = await Unesco.query().exec()
     return view.render('pages/sites', { unescos })
   }
+  async bookmarks({ view, auth }: HttpContext) {
+    const markers = await Marker.query()
+      .where('user_id', auth.user!.id)
+      .where('type', 'marked')
+      .exec()
+    const unescos = await Unesco.query()
+      .whereIn(
+        'id',
+        markers.map((marker) => marker.unescoId)
+      )
+      .exec()
+    return view.render('pages/bookmarks', { unescos })
+  }
+  async visits({ view, auth }: HttpContext) {
+    const markers = await Marker.query()
+      .where('user_id', auth.user!.id)
+      .where('type', 'visited')
+      .exec()
+    const unescos = await Unesco.query()
+      .whereIn(
+        'id',
+        markers.map((marker) => marker.unescoId)
+      )
+      .exec()
+    return view.render('pages/visits', { unescos })
+  }
   async profile({ view }: HttpContext) {
     return view.render('pages/profile')
   }
@@ -42,7 +68,7 @@ export default class UnescosController {
    */
   async show({ params, view }: HttpContext) {
     const unesco = await Unesco.query().where('id', params.id).firstOrFail()
-    
+
     return view.render('pages/site', { unesco })
   }
 

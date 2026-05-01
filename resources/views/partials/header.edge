@@ -53,16 +53,16 @@
           </p>
         </div>
       </a>
-      <a href="#">
-        <div class="menu-item">
+      <a href="{{ route('bookmarks') }}">
+        <div class="menu-item {{ request.url() === '/bookmarks' ? 'active' : '' }}">
           <span class="material-symbols-outlined">list_alt_check</span>
           <p>
             Sites marqués
           </p>
         </div>
       </a>
-      <a href="#">
-        <div class="menu-item">
+      <a href="{{ route('visits') }}">
+        <div class="menu-item {{ request.url() === '/visits' ? 'active' : '' }}">
           <span class="material-symbols-outlined">patient_list</span>
           <p>
             Sites visités

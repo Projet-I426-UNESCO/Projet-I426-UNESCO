@@ -18,6 +18,8 @@ import MarkersController from '#controllers/markers_controller'
 
 router.get('/', [UnescosController, 'index']).as('home')
 router.get('/sites', [UnescosController, 'sites']).as('sites')
+router.get('/bookmarks', [UnescosController, 'bookmarks']).as('bookmarks').use(middleware.auth())
+router.get('/visits', [UnescosController, 'visits']).as('visits').use(middleware.auth())
 router.get('/profile', [UnescosController, 'profile']).as('profile.show').use(middleware.auth())
 
 router.get('/site/:id', [UnescosController, 'show']).as('site.show')
