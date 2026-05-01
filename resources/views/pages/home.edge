@@ -155,6 +155,7 @@
                       ${item.shortDescriptionFr || "Située au large des côtes, cette formation géologique est une structure monumentale unique au monde."}
                   </p>
                   <a href="/site/${item.id}" class="detail-link">En savoir plus</a>
+                @if(auth.user)
                 <button class="action-btn btn-add" id="visitSiteBtn" onclick="visitSite('${visitUrl}', '${unescoId}')">
                   <!--<span class="material-symbols-outlined">add</span>-->
                   Ajouter à mes visites
@@ -164,6 +165,7 @@
                   <!--<span class="material-symbols-outlined">check</span>-->
                   Marquer le Site
                 </button>
+                @end
               </div>
           </div>
       `;
@@ -350,8 +352,6 @@
   function loadMarker(lng, lat) {
     const marker = new mapboxgl.Marker().setLngLat([lng, lat]).addTo(map);
   }
-
-  map.addControl(new mapboxgl.NavigationControl());
 
   function zoomToLocation(lng, lat) {
     map.flyTo({
