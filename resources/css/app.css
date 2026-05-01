@@ -1017,6 +1017,62 @@ aside {
 
 /* --- RESPONSIVE --- */
 
+/* Tablet Responsive */
+@media screen and (max-width: 1024px) and (min-width: 768px) {
+  .sites-main {
+    padding-bottom: 20px;
+  }
+
+  .sites-main .controls {
+    padding: 15px;
+    flex-wrap: wrap;
+    gap: 15px;
+  }
+
+  .search-container {
+    width: 100%;
+    flex-wrap: wrap;
+  }
+
+  .search-pill input {
+    width: 200px;
+  }
+
+  .sites-grid {
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 15px;
+    padding: 15px;
+  }
+
+  .site-box {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .site-box-img {
+    height: 140px;
+  }
+
+  .site-box-info h3 {
+    font-size: 15px;
+  }
+
+  .site-box .btn-primary,
+  .site-box .delete-btn,
+  .site-box .visited-btn,
+  .site-box .action-btn {
+    font-size: 14px;
+    height: 40px;
+    margin: 3px 8px;
+    width: calc(100% - 16px);
+  }
+
+  .filter-popup-content {
+    width: 95%;
+    max-width: 450px;
+  }
+}
+
 @media screen and (max-width: 1460px) {
   .user-profile {
     display: none;
