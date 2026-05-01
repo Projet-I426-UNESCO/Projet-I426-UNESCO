@@ -15,10 +15,10 @@ export default class MarkersController {
           marker = await Marker.query().where('userId', auth.user?.id).where('unescoId', params.unescoId).first()
           
           if (marker) {
-              console.log(`Modifying existing marker ${params.unescoId}, isVisited : ${marker.isVisited}`)
               await marker.merge({
                   isVisited: !marker.isVisited
               })
+              console.log(`Modifying existing marker ${params.unescoId}, isVisited : ${marker.isVisited}`)
               marker.save()
           } else {
               console.log('Marker doesn\'t exist yet, creating one')
@@ -43,10 +43,10 @@ export default class MarkersController {
           marker = await Marker.query().where('userId', auth.user?.id).where('unescoId', params.unescoId).first()
 
           if (marker) {
-              console.log(`Modifying existing marker ${params.unescoId}, isMarked : ${marker.isMarked}`)
               marker.merge({
                   isMarked: !marker.isMarked
               })
+              console.log(`Modifying existing marker ${params.unescoId}, isMarked : ${marker.isMarked}`)
               marker.save()
           } else {
               console.log('Marker doesn\'t exist yet, creating one')

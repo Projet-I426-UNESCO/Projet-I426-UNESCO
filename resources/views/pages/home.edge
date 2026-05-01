@@ -156,12 +156,12 @@
                   </p>
                   <a href="/site/${item.id}" class="detail-link">En savoir plus</a>
                 <button class="action-btn btn-add" id="visitSiteBtn" onclick="visitSite('${visitUrl}', '${unescoId}')">
-                  <span class="material-symbols-outlined">add</span>
+                  <!--<span class="material-symbols-outlined">add</span>-->
                   Ajouter à mes visites
                 </button>
 
                 <button class="action-btn btn-visit" id="markSiteBtn" onclick="markSite('${markUrl}', '${unescoId}')">
-                  <span class="material-symbols-outlined">check</span>
+                  <!--<span class="material-symbols-outlined">check</span>-->
                   Marquer le Site
                 </button>
               </div>
@@ -307,12 +307,15 @@
     // if the marker exists Flip the isVisited value in UI
     if (markersData) {
       const marker = markersData.find((marker) => marker.unescoId == unescoId)
+      const button = document.getElementById("visitSiteBtn")
       if (marker) {
-        const button = document.getElementById("visitSiteBtn")
+        markersData[markersData.findIndex((marker) => marker.unescoId == unescoId)].isVisited = !marker.isVisited
         button.innerText = marker.isVisited ? "Enlever de mes visites" : "Ajouter à mes visites"
         // Flips the isVisited in the gotten data, it modifies the now local data, not the distant one, simply to keep the UI up to date.
-        markersData[markersData.findIndex((marker) => marker.unescoId == unescoId)].isVisited = !marker.isVisited
-      } 
+      } else {
+        markersData.push({isMarked: 0, isVisited: 1, unescoId: unescoId})
+        button.innerText = "Enlever de mes visites"
+      }
     }
   }
 
@@ -320,11 +323,15 @@
     // if the marker exists Flip the isMarked value in UI
     if (markersData) {
       const marker = markersData.find((marker) => marker.unescoId == unescoId)
+      const button = document.getElementById("markSiteBtn")
       if (marker) {
-        const button = document.getElementById("markSiteBtn")
+        markersData[markersData.findIndex((marker) => marker.unescoId == unescoId)].isMarked = !marker.isMarked
         button.innerText = marker.isMarked ? "Démarquer le Site" : "Marquer le Site"
         // Flips the isMarked in the gotten data, it modifies the now local data, not the distant one, simply to keep the UI up to date.
-        markersData[markersData.findIndex((marker) => marker.unescoId == unescoId)].isMarked = !marker.isMarked
+      } else {
+        // If the marker doesn't exist we manually, locally create it as the db would and change it's values manually 
+        markersData.push({isMarked: 1, isVisited: 0, unescoId: unescoId})
+        button.innerText = "Démarquer le Site"
       }
     }
   }
