@@ -49,6 +49,7 @@ export default class UnescosController {
    * Show individual record
    */
   async show({ params, view, auth }: HttpContext) {
+    await auth.check()
     const unesco = await Unesco.query().where('id', params.id).firstOrFail()
     let markers = null
     if (auth.user) {
