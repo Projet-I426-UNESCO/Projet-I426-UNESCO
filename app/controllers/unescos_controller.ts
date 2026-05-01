@@ -48,10 +48,9 @@ export default class UnescosController {
   /**
    * Show individual record
    */
-  async show({ params, view }: HttpContext) {
-    const unesco = await Unesco.query().where('id', params.id).firstOrFail()
 
-    return view.render('pages/site', { unesco })
+
+    return view.render('pages/site', { unesco, markers })
   }
 
   /**
