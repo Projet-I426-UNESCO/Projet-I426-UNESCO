@@ -24,6 +24,8 @@ export default class UnescosController {
     const unescos = await Unesco.query().exec()
     return view.render('pages/sites', { unescos })
   }
+
+  // TODO: à faire fetch des données des sites de user.
   async bookmarks({ view, auth }: HttpContext) {
     const unescos = await Unesco.query().exec()
     return view.render('pages/bookmarks', { unescos })
@@ -32,8 +34,13 @@ export default class UnescosController {
     const unescos = await Unesco.query().exec()
     return view.render('pages/visits', { unescos })
   }
-  async profile({ view }: HttpContext) {
-    return view.render('pages/profile')
+  async profile({ view, auth }: HttpContext) {
+    
+    let markers = null
+    if (auth.user)
+      markers = await Marker.query().where('user_id', auth.user.id).exec()
+
+    return view.render('pages/profile', { markers })
   }
   /**
    * Display form to create a new record

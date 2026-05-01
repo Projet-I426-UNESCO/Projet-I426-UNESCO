@@ -25,7 +25,7 @@
           @if(unesco.localImageThumb)
             <img src="{{ unesco.localImageThumb }}" class="site-box-img" />
           @else
-            <img src="https://placehold.co/300x200" class="site-box-img" />
+            <img src="../../../public/placeholders/placeholderImage.png" class="site-box-img" />
           @end
           <div class="site-box-info">
             <h3>
@@ -52,7 +52,9 @@
     <div id="filterPopup" class="filter-popup">
       <div class="filter-popup-content">
         <div class="filter-popup-header">
-          <h2>Filtres</h2>
+          <h2>
+            Filtres
+          </h2>
           <button class="filter-close-btn" onclick="closeFilters()">
             <span class="material-symbols-outlined">close</span>
           </button>
@@ -65,10 +67,18 @@
           <div class="filter-section">
             <label>Type de site</label>
             <select id="typeFilter">
-              <option value="">Tous les types</option>
-              <option value="cultural">Culturel</option>
-              <option value="natural">Naturel</option>
-              <option value="mixed">Mixte</option>
+              <option value="">
+                Tous les types
+              </option>
+              <option value="cultural">
+                Culturel
+              </option>
+              <option value="natural">
+                Naturel
+              </option>
+              <option value="mixed">
+                Mixte
+              </option>
             </select>
           </div>
         </div>
@@ -82,47 +92,41 @@
 
   <script>
     function openFilters() {
-      const popup = document.getElementById('filterPopup');
-      popup.classList.add('show');
+      const popup = document.getElementById("filterPopup");
+      popup.classList.add("show");
     }
 
     function closeFilters() {
-      const popup = document.getElementById('filterPopup');
-      popup.classList.remove('show');
+      const popup = document.getElementById("filterPopup");
+      popup.classList.remove("show");
     }
 
     function applyFilters() {
-      const countryFilter = document.getElementById('countryFilter').value;
-      const typeFilter = document.getElementById('typeFilter').value;
-
-      const sites = document.querySelectorAll('.site-box');
+      const countryFilter = document.getElementById("countryFilter").value;
+      const typeFilter = document.getElementById("typeFilter").value;
+      const sites = document.querySelectorAll(".site-box");
       sites.forEach(site => {
         let visible = true;
-
         if (countryFilter) {
-          const country = site.querySelector('.site-box-info p').textContent.toLowerCase();
+          const country = site.querySelector(".site-box-info p").textContent.toLowerCase();
           visible = visible && country.includes(countryFilter.toLowerCase());
         }
-
-        site.style.display = visible ? 'flex' : 'none';
+        site.style.display = visible ? "flex" : "none";
       });
-
       closeFilters();
     }
 
     function resetFilters() {
-      document.getElementById('countryFilter').value = '';
-      document.getElementById('typeFilter').value = '';
-
-      const sites = document.querySelectorAll('.site-box');
+      document.getElementById("countryFilter").value = "";
+      document.getElementById("typeFilter").value = "";
+      const sites = document.querySelectorAll(".site-box");
       sites.forEach(site => {
-        site.style.display = 'flex';
+        site.style.display = "flex";
       });
-
       closeFilters();
     }
 
-    document.getElementById('filterPopup').addEventListener('click', function(e) {
+    document.getElementById("filterPopup").addEventListener("click", function(e) {
       if (e.target === this) {
         closeFilters();
       }
