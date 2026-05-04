@@ -10,7 +10,6 @@ import _puppeteer from 'puppeteer-extra'
 import StealthPlugin from 'puppeteer-extra-plugin-stealth'
 
 const puppeteer = _puppeteer.default
-puppeteer.use(StealthPlugin())
 
 puppeteer.use(StealthPlugin())
 
@@ -24,7 +23,7 @@ export default class DownloadImages extends BaseCommand {
   static options: CommandOptions = { startApp: true }
 
   // Fonction pour traiter un site unique
-  async processSite(page: any, site: Unesco, paths: { main: string; thumb: string; base: string }) {
+  async processSite(page: any, site: Unesco, paths: { main: string; thumb: string }) {
     const safeImageUrl = site.mainImageUrl.replace(/^http:\/\//i, 'https://')
 
     const base64DataUrl = await page.evaluate(async (imageUrl: string) => {
@@ -48,31 +47,31 @@ export default class DownloadImages extends BaseCommand {
 
     // Sauvegarder les images
     // Main
-    await sharp(buffer)
+    await sharp(buffer, { limitInputPixels: false })
       .resize({ width: 1200, withoutEnlargement: true })
       .webp({ quality: 70, effort: 6 })
       .toFile(path.join(paths.main, filenameMain))
 
     // Thumb
-    await sharp(buffer)
+    await sharp(buffer, { limitInputPixels: false })
       .resize({ width: 180, height: 180, fit: 'cover' })
       .webp({ quality: 60, effort: 6 })
       .toFile(path.join(paths.thumb, filenameThumb))
 
     // Sauvegarder les chemins des images
-    site.localImageMain = `${paths.base}/main/${filenameMain}`
-    site.localImageThumb = `${paths.base}/thumb/${filenameThumb}`
+
+    const DOMAIN = 'unesco.etml.net'
+    site.localImageMain = `https://${DOMAIN}/${paths.main}/${filenameMain}`
+    site.localImageThumb = `https://${DOMAIN}/${paths.thumb}/${filenameThumb}`
     await site.save()
   }
 
   async run() {
     // Initialiser les chemins des images
     const STOREPATH = 'public/unesco/images'
-    const BASEPATH = 'unesco/images'
     const paths = {
-      main: app.makePath(`${STOREPATH}/main`),
-      thumb: app.makePath(`${STOREPATH}/thumb`),
-      base: BASEPATH,
+      main: `${STOREPATH}/main`,
+      thumb: `${STOREPATH}/thumb`,
     }
 
     // Créer les dossiers de stockage
@@ -86,7 +85,7 @@ export default class DownloadImages extends BaseCommand {
     // Initialiser le navigateur
     const browser = await puppeteer.launch({
       executablePath: '/usr/bin/chromium',
-      headless: false,
+      headless: true,
       args: ['--no-sandbox', '--disable-setuid-sandbox'],
       defaultViewport: null,
     })
