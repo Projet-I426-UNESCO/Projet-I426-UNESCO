@@ -1,7 +1,6 @@
 import { BaseCommand } from '@adonisjs/core/ace'
 import type { CommandOptions } from '@adonisjs/core/types/ace'
 import Unesco from '#models/unesco'
-import app from '@adonisjs/core/services/app'
 import fs from 'node:fs/promises'
 import path from 'node:path'
 import sharp from 'sharp'
@@ -24,26 +23,30 @@ export default class DownloadImages extends BaseCommand {
 
   // Fonction pour traiter un site unique
   async processSite(page: any, site: Unesco, paths: { main: string; thumb: string }) {
-    const safeImageUrl = site.mainImageUrl.replace(/^http:\/\//i, 'https://')
-
     const base64DataUrl = await page.evaluate(async (imageUrl: string) => {
-      const res = await fetch(imageUrl)
-      if (!res.ok) throw new Error(`HTTP ${res.status}`)
-      const blob = await res.blob()
-      return new Promise((resolve, reject) => {
-        const reader = new FileReader()
-        reader.onloadend = () => resolve(reader.result as string)
-        reader.onerror = reject
-        reader.readAsDataURL(blob)
-      })
-    }, safeImageUrl)
+      const signal = AbortSignal.timeout(15000)
+
+      try {
+        const res = await fetch(imageUrl, { signal })
+        if (!res.ok) throw new Error(`HTTP ${res.status}`)
+        const blob = await res.blob()
+        return new Promise((resolve, reject) => {
+          const reader = new FileReader()
+          reader.onloadend = () => resolve(reader.result as string)
+          reader.onerror = reject
+          reader.readAsDataURL(blob)
+        })
+      } catch (err: any) {
+        throw new Error(err.message || 'Timeout')
+      }
+    }, site.mainImageUrl)
 
     const base64String = (base64DataUrl as string).split(',')[1]
     const buffer = Buffer.from(base64String, 'base64')
 
     // Générer les noms de fichiers
     const filenameMain = `${site.idNo}.webp`
-    const filenameThumb = `${site.idNo}-thumb.webp`
+    const filenameThumb = `${site.idNo}.webp`
 
     // Sauvegarder les images
     // Main
@@ -81,13 +84,22 @@ export default class DownloadImages extends BaseCommand {
     // Récupérer tous les sites depuis la db
     const sites = await Unesco.all()
     let failedSites: Unesco[] = []
+    let succeedSites = 0
 
     // Initialiser le navigateur
     const browser = await puppeteer.launch({
       executablePath: '/usr/bin/chromium',
       headless: true,
-      args: ['--no-sandbox', '--disable-setuid-sandbox'],
+      args: [
+        '--no-sandbox',
+        '--disable-setuid-sandbox',
+        '--disable-dev-shm-usage',
+        '--disable-web-security',
+        '--ignore-certificate-errors',
+        '--allow-running-insecure-content',
+      ],
       defaultViewport: null,
+      protocolTimeout: 0,
     })
 
     const page = await browser.newPage()
@@ -96,19 +108,21 @@ export default class DownloadImages extends BaseCommand {
         'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36',
     })
 
-    await page.goto('https://whc.unesco.org/fr/list/', { waitUntil: 'networkidle2' })
+    await page.goto('https://whc.unesco.org/fr/list/', { waitUntil: 'networkidle2', timeout: 0 })
     this.logger.info(`Cloudflare bypassed`)
     await sleep(4000)
 
     // PREMIER PASSAGE
     for (const site of sites) {
+      const id = `[${sites.length + 1 - site.id}/${sites.length}]`
       if (site.mainImageUrl?.startsWith('http')) {
         try {
           await this.processSite(page, site, paths)
-          this.logger.success(`[${site.id}/${sites.length}] [${site.idNo}]`)
+          this.logger.success(`${id} [${site.idNo}]`)
+          succeedSites++
           await sleep(1000)
         } catch (error) {
-          this.logger.error(`[${site.idNo}] Failed ${error.message}`)
+          this.logger.error(`  ${id} [${site.idNo}] ${error.message}`)
           failedSites.push(site)
           await sleep(2000)
         }
@@ -128,6 +142,7 @@ export default class DownloadImages extends BaseCommand {
         try {
           await this.processSite(page, site, paths)
           this.logger.success(`[${site.id}/${sites.length}] [${site.idNo}]`)
+          succeedSites++
           await sleep(2000)
         } catch (error) {
           this.logger.error(`[${site.idNo}] Failed ${error.message}`)
