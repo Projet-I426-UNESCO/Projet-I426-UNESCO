@@ -5,15 +5,15 @@
       <div class="search-container">
         <div class="search-pill">
           <span class="material-symbols-outlined">search</span>
-          <input type="text" placeholder="Rechercher un site..." />
+          <input type="text" placeholder="{{ t('messages.sites.search_placeholder') }}" />
         </div>
         <div class="search-pill">
           <button class="filter" onclick="openFilters()">            <span class="material-symbols-outlined">filter_list</span></button>
           <p>
             @if(filter)
-              Filtre: {{ filter }}
+              {{ t('messages.sites.filter_active') }}{{ filter }}
             @else
-              Filtre: aucun
+              {{ t('messages.sites.filter_none') }}
             @end
           </p>
         </div>
@@ -36,14 +36,14 @@
             </p>
           </div>
           @if(unesco.added)
-            <button class="delete-btn">              <span class="material-symbols-outlined">delete</span>Supprimer de la liste</button>
+            <button class="delete-btn">              <span class="material-symbols-outlined">delete</span>{{ t('messages.sites.remove_from_list') }}</button>
           @else
-            <button class="btn-primary">              <span class="material-symbols-outlined">add</span>Ajouter à ma liste</button>
+            <button class="btn-primary">              <span class="material-symbols-outlined">add</span>{{ t('messages.sites.add_to_list') }}</button>
           @end
           @if(unesco.visited)
-            <button class="visited-btn">              <span class="material-symbols-outlined">check</span>Site visité</button>
+            <button class="visited-btn">              <span class="material-symbols-outlined">check</span>{{ t('messages.sites.site_visited') }}</button>
           @else
-            <button class="action-btn btn-visit">              <span class="material-symbols-outlined">check</span>Marquer comme visité</button>
+            <button class="action-btn btn-visit">              <span class="material-symbols-outlined">check</span>{{ t('messages.sites.mark_as_visited') }}</button>
           @end
         </a>
       @end
@@ -52,29 +52,29 @@
     <div id="filterPopup" class="filter-popup">
       <div class="filter-popup-content">
         <div class="filter-popup-header">
-          <h2>Filtres</h2>
+          <h2>{{ t('messages.sites.filters_title') }}</h2>
           <button class="filter-close-btn" onclick="closeFilters()">
             <span class="material-symbols-outlined">close</span>
           </button>
         </div>
         <div class="filter-popup-body">
           <div class="filter-section">
-            <label>Région / Pays</label>
-            <input type="text" id="countryFilter" placeholder="Rechercher un pays..." />
+            <label>{{ t('messages.sites.filter_country_label') }}</label>
+            <input type="text" id="countryFilter" placeholder="{{ t('messages.sites.filter_country_placeholder') }}" />
           </div>
           <div class="filter-section">
-            <label>Type de site</label>
+            <label>{{ t('messages.sites.filter_type_label') }}</label>
             <select id="typeFilter">
-              <option value="">Tous les types</option>
-              <option value="cultural">Culturel</option>
-              <option value="natural">Naturel</option>
-              <option value="mixed">Mixte</option>
+              <option value="">{{ t('messages.sites.filter_type_all') }}</option>
+              <option value="cultural">{{ t('messages.sites.filter_type_cultural') }}</option>
+              <option value="natural">{{ t('messages.sites.filter_type_natural') }}</option>
+              <option value="mixed">{{ t('messages.sites.filter_type_mixed') }}</option>
             </select>
           </div>
         </div>
         <div class="filter-popup-footer">
-          <button class="btn-primary" onclick="applyFilters()">Appliquer</button>
-          <button class="btn-secondary" onclick="resetFilters()">Réinitialiser</button>
+          <button class="btn-primary" onclick="applyFilters()">{{ t('messages.sites.apply_filters') }}</button>
+          <button class="btn-secondary" onclick="resetFilters()">{{ t('messages.sites.reset_filters') }}</button>
         </div>
       </div>
     </div>

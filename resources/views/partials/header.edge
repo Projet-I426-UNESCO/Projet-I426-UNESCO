@@ -23,15 +23,15 @@
         <div class="menu-item {{ request.url() === '/' ? 'active' : '' }}">
           <span class="material-symbols-outlined">map</span>
           <p>
-            Explorer
+            {{ t('messages.header.explore') }}
           </p>
         </div>
       </a>
       <a href="{{ route('sites') }}">
-        <div class="menu-item">
+        <div class="menu-item {{ request.url() === '/sites' ? 'active' : '' }}">
           <span class="material-symbols-outlined">list</span>
           <p>
-            Liste
+            {{ t('messages.header.list') }}
           </p>
         </div>
       </a>
@@ -40,7 +40,7 @@
           class="menu-item {{ request.url() === '/profile' || request.url() === '/login' || request.url() === '/register' ? 'active' : '' }}">
           <span class="material-symbols-outlined">account_circle</span>
           <p>
-            Profil
+            {{ t('messages.header.profile') }}
           </p>
         </div>
       </a>
@@ -48,7 +48,7 @@
         <div class="menu-item">
           <span class="material-symbols-outlined">list_alt_check</span>
           <p>
-            Sites marqués
+            {{ t('messages.header.bookmarked_sites') }}
           </p>
         </div>
       </a>
@@ -56,7 +56,7 @@
         <div class="menu-item">
           <span class="material-symbols-outlined">patient_list</span>
           <p>
-            Sites visités
+            {{ t('messages.header.visited_sites') }}
           </p>
         </div>
       </a>
@@ -64,17 +64,26 @@
 
     <div class="lang-container">
       <div class="lang-popup" id="langPopup">
-        <div class="lang-option" onclick="changeLang('EN', 'us')">
-          <img src="https://flagcdn.com/w80/us.png" class="flag-icon" /> <span class="lang-text">EN</span>
-        </div>
-        <div class="lang-option" onclick="changeLang('FR', 'fr')">
-          <img src="https://flagcdn.com/w80/fr.png" class="flag-icon" /> <span class="lang-text">FR</span>
-        </div>
+        <a href="{{ route('lang.switch', { locale: 'en' }) }}" style="text-decoration: none; color: inherit;">
+          <div class="lang-option">
+            <img src="https://flagcdn.com/w80/us.png" class="flag-icon" /> <span class="lang-text">EN</span>
+          </div>
+        </a>
+        <a href="{{ route('lang.switch', { locale: 'fr' }) }}" style="text-decoration: none; color: inherit;">
+          <div class="lang-option">
+            <img src="https://flagcdn.com/w80/fr.png" class="flag-icon" /> <span class="lang-text">FR</span>
+          </div>
+        </a>
       </div>
 
       <div class="language-picker" id="langTrigger">
-        <img src="https://flagcdn.com/w80/fr.png" id="mainFlag" class="flag-icon" />
-        <span class="lang-text" id="mainText">FR</span>
+        @if(i18n.locale === 'en')
+          <img src="https://flagcdn.com/w80/us.png" id="mainFlag" class="flag-icon" />
+          <span class="lang-text" id="mainText">EN</span>
+        @else
+          <img src="https://flagcdn.com/w80/fr.png" id="mainFlag" class="flag-icon" />
+          <span class="lang-text" id="mainText">FR</span>
+        @end
         <span class="material-symbols-outlined" style="font-size: 20px; color: white;">expand_less</span>
       </div>
     </div>
@@ -122,12 +131,6 @@
     e.stopPropagation();
     popup.classList.toggle("show");
   });
-
-  function changeLang(lang, code) {
-    mainText.innerText = lang;
-    mainFlag.src = `https://flagcdn.com/w80/${code}.png`;
-    popup.classList.remove("show");
-  }
 
   window.addEventListener("resize", () => {
     if (!mobileMedia.matches) {

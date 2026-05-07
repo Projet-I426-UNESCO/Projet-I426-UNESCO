@@ -1,0 +1,72 @@
+{
+  "header": {
+    "explore": "Explorer",
+    "list": "Liste",
+    "profile": "Profil",
+    "bookmarked_sites": "Sites marqués",
+    "visited_sites": "Sites visités"
+  },
+  "home": {
+    "search_placeholder": "Rechercher un site...",
+    "filter_sites": "Sites",
+    "filter_to_visit": "À visiter",
+    "filter_visited": "Visités",
+    "toggle_markers": "Markers",
+    "logout_title": "Se déconnecter",
+    "login": "Se connecter",
+    "register": "Créer un compte",
+    "stats_title": "Mes statistiques",
+    "sites_visited": "Sites visités",
+    "countries_visited": "Pays visités",
+    "back_button": "Retour en arrière",
+    "add_to_visited": "Ajouter à mes visites",
+    "remove_from_visited": "Enlever de mes visites",
+    "mark_site": "Marquer le Site",
+    "unmark_site": "Démarquer le Site"
+  },
+  "sites": {
+    "search_placeholder": "Rechercher un site...",
+    "filter_none": "Filtre: aucun",
+    "filter_active": "Filtre: ",
+    "remove_from_list": "Supprimer de la liste",
+    "add_to_list": "Ajouter à ma liste",
+    "site_visited": "Site visité",
+    "mark_as_visited": "Marquer comme visité",
+    "filters_title": "Filtres",
+    "filter_country_label": "Région / Pays",
+    "filter_country_placeholder": "Rechercher un pays...",
+    "filter_type_label": "Type de site",
+    "filter_type_all": "Tous les types",
+    "filter_type_cultural": "Culturel",
+    "filter_type_natural": "Naturel",
+    "filter_type_mixed": "Mixte",
+    "apply_filters": "Appliquer",
+    "reset_filters": "Réinitialiser"
+  },
+  "auth": {
+    "login_title": "Connexion",
+    "register_title": "Inscription",
+    "back": "Retour en arrière",
+    "username_placeholder": "Nom d'utilisateur (ex. xXx67Erdem67xXx-LFT)",
+    "password_placeholder": "Mot de passe",
+    "login_button": "Se connecter",
+    "register_button": "S'inscrire",
+    "invalid_credentials": "Identifiants invalides.",
+    "no_account": "Pas de compte ?",
+    "has_account": "Déjà un compte ?",
+    "email_placeholder": "Adresse e-mail"
+  },
+  "profile": {
+    "title": "Profil",
+    "logout": "Se déconnecter",
+    "edit_account": "Modifier le compte",
+    "last_visit": "Dernière visite",
+    "global_progress": "Progression Globale",
+    "continent_exploration": "Exploration par continent",
+    "recent_visits": "Visites récentes",
+    "visited_sites": "Sites visités",
+    "continents": "Continents",
+    "completion_rate": "Taux de complétion",
+    "countries_explored": "Pays explorés"
+  }
+}

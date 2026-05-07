@@ -5,7 +5,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>
-      Profil -
+      {{ t('messages.profile.title') }} -
     </title>
     <link
       rel="stylesheet"
@@ -204,15 +204,15 @@
             <div class="line">
               <form method="POST" action="{{ route('auth.logout') }}">
                 {{ csrfField() }}
-                <button type="submit" class="logout-btn">Se déconnecter</button>
+                <button type="submit" class="logout-btn">{{ t('messages.profile.logout') }}</button>
               </form>
-              <a href="" class="modif-btn">Modifier le compte</a>
+              <a href="" class="modif-btn">{{ t('messages.profile.edit_account') }}</a>
             </div>
           </div>
 
           <div class="last-visit-block">
             <p>
-              Dernière visite
+              {{ t('messages.profile.last_visit') }}
             </p>
             <p>
             </p>
@@ -220,7 +220,7 @@
 
           <div class="progress-block">
             <p>
-              Progression Globale
+              {{ t('messages.profile.global_progress') }}
             </p>
             <p>
               %
@@ -229,7 +229,7 @@
 
           <div class="continent-stats-block">
             <p>
-              Exploration par continent
+              {{ t('messages.profile.continent_exploration') }}
             </p>
             <div class="continent-grid">
 
@@ -238,25 +238,25 @@
 
           <div class="few-last-visits-block">
             <p>
-              Visites récentes
+              {{ t('messages.profile.recent_visits') }}
             </p>
           </div>
 
           <div class="general-stats-block">
             <div class="stat-card">
-              <span>Sites visités</span>
+              <span>{{ t('messages.profile.visited_sites') }}</span>
 
             </div>
             <div class="stat-card">
-              <span>Continents</span>
+              <span>{{ t('messages.profile.continents') }}</span>
 
             </div>
             <div class="stat-card">
-              <span>Taux de complétion</span>
+              <span>{{ t('messages.profile.completion_rate') }}</span>
 
             </div>
             <div class="stat-card">
-              <span>Pays explorés</span>
+              <span>{{ t('messages.profile.countries_explored') }}</span>
 
             </div>
           </div>

@@ -1,0 +1,72 @@
+{
+  "header": {
+    "explore": "Explore",
+    "list": "List",
+    "profile": "Profile",
+    "bookmarked_sites": "Bookmarked sites",
+    "visited_sites": "Visited sites"
+  },
+  "home": {
+    "search_placeholder": "Search a site...",
+    "filter_sites": "Sites",
+    "filter_to_visit": "To visit",
+    "filter_visited": "Visited",
+    "toggle_markers": "Markers",
+    "logout_title": "Logout",
+    "login": "Login",
+    "register": "Create account",
+    "stats_title": "My statistics",
+    "sites_visited": "Visited sites",
+    "countries_visited": "Countries visited",
+    "back_button": "Go back",
+    "add_to_visited": "Add to visits",
+    "remove_from_visited": "Remove from visits",
+    "mark_site": "Bookmark site",
+    "unmark_site": "Unbookmark site"
+  },
+  "sites": {
+    "search_placeholder": "Search a site...",
+    "filter_none": "Filter: none",
+    "filter_active": "Filter: ",
+    "remove_from_list": "Remove from list",
+    "add_to_list": "Add to my list",
+    "site_visited": "Site visited",
+    "mark_as_visited": "Mark as visited",
+    "filters_title": "Filters",
+    "filter_country_label": "Region / Country",
+    "filter_country_placeholder": "Search for a country...",
+    "filter_type_label": "Site type",
+    "filter_type_all": "All types",
+    "filter_type_cultural": "Cultural",
+    "filter_type_natural": "Natural",
+    "filter_type_mixed": "Mixed",
+    "apply_filters": "Apply",
+    "reset_filters": "Reset"
+  },
+  "auth": {
+    "login_title": "Login",
+    "register_title": "Register",
+    "back": "Go back",
+    "username_placeholder": "Username (e.g. xXx67Erdem67xXx-LFT)",
+    "password_placeholder": "Password",
+    "login_button": "Login",
+    "register_button": "Register",
+    "invalid_credentials": "Invalid credentials.",
+    "no_account": "Don't have an account?",
+    "has_account": "Already have an account?",
+    "email_placeholder": "Email address"
+  },
+  "profile": {
+    "title": "Profile",
+    "logout": "Logout",
+    "edit_account": "Edit account",
+    "last_visit": "Last visit",
+    "global_progress": "Global Progress",
+    "continent_exploration": "Exploration by continent",
+    "recent_visits": "Recent visits",
+    "visited_sites": "Visited sites",
+    "continents": "Continents",
+    "completion_rate": "Completion rate",
+    "countries_explored": "Countries explored"
+  }
+}

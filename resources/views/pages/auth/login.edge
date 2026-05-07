@@ -1,7 +1,7 @@
 <link rel="stylesheet"
   href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@23,400,0,0&icon_names=arrow_back" />
 @layout({
-title: "Connexion",
+title: t('messages.auth.login_title'),
 hideHeader: true
 })
 <div class="goback">
@@ -11,20 +11,20 @@ hideHeader: true
         arrow_back
       </span>
       <p>
-        Retour en arrière</p>
+        {{ t('messages.auth.back') }}</p>
     </div>
   </a>
 </div>
 <div class="auth-page-container">
   <div class="auth-card">
-    <h1>Connexion</h1>
+    <h1>{{ t('messages.auth.login_title') }}</h1>
 
     <form method="POST" action="{{ route('auth.login.store') }}">
       {{ csrfField() }}
 
       <div class="input-group">
         <input type="text" name="fullName" value="{{ old('fullName') || '' }}"
-          placeholder="Nom d'utilisateur (ex. xXx67Erdem67xXx-LFT)" required />
+          placeholder="{{ t('messages.auth.username_placeholder') }}" required />
         @inputError('fullName')
         <span class="error-text">{{ $messages.join(', ') }}</span>
         @end
@@ -32,7 +32,7 @@ hideHeader: true
 
       <div class="input-group">
         <div class="password-wrapper">
-          <input type="password" name="password" placeholder="Mot de passe" required />
+          <input type="password" name="password" placeholder="{{ t('messages.auth.password_placeholder') }}" required />
         </div>
         @inputError('password')
         <span class="error-text">{{ $messages.join(', ') }}</span>
@@ -40,16 +40,16 @@ hideHeader: true
       </div>
 
 
-      <button type="submit" class="btn-primary">Se connecter</button>
+      <button type="submit" class="btn-primary">{{ t('messages.auth.login_button') }}</button>
 
       @error('E_INVALID_CREDENTIALS')
-      <p class="error-message">Identifiants invalides.</p>
+      <p class="error-message">{{ t('messages.auth.invalid_credentials') }}</p>
       @end
     </form>
 
     <div class="auth-footer">
-      <span>Pas de compte ?</span>
-      <a href="/register">S'inscrire</a>
+      <span>{{ t('messages.auth.no_account') }}</span>
+      <a href="/register">{{ t('messages.auth.register_button') }}</a>
     </div>
   </div>
 </div>
