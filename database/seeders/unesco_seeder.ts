@@ -1,6 +1,7 @@
 import { BaseSeeder } from '@adonisjs/lucid/seeders'
 import Unesco from '#models/unesco'
 import unescos from '../../public/data/whc001.json' with { type: 'json' }
+import db from '@adonisjs/lucid/services/db'
 
 // Seeder généré avec Gemini
 // https://gemini.google.com/share/79ebc5eccbaf
@@ -85,5 +86,12 @@ export default class extends BaseSeeder {
         componentsCount: item.components_count,
       }))
     )
+
+    await db.rawQuery(`
+          UPDATE unescos
+          SET local_image_main = 'https://unesco.etml.net/unesco/images/main/' || id_no || '.webp',
+              local_image_thumb = 'https://unesco.etml.net/unesco/images/thumb/' || id_no || '.webp'
+          WHERE id_no IS NOT NULL;
+        `)
   }
 }
