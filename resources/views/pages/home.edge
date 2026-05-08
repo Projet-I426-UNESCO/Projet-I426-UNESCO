@@ -10,7 +10,8 @@
       <div class="search-container">
         <div class="search-pill">
           <span class="material-symbols-outlined">search</span>
-          <input type="text" placeholder="{{ t('messages.home.search_placeholder') }}" />
+          <input id="siteSearchInput" type="text" placeholder="{{ t('messages.home.search_placeholder') }}"
+            autocomplete="off" />
         </div>
 
         <div class="filter-pill active" onclick="setFilter('all')">
@@ -108,8 +109,7 @@
   @!unesco.detail()
 </template>
 <script>
-  
-  const initialAsideContent = document.getElementById("aside-dynamic-content").innerHTML;
+
 
   // function handleCardClick(index, lon, lat) {
   //   zoomToLocation(lon, lat);
@@ -133,6 +133,7 @@
   const markUrlTemplate = "{{ route('marker.mark', { unescoId: '__ID__' }) }}";
 
   let activeFilter = "all"; // "all" | "visited" | "marked"
+  let searchQuery = "";
 
   function handleCardClick(index, unescoId, lon, lat) {
     // 1. Zoom et Marker (Tes fonctions originales)
@@ -201,26 +202,91 @@
     activeFilter = mode;
 
     updateFilterUI(mode);
-    loadMarkers(unescosData);
+    applyFilters();
   }
 
   function restoreList() {
-    if (initialAsideContent) {
-      const container = document.getElementById("aside-dynamic-content");
-      container.innerHTML = initialAsideContent;
-      initialAsideContent = "";
-    }
+    applyFilters();
   }
-
-  document.querySelectorAll(".filter-pill").forEach(pill => {
-    pill.addEventListener("click", () => {
-      document.querySelectorAll(".filter-pill").forEach(p => p.classList.remove("active"));
-      pill.classList.add("active");
-    });
-  });
 
   const unescosData = {{{ JSON.stringify(unescos) }}};
   const markersData = {{{ JSON.stringify(markers) }}};
+  const unescoIndexById = new Map(unescosData.map((unesco, index) => [unesco.id, index]));
+  const searchInput = document.getElementById("siteSearchInput");
+
+  function normalizeSearchValue(value) {
+    return (value || "")
+      .toString()
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .toLowerCase()
+      .trim();
+  }
+
+  function markerMatchesActiveFilter(markerState) {
+    if (activeFilter === "visited") return Boolean(markerState?.isVisited);
+    if (activeFilter === "marked") return Boolean(markerState?.isMarked);
+    return true;
+  }
+
+  function matchesSearch(unesco) {
+    const normalizedQuery = normalizeSearchValue(searchQuery);
+    if (!normalizedQuery) return true;
+
+    const searchableText = [unesco.nameFr, unesco.nameEn, unesco.statesNames]
+      .map(normalizeSearchValue)
+      .join(" ");
+
+    return searchableText.includes(normalizedQuery);
+  }
+
+  function getFilteredUnescos() {
+    return unescosData.filter((unesco) => {
+      if (!unesco.coordinates) return false;
+
+      const markerState = markersData?.find((marker) => marker.unescoId == unesco.id);
+
+      return markerMatchesActiveFilter(markerState) && matchesSearch(unesco);
+    });
+  }
+
+  function renderSiteList(unescos) {
+    const container = document.getElementById("aside-dynamic-content");
+
+    if (!unescos.length) {
+      container.innerHTML = `<p class="empty-search-result">Aucun site ne correspond a votre recherche.</p>`;
+      return;
+    }
+
+    container.innerHTML = unescos
+      .map((unesco) => {
+        const index = unescoIndexById.get(unesco.id);
+
+        return `
+          <div class="site-card" onclick="handleCardClick(${index}, ${unesco.id}, ${unesco.coordinates.lon}, ${unesco.coordinates.lat})">
+            <div class="card-info">
+              <img src="${unesco.localImageThumb || "https://placehold.co/600x400"}" class="card-img" />
+              <h4>${unesco.nameFr || unesco.nameEn || "Site UNESCO"}</h4>
+              <p>${unesco.statesNames || ""}</p>
+            </div>
+          </div>
+        `;
+      })
+      .join("");
+  }
+
+  function applyFilters() {
+    const filteredUnescos = getFilteredUnescos();
+    renderSiteList(filteredUnescos);
+    loadMarkers(filteredUnescos);
+  }
+
+  if (searchInput) {
+    searchInput.addEventListener("input", (event) => {
+      searchQuery = event.target.value || "";
+      applyFilters();
+    });
+  }
 
   mapboxgl.accessToken = "pk.eyJ1IjoiNjdza2liaWRpc2NydW0iLCJhIjoiY21sYXdlamR3MGcyOTNlcXoxdHQ2bXliaiJ9.BXx6EzzxvsFrDg5yeo1LUQ";
 
@@ -279,8 +345,9 @@
   });
 
   map.on("load", () => {
-    loadMarkers(unescosData);
+    applyFilters();
     toggleMarkers();
+    updateStats();
     console.log(markersData);
   });
 
@@ -335,6 +402,10 @@
         .setLngLat([unesco.coordinates.lon, unesco.coordinates.lat])
         .addTo(map);
 
+      if (!markersVisible) {
+        marker.remove();
+      }
+
       markerInstances.push(marker);
     });
   }
@@ -375,6 +446,7 @@
       console.log(`Visiting sequence with unescoId : ${unescoId} `);
 
       flipVisitSiteUI(unescoId)
+      loadMarkers(getFilteredUnescos())
       updateStats()
     } catch (err) {
       console.error(err);
@@ -396,6 +468,7 @@
       console.log(`Marking sequence with unescoId : ${unescoId} `);
 
       flipMarkSiteUI(unescoId)
+      loadMarkers(getFilteredUnescos())
       updateStats()
     } catch (err) {
       console.error(err);
@@ -409,11 +482,15 @@
       const button = document.getElementById("visitSiteBtn")
       if (marker) {
         markersData[markersData.findIndex((marker) => marker.unescoId == unescoId)].isVisited = !marker.isVisited
-        button.innerText = marker.isVisited ? "{{ t('messages.home.remove_from_visited') }}" : "{{ t('messages.home.add_to_visited') }}"
+        if (button) {
+          button.innerText = marker.isVisited ? "{{ t('messages.home.remove_from_visited') }}" : "{{ t('messages.home.add_to_visited') }}"
+        }
         // Flips the isVisited in the gotten data, it modifies the now local data, not the distant one, simply to keep the UI up to date.
       } else {
         markersData.push({ isMarked: 0, isVisited: 1, unescoId: unescoId })
-        button.innerText = "Enlever de mes visites"
+        if (button) {
+          button.innerText = "Enlever de mes visites"
+        }
       }
     }
   }
@@ -425,12 +502,16 @@
       const button = document.getElementById("markSiteBtn")
       if (marker) {
         markersData[markersData.findIndex((marker) => marker.unescoId == unescoId)].isMarked = !marker.isMarked
-        button.innerText = marker.isMarked ? "{{ t('messages.home.unmark_site') }}" : "{{ t('messages.home.mark_site') }}"
+        if (button) {
+          button.innerText = marker.isMarked ? "{{ t('messages.home.unmark_site') }}" : "{{ t('messages.home.mark_site') }}"
+        }
         // Flips the isMarked in the gotten data, it modifies the now local data, not the distant one, simply to keep the UI up to date.
       } else {
         // If the marker doesn't exist we manually, locally create it as the db would and change it's values manually 
         markersData.push({ isMarked: 1, isVisited: 0, unescoId: unescoId })
-        button.innerText = "Démarquer le Site"
+        if (button) {
+          button.innerText = "Démarquer le Site"
+        }
       }
     }
   }

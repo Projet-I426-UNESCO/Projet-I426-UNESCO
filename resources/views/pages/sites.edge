@@ -5,7 +5,8 @@
     <div class="search-container">
       <div class="search-pill" style="flex: 1; min-width: 200px;">
         <span class="material-symbols-outlined">search</span>
-        <input type="text" placeholder="{{ t('messages.sites.search_placeholder') }}" />
+        <input id="siteSearchInput" type="text" placeholder="{{ t('messages.sites.search_placeholder') }}"
+          autocomplete="off" />
       </div>
       <div class="search-pill">
         <button class="filter" onclick="openFilters()">
@@ -13,9 +14,9 @@
         </button>
         <p>
           @if(filter)
-            {{ t('messages.sites.filter_active') }} {{ filter }}
+          {{ t('messages.sites.filter_active') }} {{ filter }}
           @else
-            {{ t('messages.sites.filter_none') }}
+          {{ t('messages.sites.filter_none') }}
           @end
         </p>
       </div>
@@ -24,42 +25,42 @@
 
   <div class="sites-grid">
     @each((unesco) in unescos)
-      <a href="{{ route('site.show', { id: unesco.id }) }}" class="site-box">
-        @if(unesco.localImageThumb)
-          <img src="{{ unesco.localImageThumb }}" class="site-box-img" />
-        @else
-          <img src="../../../public/placeholders/placeholderImage.png" class="site-box-img" />
-        @end
+    <a href="{{ route('site.show', { id: unesco.id }) }}" class="site-box">
+      @if(unesco.localImageThumb)
+      <img src="{{ unesco.localImageThumb }}" class="site-box-img" />
+      @else
+      <img src="../../../public/placeholders/placeholderImage.png" class="site-box-img" />
+      @end
 
-        <div class="site-box-info">
-          <h3>{{ unesco.nameFr }}</h3>
-          <p>{{ unesco.statesNames }}</p>
-        </div>
+      <div class="site-box-info">
+        <h3>{{ unesco.nameFr }}</h3>
+        <p>{{ unesco.statesNames }}</p>
+      </div>
 
-        @if(unesco.added)
-          <button class="delete-btn">
-            <span class="material-symbols-outlined">delete</span>
-            {{ t('messages.sites.remove_from_list') }}
-          </button>
-        @else
-          <button class="btn-primary">
-            <span class="material-symbols-outlined">add</span>
-            {{ t('messages.sites.add_to_list') }}
-          </button>
-        @end
+      @if(unesco.added)
+      <button class="delete-btn">
+        <span class="material-symbols-outlined">delete</span>
+        {{ t('messages.sites.remove_from_list') }}
+      </button>
+      @else
+      <button class="btn-primary">
+        <span class="material-symbols-outlined">add</span>
+        {{ t('messages.sites.add_to_list') }}
+      </button>
+      @end
 
-        @if(unesco.visited)
-          <button class="visited-btn">
-            <span class="material-symbols-outlined">check</span>
-            {{ t('messages.sites.site_visited') }}
-          </button>
-        @else
-          <button class="action-btn btn-visit">
-            <span class="material-symbols-outlined">check</span>
-            {{ t('messages.sites.mark_as_visited') }}
-          </button>
-        @end
-      </a>
+      @if(unesco.visited)
+      <button class="visited-btn">
+        <span class="material-symbols-outlined">check</span>
+        {{ t('messages.sites.site_visited') }}
+      </button>
+      @else
+      <button class="action-btn btn-visit">
+        <span class="material-symbols-outlined">check</span>
+        {{ t('messages.sites.mark_as_visited') }}
+      </button>
+      @end
+    </a>
     @end
   </div>
 
@@ -96,6 +97,39 @@
 </main>
 
 <script>
+  const searchInput = document.getElementById("siteSearchInput");
+  const countryFilterInput = document.getElementById("countryFilter");
+  const typeFilterInput = document.getElementById("typeFilter");
+
+  function normalizeSearchValue(value) {
+    return (value || "")
+      .toString()
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .toLowerCase()
+      .trim();
+  }
+
+  function filterSites() {
+    const searchQuery = normalizeSearchValue(searchInput?.value);
+    const countryQuery = normalizeSearchValue(countryFilterInput?.value);
+    const typeQuery = normalizeSearchValue(typeFilterInput?.value);
+
+    const sites = document.querySelectorAll(".site-box");
+    sites.forEach((site) => {
+      const siteName = normalizeSearchValue(site.querySelector(".site-box-info h3")?.textContent);
+      const countryName = normalizeSearchValue(site.querySelector(".site-box-info p")?.textContent);
+      const siteText = `${siteName} ${countryName}`;
+      const siteType = normalizeSearchValue(site.dataset.type);
+
+      const matchesSearch = !searchQuery || siteText.includes(searchQuery);
+      const matchesCountry = !countryQuery || countryName.includes(countryQuery);
+      const matchesType = !typeQuery || !siteType || siteType === typeQuery;
+
+      site.style.display = matchesSearch && matchesCountry && matchesType ? "flex" : "none";
+    });
+  }
+
   function openFilters() {
     const popup = document.getElementById("filterPopup");
     popup.classList.add("show");
@@ -107,35 +141,32 @@
   }
 
   function applyFilters() {
-    const countryFilter = document.getElementById("countryFilter").value;
-    const typeFilter = document.getElementById("typeFilter").value;
-
-    const sites = document.querySelectorAll(".site-box");
-    sites.forEach(site => {
-      let visible = true;
-      if (countryFilter) {
-        const country = site.querySelector(".site-box-info p").textContent.toLowerCase();
-        visible = visible && country.includes(countryFilter.toLowerCase());
-      }
-      site.style.display = visible ? "flex" : "none";
-    });
-
+    filterSites();
     closeFilters();
   }
 
   function resetFilters() {
-    document.getElementById("countryFilter").value = "";
-    document.getElementById("typeFilter").value = "";
+    countryFilterInput.value = "";
+    typeFilterInput.value = "";
 
-    const sites = document.querySelectorAll(".site-box");
-    sites.forEach(site => {
-      site.style.display = "flex";
-    });
+    filterSites();
 
     closeFilters();
   }
 
-  document.getElementById("filterPopup").addEventListener("click", function(e) {
+  if (searchInput) {
+    searchInput.addEventListener("input", filterSites);
+  }
+
+  if (countryFilterInput) {
+    countryFilterInput.addEventListener("input", filterSites);
+  }
+
+  if (typeFilterInput) {
+    typeFilterInput.addEventListener("change", filterSites);
+  }
+
+  document.getElementById("filterPopup").addEventListener("click", function (e) {
     if (e.target === this) {
       closeFilters();
     }
