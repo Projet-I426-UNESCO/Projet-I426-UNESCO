@@ -286,7 +286,11 @@
         <div class="info-block">
           <div class="name-block">
             <div class="name-avatar">
-              <img class="avatar" src="" alt="Avatar" />
+              <img
+                class="avatar"
+                src="{{ auth.user.avatarUrl || 'https://placehold.co/100x100' }}"
+                alt="Avatar"
+              />
               <div class="name">
                 <h2>
                   {{ auth.user.fullName }}
@@ -298,7 +302,7 @@
                 {{ csrfField() }}
                 <button type="submit" class="logout-btn">Se déconnecter</button>
               </form>
-              <a href="" class="modif-btn">Modifier le compte</a>
+              <a href="{{ route('profile.editview')}}" class="modif-btn">Modifier le compte</a>
             </div>
           </div>
 

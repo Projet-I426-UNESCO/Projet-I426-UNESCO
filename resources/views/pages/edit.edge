@@ -1,0 +1,152 @@
+<link rel="stylesheet"
+  href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@23,400,0,0&icon_names=arrow_back" />
+
+@layout({
+  title: "Modifier le profil",
+  hideHeader: true
+})
+
+<div class="goback">
+  <a href="{{ route('profile.show') }}" class="link">
+    <div class="goback-link">
+      <span class="material-symbols-outlined">
+        arrow_back
+      </span>
+      <p>Retour au profil</p>
+    </div>
+  </a>
+</div>
+
+<div class="auth-page-container">
+  <div class="auth-card">
+
+    <h1>Modifier le profil</h1>
+
+    <form method="POST" action="{{ route('profile.edit') }}">
+      {{ csrfField() }}
+
+      <div class="input-group">
+        <input
+          type="text"
+          name="fullName"
+          value="{{ user.fullName }}"
+          placeholder="Nom complet"
+          required
+        />
+      </div>
+
+      <div class="input-group">
+        <input
+          type="email"
+          name="email"
+          value="{{ user.email }}"
+          placeholder="Email"
+          required
+        />
+      </div>
+
+      <div class="input-group">
+        <input
+          type="text"
+          name="avatarUrl"
+          value="{{ user.avatarUrl || '' }}"
+          placeholder="URL photo de profil"
+        />
+      </div>
+
+      <button type="submit" class="btn-primary">
+        Sauvegarder
+      </button>
+    </form>
+
+  </div>
+</div>
+
+<style>
+  body {
+    display: flex;
+    flex-direction: column;
+    margin-left: 0;
+    background: #0f172a;
+  }
+
+  p {
+    color: #c2c2c2;
+    margin: 0;
+  }
+
+  .goback {
+    margin: 20px;
+  }
+
+  .goback .link {
+    color: #c2c2c2;
+    text-decoration: none;
+  }
+
+  .goback-link {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .auth-page-container {
+    display: grid;
+    place-items: center;
+    flex: 1;
+    margin-bottom: 100px;
+  }
+
+  .auth-card {
+    background: #1e2533;
+    padding: 2rem;
+    border-radius: 7px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  h1 {
+    margin: 0;
+    font-size: 1.5rem;
+    color: white;
+    margin-bottom: 10px;
+  }
+
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  input {
+    padding: 12px;
+    border: 1px solid #3b3b3b;
+    border-radius: 8px;
+    font-size: 16px;
+    width: 350px;
+    background-color: #3A4151;
+    color: #ebebeb;
+  }
+
+  input::placeholder {
+    color: #c2c2c2;
+    opacity: 1;
+  }
+
+  .btn-primary {
+    background: #5F7EF2;
+    border: none;
+    padding: 12px;
+    border-radius: 8px;
+    color: white;
+    cursor: pointer;
+    font-weight: 500;
+  }
+
+  .btn-primary:hover {
+    opacity: 0.9;
+  }
+</style>
+
+@end
