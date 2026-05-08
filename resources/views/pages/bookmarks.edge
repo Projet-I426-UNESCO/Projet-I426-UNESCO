@@ -20,7 +20,43 @@
       </div>
     </div>
     <div class="sites-grid">
+      @each((unesco) in markedUnescos)
+        <a href="{{ route('site.show', { id: unesco.id }) }}" class="site-box">
+          @if(unesco.localImageThumb)
+            <img src="{{ unesco.localImageThumb }}" class="site-box-img" />
+          @else
+            <img src="../../../public/placeholders/placeholderImage.png" class="site-box-img" />
+          @end
+          <div class="site-box-info">
+            <h3>
+              {{ unesco.nameFr }}
+            </h3>
+            <p>
+              {{ unesco.statesNames }}
+            </p>
+          </div>
+          <button class="delete-btn" onclick="unmarkSite({{ unesco.id }})">
+            <span class="material-symbols-outlined">delete</span>Retirer des favoris
+          </button>
+          <button
+            class="action-btn btn-add"
+            id="visitSiteBtn"
+            onclick="visitSite('{{ route('marker.visit', { unescoId: unesco.id }) }}', {{ unesco.id }})"
+          >
+            Ajouter à mes visites
+            </button>
+        </a>
+      @end
     </div>
+
+    @if(markedUnescos.length === 0)
+      <div class="empty-state">
+        <p>
+          Aucun site marqué pour le moment
+        </p>
+      </div>
+    @end
+    
     <div id="filterPopup" class="filter-popup">
       <div class="filter-popup-content">
         <div class="filter-popup-header">
@@ -104,6 +140,16 @@
         site.style.display = "flex";
       });
       closeFilters();
+    }
+
+    function unmarkSite(unescoId) {
+      fetch(`/api/markers/${unescoId}/mark`, {
+        method: "POST"
+      }).then(response => response.json()).then(data => {
+        if (data.success) {
+          window.location.reload();
+        }
+      });
     }
 
     document.getElementById("filterPopup").addEventListener("click", function(e) {
