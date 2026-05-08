@@ -25,8 +25,19 @@ export default class UnescosController {
     return view.render('pages/sites', { unescos })
   }
   async bookmarks({ view, auth }: HttpContext) {
-    const unescos = await Unesco.query().exec()
-    return view.render('pages/bookmarks', { unescos })
+    await auth.check()
+
+    let markedUnescos: Unesco[] = []
+    if (auth.user) {
+      const markers = await Marker.query()
+        .where('user_id', auth.user.id)
+        .where('is_marked', true)
+        .preload('unesco')
+
+      markedUnescos = markers.map((marker) => marker.unesco)
+    }
+
+    return view.render('pages/bookmarks', { markedUnescos })
   }
   async visits({ view, auth }: HttpContext) {
     const unescos = await Unesco.query().exec()
@@ -43,7 +54,8 @@ export default class UnescosController {
     const totalSites = await Unesco.query().count('* as total').first()
     const totalCount = totalSites ? totalSites.$extras.total : 0
 
-    const lastVisit = visitedMarkers.length > 0 ? visitedMarkers[visitedMarkers.length - 1].unesco : null
+    const lastVisit =
+      visitedMarkers.length > 0 ? visitedMarkers[visitedMarkers.length - 1].unesco : null
 
     const visitsByRegion: Record<string, number> = {}
     visitedMarkers.forEach((marker) => {
@@ -52,14 +64,18 @@ export default class UnescosController {
       }
     })
 
-    const completionPercentage = totalCount > 0 ? Math.round((visitedMarkers.length / totalCount) * 100 * 10) / 10 : 0
+    const completionPercentage =
+      totalCount > 0 ? Math.round((visitedMarkers.length / totalCount) * 100 * 10) / 10 : 0
 
-    const allRegions = await Unesco.query()
-      .whereNotNull('region')
-      .select('region')
-      .distinct()
+    const allRegions = await Unesco.query().whereNotNull('region').select('region').distinct()
 
-    const regionStats: Array<{ region: string; visited: number; total: number; percentage: number; colorIndex: number }> = []
+    const regionStats: Array<{
+      region: string
+      visited: number
+      total: number
+      percentage: number
+      colorIndex: number
+    }> = []
 
     allRegions.forEach((row, index) => {
       if (row.region) {
@@ -81,7 +97,8 @@ export default class UnescosController {
         .first()
       const totalInRegion = total ? total.$extras.count : 0
       regionStats[i].total = totalInRegion
-      regionStats[i].percentage = totalInRegion > 0 ? Math.round((regionStats[i].visited / totalInRegion) * 100) : 0
+      regionStats[i].percentage =
+        totalInRegion > 0 ? Math.round((regionStats[i].visited / totalInRegion) * 100) : 0
     }
 
     const mostVisitedCountry = (() => {
@@ -101,7 +118,10 @@ export default class UnescosController {
       return sorted.length > 0 ? sorted[0][0] : null
     })()
 
-    const mostVisitedRegion = regionStats.length > 0 ? regionStats.reduce((a, b) => (a.visited > b.visited ? a : b)).region : null
+    const mostVisitedRegion =
+      regionStats.length > 0
+        ? regionStats.reduce((a, b) => (a.visited > b.visited ? a : b)).region
+        : null
 
     return view.render('pages/profile', {
       stats: {
