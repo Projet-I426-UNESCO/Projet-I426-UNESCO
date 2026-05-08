@@ -4,6 +4,7 @@ import Unesco from '#models/unesco'
 import fs from 'node:fs/promises'
 import path from 'node:path'
 import sharp from 'sharp'
+import app from '@adonisjs/core/services/app'
 
 import _puppeteer from 'puppeteer-extra'
 import StealthPlugin from 'puppeteer-extra-plugin-stealth'
@@ -44,36 +45,30 @@ export default class DownloadImages extends BaseCommand {
     const base64String = (base64DataUrl as string).split(',')[1]
     const buffer = Buffer.from(base64String, 'base64')
 
-    // Générer les noms de fichiers
-    const filenameMain = `${site.idNo}.webp`
-    const filenameThumb = `${site.idNo}.webp`
+    const filename = `${site.idNo}.webp`
 
     // Sauvegarder les images
-    // Main
-    await sharp(buffer, { limitInputPixels: false })
-      .resize({ width: 1200, withoutEnlargement: true })
-      .webp({ quality: 70, effort: 6 })
-      .toFile(path.join(paths.main, filenameMain))
+    await Promise.all([
+      // Main
+      sharp(buffer, { limitInputPixels: false })
+        .resize({ width: 1200, withoutEnlargement: true })
+        .webp({ quality: 70, effort: 6 })
+        .toFile(path.join(paths.main, filename)),
 
-    // Thumb
-    await sharp(buffer, { limitInputPixels: false })
-      .resize({ width: 180, height: 180, fit: 'cover' })
-      .webp({ quality: 60, effort: 6 })
-      .toFile(path.join(paths.thumb, filenameThumb))
-
-    // Sauvegarder les chemins des images
-    const DOMAIN = 'unesco.etml.net'
-    site.localImageMain = `https://${DOMAIN}/unesco/images/main/${filenameMain}`
-    site.localImageThumb = `https://${DOMAIN}/unesco/images/thumb/${filenameThumb}`
-    await site.save()
+      //Thumb
+      sharp(buffer, { limitInputPixels: false })
+        .resize({ width: 180, height: 180, fit: 'cover' })
+        .webp({ quality: 60, effort: 6 })
+        .toFile(path.join(paths.thumb, filename)),
+    ])
   }
 
   async run() {
     // Initialiser les chemins des images
-    const STOREPATH = 'public/unesco/images'
+    const storePath = app.publicPath('unesco/images')
     const paths = {
-      main: `${STOREPATH}/main`,
-      thumb: `${STOREPATH}/thumb`,
+      main: path.join(storePath, 'main'),
+      thumb: path.join(storePath, 'thumb'),
     }
 
     // Créer les dossiers de stockage
@@ -88,7 +83,7 @@ export default class DownloadImages extends BaseCommand {
     // Initialiser le navigateur
     const browser = await puppeteer.launch({
       executablePath: '/usr/bin/chromium',
-      headless: false,
+      headless: true,
       args: [
         '--no-sandbox',
         '--disable-setuid-sandbox',
@@ -108,20 +103,20 @@ export default class DownloadImages extends BaseCommand {
     })
 
     await page.goto('https://whc.unesco.org/fr/list/', { waitUntil: 'networkidle2', timeout: 0 })
-    this.logger.info(`Cloudflare bypassed`)
+    this.logger.info(`   Cloudflare bypassed`)
     await sleep(4000)
 
     // PREMIER PASSAGE
-    for (const site of sites) {
-      const id = `[${sites.length + 1 - site.id}/${sites.length}]`
+    for (const [i, site] of sites.entries()) {
+      const counterId = `[${i + 1}/${sites.length}]`
       if (site.mainImageUrl?.startsWith('http')) {
         try {
           await this.processSite(page, site, paths)
-          this.logger.success(`${id} [${site.idNo}]`)
+          this.logger.success(`${counterId} [${site.idNo}]`)
           succeedSites++
           await sleep(1000)
         } catch (error) {
-          this.logger.error(`  ${id} [${site.idNo}] ${error.message}`)
+          this.logger.error(`  ${counterId} [${site.idNo}] ${error.message}`)
           failedSites.push(site)
           await sleep(2000)
         }
@@ -131,21 +126,27 @@ export default class DownloadImages extends BaseCommand {
     }
 
     // PASSAGES DES ECHECS
-    while (failedSites.length > 0) {
-      this.logger.info(`Rattrapage pour ${failedSites.length} échecs`)
+    let retryCount = 0
+    const MAX_RETRIES = 10
+
+    while (failedSites.length > 0 && retryCount < MAX_RETRIES) {
+      retryCount++
+      this.logger.info(
+        `Rattrapage (${retryCount}/${MAX_RETRIES}) pour ${failedSites.length} échecs`
+      )
       await sleep(5000)
 
       let failuresOfThisRound: Unesco[] = []
 
-      for (const site of failedSites) {
+      for (const [i, site] of failedSites.entries()) {
+        const counterId = `[${i + 1}/${failedSites.length}]`
         try {
           await this.processSite(page, site, paths)
-          this.logger.success(`[${site.id}/${sites.length}] [${site.idNo}]`)
+          this.logger.success(`${counterId} [${site.idNo}] réparé`)
           succeedSites++
           await sleep(2000)
         } catch (error) {
-          this.logger.error(`[${site.idNo}] Failed ${error.message}`)
-
+          this.logger.error(`[${site.idNo}] Failed again: ${error.message}`)
           failuresOfThisRound.push(site)
         }
       }
