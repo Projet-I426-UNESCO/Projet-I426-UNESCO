@@ -2,6 +2,7 @@ import type { HttpContext } from '@adonisjs/core/http'
 import Unesco from '#models/unesco'
 import { dd } from '@adonisjs/core/services/dumper'
 import Marker from '#models/marker'
+import User from '#models/user'
 
 export default class UnescosController {
   /**
@@ -29,7 +30,15 @@ export default class UnescosController {
     return view.render('pages/bookmarks', { unescos })
   }
   async visits({ view, auth }: HttpContext) {
-    const unescos = await Unesco.query().exec()
+    const user = await User.query().where('id', auth.user!.id).firstOrFail()
+
+    const unescos = await Unesco.query()
+      .join('markers', 'unescos.id', '=', 'markers.unesco_id')
+      .where('markers.user_id', user.id)
+      .where('markers.is_visited', true)
+      .select('unescos.*')
+      .groupBy('unescos.id')
+
     return view.render('pages/visits', { unescos })
   }
   async profile({ view, auth }: HttpContext) {
@@ -119,12 +128,12 @@ export default class UnescosController {
   /**
    * Display form to create a new record
    */
-  async create({}: HttpContext) {}
+  async create({ }: HttpContext) { }
 
   /**
    * Handle form submission for the create action
    */
-  async store({ request }: HttpContext) {}
+  async store({ request }: HttpContext) { }
 
   /**
    * Show individual record
@@ -144,15 +153,15 @@ export default class UnescosController {
   /**
    * Edit individual record
    */
-  async edit({ params }: HttpContext) {}
+  async edit({ params }: HttpContext) { }
   /**
 
    * Handle form submission for the edit action
    */
-  async update({ params, request }: HttpContext) {}
+  async update({ params, request }: HttpContext) { }
 
   /**
    * Delete record
    */
-  async destroy({ params }: HttpContext) {}
+  async destroy({ params }: HttpContext) { }
 }

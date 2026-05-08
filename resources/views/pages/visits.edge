@@ -1,115 +1,151 @@
 @layout('components/layout/index', { title: 'Sites visits', page: 'visits' })
-  <!--TODO : ajouter les filtres(par date cr/decr, par pays, par nom cr/decr ) et la recherche-->
-  <main class="sites-main">
-    <div class="controls">
-      <div class="search-container">
-        <div class="search-pill">
-          <span class="material-symbols-outlined">search</span>
-          <input type="text" placeholder="Rechercher un site..." />
-        </div>
-        <div class="search-pill">
-          <button class="filter" onclick="openFilters()">            <span class="material-symbols-outlined">filter_list</span></button>
-          <p>
-            @if(filter)
-              Filtre: {{ filter }}
-            @else
-              Filtre: aucun
-            @end
-          </p>
-        </div>
+<!--TODO : ajouter les filtres(par date cr/decr, par pays, par nom cr/decr ) et la recherche-->
+<main class="sites-main">
+  <div class="controls">
+    <div class="search-container">
+      <div class="search-pill">
+        <span class="material-symbols-outlined">search</span>
+        <input type="text" placeholder="Rechercher un site..." />
+      </div>
+      <div class="search-pill">
+        <button class="filter" onclick="openFilters()"> <span
+            class="material-symbols-outlined">filter_list</span></button>
+        <p>
+          @if(filter)
+          Filtre: {{ filter }}
+          @else
+          Filtre: aucun
+          @end
+        </p>
       </div>
     </div>
-    <div class="sites-grid">
-    </div>
-    <div id="filterPopup" class="filter-popup">
-      <div class="filter-popup-content">
-        <div class="filter-popup-header">
-          <h2>
-            Filtres
-          </h2>
-          <button class="filter-close-btn" onclick="closeFilters()">
-            <span class="material-symbols-outlined">close</span>
-          </button>
+  </div>
+  <div class="sites-grid">
+  </div>
+  <div id="filterPopup" class="filter-popup">
+    <div class="filter-popup-content">
+      <div class="filter-popup-header">
+        <h2>
+          Filtres
+        </h2>
+        <button class="filter-close-btn" onclick="closeFilters()">
+          <span class="material-symbols-outlined">close</span>
+        </button>
+      </div>
+      <div class="filter-popup-body">
+        <div class="filter-section">
+          <label>Région / Pays</label>
+          <input type="text" id="countryFilter" placeholder="Rechercher un pays..." />
         </div>
-        <div class="filter-popup-body">
-          <div class="filter-section">
-            <label>Région / Pays</label>
-            <input type="text" id="countryFilter" placeholder="Rechercher un pays..." />
-          </div>
-          <div class="filter-section">
-            <label>Type de site</label>
-            <select id="typeFilter">
-              <option value="">
-                Tous les types
-              </option>
-              <option value="cultural">
-                Culturel
-              </option>
-              <option value="natural">
-                Naturel
-              </option>
-              <option value="mixed">
-                Mixte
-              </option>
-            </select>
-          </div>
-          <select id="increase">
-            <option value="increase">
-              Croisant
+        <div class="filter-section">
+          <label>Type de site</label>
+          <select id="typeFilter">
+            <option value="">
+              Tous les types
             </option>
-            <option value="decrease">
-              Décroisant
+            <option value="cultural">
+              Culturel
+            </option>
+            <option value="natural">
+              Naturel
+            </option>
+            <option value="mixed">
+              Mixte
             </option>
           </select>
         </div>
-        <div class="filter-popup-footer">
-          <button class="btn-primary" onclick="applyFilters()">Appliquer</button>
-          <button class="btn-secondary" onclick="resetFilters()">Réinitialiser</button>
-        </div>
+        <select id="increase">
+          <option value="increase">
+            Croisant
+          </option>
+          <option value="decrease">
+            Décroisant
+          </option>
+        </select>
+      </div>
+      <div class="filter-popup-footer">
+        <button class="btn-primary" onclick="applyFilters()">Appliquer</button>
+        <button class="btn-secondary" onclick="resetFilters()">Réinitialiser</button>
       </div>
     </div>
-  </main>
+  </div>
 
-  <script>
-    function openFilters() {
-      const popup = document.getElementById("filterPopup");
-      popup.classList.add("show");
-    }
+  <div class="sites-grid">
+    @if(unescos)
+    @each((unesco) in unescos)
+    <a href="{{ route('site.show', { id: unesco.id }) }}" class="site-box">
+      @if(unesco.localImageThumb)
+      <img src="{{ unesco.localImageMain }}" class="site-box-img" />
+      @else
+      <img src="../../../public/placeholders/placeholderImage.png" class="site-box-img" />
+      @end
+      <div class="site-box-info">
+        <h3>
+          {{ unesco.nameFr }}
+        </h3>
+        <p>
+          {{ unesco.statesNames }}
+        </p>
+      </div>
+      @if(unesco.added)
+      <button class="delete-btn"> <span class="material-symbols-outlined">delete</span>Supprimer de la liste</button>
+      @else
+      <button class="btn-primary"> <span class="material-symbols-outlined">add</span>Ajouter à ma liste</button>
+      @end
+      @if(unesco.visited)
+      <button class="visited-btn"> <span class="material-symbols-outlined">check</span>Site visité</button>
+      @else
+      <button class="action-btn btn-visit"> <span class="material-symbols-outlined">check</span>Marquer comme
+        visité</button>
+      @end
+    </a>
+    @end
+    @else
+    <p>Vous n'avez pas de site visité.</p>
+    @end
+  </div>
+</main>
 
-    function closeFilters() {
-      const popup = document.getElementById("filterPopup");
-      popup.classList.remove("show");
-    }
+<script>
+  function openFilters() {
+    const popup = document.getElementById("filterPopup");
+    popup.classList.add("show");
+  }
 
-    function applyFilters() {
-      const countryFilter = document.getElementById("countryFilter").value;
-      const typeFilter = document.getElementById("typeFilter").value;
-      const sites = document.querySelectorAll(".site-box");
-      sites.forEach(site => {
-        let visible = true;
-        if (countryFilter) {
-          const country = site.querySelector(".site-box-info p").textContent.toLowerCase();
-          visible = visible && country.includes(countryFilter.toLowerCase());
-        }
-        site.style.display = visible ? "flex" : "none";
-      });
-      closeFilters();
-    }
+  function closeFilters() {
+    const popup = document.getElementById("filterPopup");
+    popup.classList.remove("show");
+  }
 
-    function resetFilters() {
-      document.getElementById("countryFilter").value = "";
-      document.getElementById("typeFilter").value = "";
-      const sites = document.querySelectorAll(".site-box");
-      sites.forEach(site => {
-        site.style.display = "flex";
-      });
-      closeFilters();
-    }
-
-    document.getElementById("filterPopup").addEventListener("click", function(e) {
-      if (e.target === this) {
-        closeFilters();
+  function applyFilters() {
+    const countryFilter = document.getElementById("countryFilter").value;
+    const typeFilter = document.getElementById("typeFilter").value;
+    const sites = document.querySelectorAll(".site-box");
+    sites.forEach(site => {
+      let visible = true;
+      if (countryFilter) {
+        const country = site.querySelector(".site-box-info p").textContent.toLowerCase();
+        visible = visible && country.includes(countryFilter.toLowerCase());
       }
+      site.style.display = visible ? "flex" : "none";
     });
-  </script>
+    closeFilters();
+  }
+
+  function resetFilters() {
+    document.getElementById("countryFilter").value = "";
+    document.getElementById("typeFilter").value = "";
+    const sites = document.querySelectorAll(".site-box");
+    sites.forEach(site => {
+      site.style.display = "flex";
+    });
+    closeFilters();
+  }
+
+  document.getElementById("filterPopup").addEventListener("click", function (e) {
+    if (e.target === this) {
+      closeFilters();
+    }
+  });
+</script>
 @end
