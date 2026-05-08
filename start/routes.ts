@@ -44,3 +44,13 @@ router
     router.post('/logout', [LogoutController, 'handle']).as('logout').use(middleware.auth())
   })
   .as('auth')
+
+
+router
+  .get('/lang/:locale', async ({ params, response }) => {
+    const locale = params.locale
+    // Setup cookie for 30 days
+    response.cookie('locale', locale, { maxAge: '30 days' })
+    response.redirect().back()
+  })
+  .as('lang.switch')

@@ -1,47 +1,97 @@
-@layout('components/layout/index', { title: 'Accueil', page: title })
+@layout('components/layout/index', { title: 'Sites', page: 'sites' })
 
-<head>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
-  <link href="https://api.mapbox.com/mapbox-gl-js/v3.3.0/mapbox-gl.css" rel="stylesheet">
-  <script src='https://api.mapbox.com/mapbox-gl-js/v3.2.0/mapbox-gl.js'></script>
-</head>
-
-<main class="site_main">
-  <div class="site_grid">
-    <div class="left_page">
-      <h1>{{ unesco.nameFr}}</h1>
-      <p>{{ unesco.shortDescriptionFr }}</p>
-    </div>
-    <div class="right_page">
-      <img src="{{ img ? img : unesco.localImageMain }}" alt="" class="site_img">
-      <div class="site_temp">
-        <div class="site_information">
-          <p>Pays : {{ unesco.statesNames }}</p>
-          <p>Date d'inscription : {{ unesco.dateInscribed }}</p> <p>Critères d'admission : </p> <a href="https://whc.unesco.org/fr/criteres">{{ unesco.criteriaTxt }}</a>
-          <p>Taille : {{ unesco.areaHectares }} he</p>
-          <p>No de dossier : {{ unesco.idNo }}</p>
-          <p>Catégorie : {{ unesco.category }}</p>
-        </div>
-        <div class="add_site">
-          @if(auth.user)
-            <button class="action-btn btn-add" id="visitSiteBtn" onclick="visitSite('{{ route('marker.visit', { unescoId: unesco.id }) }}', {{unesco.id}})">
-              Ajouter à mes visites
-            </button>
-
-            <button class="action-btn btn-visit" id="markSiteBtn" onclick="markSite('{{ route('marker.mark', { unescoId: unesco.id }) }}', {{unesco.id}})">
-              Marquer le Site
-            </button>
-          @end
-        </div>
+<main class="sites-main">
+  <div class="controls">
+    <div class="search-container">
+      <div class="search-pill">
+        <span class="material-symbols-outlined">search</span>
+        <input type="text" placeholder="{{ t('messages.sites.search_placeholder') }}" />
       </div>
-    </div>
-    <div class="map_container">
-      <h3>Monument sur la carte : </h3>
-      <div id="map">
+      <div class="search-pill">
+        <button class="filter" onclick="openFilters()">
+          <span class="material-symbols-outlined">filter_list</span>
+        </button>
+        <p>
+          @if(filter)
+            {{ t('messages.sites.filter_active') }} {{ filter }}
+          @else
+            {{ t('messages.sites.filter_none') }}
+          @end
+        </p>
       </div>
     </div>
   </div>
 
+  <div class="sites-grid">
+    @each((unesco) in unescos)
+      <a href="{{ route('site.show', { id: unesco.id }) }}" class="site-box">
+        @if(unesco.localImageThumb)
+          <img src="{{ unesco.localImageThumb }}" class="site-box-img" />
+        @else
+          <img src="https://placehold.co/300x200" class="site-box-img" />
+        @end
+
+        <div class="site-box-info">
+          <h3>{{ unesco.nameFr }}</h3>
+          <p>{{ unesco.statesNames }}</p>
+        </div>
+
+        @if(unesco.added)
+          <button class="delete-btn">
+            <span class="material-symbols-outlined">delete</span>
+            {{ t('messages.sites.remove_from_list') }}
+          </button>
+        @else
+          <button class="btn-primary">
+            <span class="material-symbols-outlined">add</span>
+            {{ t('messages.sites.add_to_list') }}
+          </button>
+        @end
+
+        @if(unesco.visited)
+          <button class="visited-btn">
+            <span class="material-symbols-outlined">check</span>
+            {{ t('messages.sites.site_visited') }}
+          </button>
+        @else
+          <button class="action-btn btn-visit">
+            <span class="material-symbols-outlined">check</span>
+            {{ t('messages.sites.mark_as_visited') }}
+          </button>
+        @end
+      </a>
+    @end
+  </div>
+
+  <div id="filterPopup" class="filter-popup">
+    <div class="filter-popup-content">
+      <div class="filter-popup-header">
+        <h2>{{ t('messages.sites.filters_title') }}</h2>
+        <button class="filter-close-btn" onclick="closeFilters()">
+          <span class="material-symbols-outlined">close</span>
+        </button>
+      </div>
+      <div class="filter-popup-body">
+        <div class="filter-section">
+          <label>{{ t('messages.sites.filter_country_label') }}</label>
+          <input type="text" id="countryFilter" placeholder="{{ t('messages.sites.filter_country_placeholder') }}" />
+        </div>
+        <div class="filter-section">
+          <label>{{ t('messages.sites.filter_type_label') }}</label>
+          <select id="typeFilter">
+            <option value="">{{ t('messages.sites.filter_type_all') }}</option>
+            <option value="cultural">{{ t('messages.sites.filter_type_cultural') }}</option>
+            <option value="natural">{{ t('messages.sites.filter_type_natural') }}</option>
+            <option value="mixed">{{ t('messages.sites.filter_type_mixed') }}</option>
+          </select>
+        </div>
+      </div>
+      <div class="filter-popup-footer">
+        <button class="btn-primary" onclick="applyFilters()">{{ t('messages.sites.apply_filters') }}</button>
+        <button class="btn-secondary" onclick="resetFilters()">{{ t('messages.sites.reset_filters') }}</button>
+      </div>
+    </div>
+  </div>
 </main>
 
 <style>

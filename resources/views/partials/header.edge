@@ -1,25 +1,18 @@
-<link
-  rel="stylesheet"
-  href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
-/>
+<link rel="stylesheet"
+  href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+
 <header class="main-header" id="mainHeader">
   <div class="header-top">
-    <a href="{{ route('home') }}" class="logo-link" aria-label="Retour a l'accueil">
+    <a href="{{ route('home') }}" class="logo-link" aria-label="{{ t('messages.header.back_to_home') }}">
       <div class="logo">
-        <h1>
-          ACD
-        </h1>
+        <h1>ACD</h1>
       </div>
     </a>
-
-    <button
-      type="button"
-      class="menu-toggle"
-      id="menuToggle"
-      aria-label="Ouvrir le menu"
+    
+    <button type="button" class="menu-toggle" id="menuToggle" 
+      aria-label="{{ t('messages.header.toggle_menu') }}" 
       aria-expanded="false"
-      aria-controls="headerContent"
-    >
+      aria-controls="headerContent">
       <span class="material-symbols-outlined icon-open">menu</span>
       <span class="material-symbols-outlined icon-close">close</span>
     </button>
@@ -30,86 +23,81 @@
       <a href="{{ route('home') }}">
         <div class="menu-item {{ request.url() === '/' ? 'active' : '' }}">
           <span class="material-symbols-outlined">map</span>
-          <p>
-            Explorer
-          </p>
+          <p>{{ t('messages.header.explore') }}</p>
         </div>
       </a>
+
       <a href="{{ route('sites') }}">
         <div class="menu-item {{ request.url() === '/sites' ? 'active' : '' }}">
           <span class="material-symbols-outlined">list</span>
-          <p>
-            Liste
-          </p>
+          <p>{{ t('messages.header.list') }}</p>
         </div>
       </a>
+
       <a href="{{ route('profile.show') }}">
-        <div
-          class="menu-item {{ request.url() === '/profile' || request.url() === '/login' || request.url() === '/register' ? 'active' : '' }}"
-        >
+        <div class="menu-item {{ request.url() === '/profile' || request.url() === '/login' || request.url() === '/register' ? 'active' : '' }}">
           <span class="material-symbols-outlined">account_circle</span>
-          <p>
-            Profil
-          </p>
+          <p>{{ t('messages.header.profile') }}</p>
         </div>
       </a>
+
       <a href="{{ route('bookmarks') }}">
         <div class="menu-item {{ request.url() === '/bookmarks' ? 'active' : '' }}">
           <span class="material-symbols-outlined">list_alt_check</span>
-          <p>
-            Sites marqués
-          </p>
+          <p>{{ t('messages.header.bookmarked_sites') }}</p>
         </div>
       </a>
+
       <a href="{{ route('visits') }}">
         <div class="menu-item {{ request.url() === '/visits' ? 'active' : '' }}">
           <span class="material-symbols-outlined">patient_list</span>
-          <p>
-            Sites visités
-          </p>
+          <p>{{ t('messages.header.visited_sites') }}</p>
         </div>
       </a>
     </nav>
 
     <div class="lang-container">
       <div class="lang-popup" id="langPopup">
-        <div class="lang-option" onclick="changeLang('EN', 'us')">
-          <img src="https://flagcdn.com/w80/us.png" class="flag-icon" />          <span class="lang-text">EN</span>
-        </div>
-        <div class="lang-option" onclick="changeLang('FR', 'fr')">
-          <img src="https://flagcdn.com/w80/fr.png" class="flag-icon" />          <span class="lang-text">FR</span>
-        </div>
+        <a href="{{ route('lang.switch', { locale: 'en' }) }}" style="text-decoration: none; color: inherit;">
+          <div class="lang-option">
+            <img src="https://flagcdn.com/w80/us.png" class="flag-icon" /> 
+            <span class="lang-text">EN</span>
+          </div>
+        </a>
+        <a href="{{ route('lang.switch', { locale: 'fr' }) }}" style="text-decoration: none; color: inherit;">
+          <div class="lang-option">
+            <img src="https://flagcdn.com/w80/fr.png" class="flag-icon" /> 
+            <span class="lang-text">FR</span>
+          </div>
+        </a>
       </div>
 
       <div class="language-picker" id="langTrigger">
-        <img src="https://flagcdn.com/w80/fr.png" id="mainFlag" class="flag-icon" />
-        <span class="lang-text" id="mainText">FR</span>
+        @if(i18n.locale === 'en')
+          <img src="https://flagcdn.com/w80/us.png" id="mainFlag" class="flag-icon" />
+          <span class="lang-text" id="mainText">EN</span>
+        @else
+          <img src="https://flagcdn.com/w80/fr.png" id="mainFlag" class="flag-icon" />
+          <span class="lang-text" id="mainText">FR</span>
+        @end
         <span class="material-symbols-outlined" style="font-size: 20px; color: white;">expand_less</span>
       </div>
     </div>
   </div>
 </header>
+
 <script>
   const mainHeader = document.getElementById("mainHeader");
-
   const menuToggle = document.getElementById("menuToggle");
-
   const headerContent = document.getElementById("headerContent");
-
   const trigger = document.getElementById("langTrigger");
-
   const popup = document.getElementById("langPopup");
-
   const mainFlag = document.getElementById("mainFlag");
-
   const mainText = document.getElementById("mainText");
-
   const mobileMedia = window.matchMedia("(max-width: 900px)");
 
   function closeMobileMenu() {
-    if (!mainHeader || !menuToggle) {
-      return;
-    }
+    if (!mainHeader || !menuToggle) return;
     mainHeader.classList.remove("is-open");
     menuToggle.classList.remove("is-open");
     menuToggle.setAttribute("aria-expanded", "false");
@@ -122,6 +110,7 @@
       menuToggle.classList.toggle("is-open", isOpen);
       menuToggle.setAttribute("aria-expanded", String(isOpen));
     });
+
     headerContent.querySelectorAll("a").forEach(link => {
       link.addEventListener("click", closeMobileMenu);
     });
@@ -131,12 +120,6 @@
     e.stopPropagation();
     popup.classList.toggle("show");
   });
-
-  function changeLang(lang, code) {
-    mainText.innerText = lang;
-    mainFlag.src = `https://flagcdn.com/w80/${code}.png`;
-    popup.classList.remove("show");
-  }
 
   window.addEventListener("resize", () => {
     if (!mobileMedia.matches) {

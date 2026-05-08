@@ -53,6 +53,7 @@
   "dependencies": {
     "@adonisjs/auth": "^9.4.0",
     "@adonisjs/core": "^6.18.0",
+    "@adonisjs/i18n": "^2.2.3",
     "@adonisjs/lucid": "^21.6.1",
     "@adonisjs/session": "^7.5.1",
     "@adonisjs/shield": "^8.2.0",
@@ -62,6 +63,7 @@
     "adonisjs-scheduler": "^2.7.0",
     "better-sqlite3": "^12.6.2",
     "edge.js": "^6.2.1",
+    "i18n": "^0.15.3",
     "luxon": "^3.7.2",
     "puppeteer": "^24.42.0",
     "puppeteer-extra": "^3.3.6",

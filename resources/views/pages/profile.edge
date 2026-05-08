@@ -1,373 +1,322 @@
 <!doctype html>
-<html lang="fr">
+<html lang="{{ i18n.locale }}">
 
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>
-      Profil -
-    </title>
-    <link
-      rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
-    />
-    <style>
-      @import url("https://fonts.googleapis.com/css2?family=K2D:wght@300;400;500&display=swap");
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>
+    {{ t('messages.profile.title') }} -
+  </title>
+  <link
+    rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
+  />
+  <style>
+    @import url("https://fonts.googleapis.com/css2?family=K2D:wght@300;400;500&display=swap");
 
-      main {
-        padding: 25px;
-      }
+    main {
+      padding: 25px;
+    }
 
-      .info-block {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        grid-gap: 10px;
-        grid-auto-rows: minmax(150px, auto);
-        max-width: 1500px;
-        margin: 0 auto;
-        flex-direction: row;
-        align-items: flex-start;
-        justify-content: space-around;
-        justify-items: stretch;
-        align-items: stretch;
-      }
+    .info-block {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      grid-gap: 10px;
+      grid-auto-rows: minmax(150px, auto);
+      max-width: 1500px;
+      margin: 0 auto;
+      align-items: stretch;
+    }
 
-      .info-block>div {
-        background-color: #1e2533;
-        border-radius: 20px;
-        padding: 20px;
-        color: #d1d5db;
-      }
+    .info-block > div {
+      background-color: #1e2533;
+      border-radius: 20px;
+      padding: 20px;
+      color: #d1d5db;
+    }
 
-      .info-block>div:last-child {
-        background-color: #0f172a;
-        border-radius: 20px;
-        padding: 0px;
-        color: #d1d5db;
-      }
+    .info-block > div:last-child {
+      background-color: #0f172a;
+      padding: 0;
+    }
 
-      .name-block {
-        display: flex;
-        align-items: center;
-        grid-column: 1 / 3;
-        justify-content: space-between;
-        background: linear-gradient(90deg, rgba(30, 41, 59, 1) 0%, rgba(15, 23, 42, 1) 100%);
-        border: 1px solid #2D313E;
-      }
+    .name-block {
+      display: flex;
+      align-items: center;
+      grid-column: 1 / 3;
+      justify-content: space-between;
+      background: linear-gradient(90deg, rgba(30, 41, 59, 1) 0%, rgba(15, 23, 42, 1) 100%);
+      border: 1px solid #2D313E;
+    }
 
-      .name-avatar {
-        display: flex;
-        align-items: center;
-        gap: 20px;
-      }
+    .name-avatar {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
 
-      .avatar {
-        height: 100px;
-        width: 100px;
-        border: 4px solid #2D313E;
-        border-radius: 50%;
-        object-fit: cover;
-      }
+    .avatar {
+      height: 100px;
+      width: 100px;
+      border: 4px solid #2D313E;
+      border-radius: 50%;
+      object-fit: cover;
+    }
 
-      .name h2 {
-        color: #ffffff;
-        font-size: 28px;
-        margin: 0;
-      }
+    .name h2 {
+      color: #ffffff;
+      font-size: 28px;
+      margin: 0;
+    }
 
-      .name p {
-        color: #94a3b8;
-        font-size: 14px;
-        margin: 0;
-      }
+    .name p {
+      color: #94a3b8;
+      font-size: 14px;
+      margin: 0;
+    }
 
-      .last-visit-block {
-        grid-column: 3;
-        grid-row: 1/4;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-      }
+    .last-visit-block {
+      grid-column: 3;
+      grid-row: 1/4;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
 
-      .last-visit-block img {
-        width: 100%;
-        height: 250px;
-        object-fit: cover;
-        border-radius: 12px;
-        margin-bottom: 10px;
-      }
+    .last-visit-block img {
+      width: 100%;
+      height: 250px;
+      object-fit: cover;
+      border-radius: 12px;
+      margin-bottom: 10px;
+    }
 
-      .progress-block {
-        grid-column: 1/2;
-        grid-row: 2;
-      }
+    .progress-block {
+      grid-column: 1/2;
+      grid-row: 2;
+    }
 
-      .progress-value {
-        font-size: 32px;
-        font-weight: bold;
-        color: #ffffff;
-        margin-top: 10px;
-      }
+    .progress-value {
+      font-size: 32px;
+      font-weight: bold;
+      color: #ffffff;
+      margin-top: 10px;
+    }
 
-      .progress-bar {
-        background-color: #2d3748;
-        border-radius: 8px;
-        height: 12px;
-        margin-top: 10px;
-        overflow: hidden;
-      }
+    .progress-bar {
+      background-color: #2d3748;
+      border-radius: 8px;
+      height: 12px;
+      margin-top: 10px;
+      overflow: hidden;
+    }
 
-      .progress-fill {
-        background: linear-gradient(90deg, #5f7ef2 0%, #68bff8 100%);
-        height: 100%;
-      }
+    .progress-fill {
+      background: linear-gradient(90deg, #5f7ef2 0%, #68bff8 100%);
+      height: 100%;
+    }
 
-      .continent-stats-block {
-        grid-column: 2;
-        grid-row: 2/4;
-      }
+    .continent-stats-block {
+      grid-column: 2;
+      grid-row: 2/4;
+    }
 
-      .continent-stats-block .boss {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 5vh;
-        text-align: center;
-        justify-content: stretch;
-      }
+    .continent-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
 
-      .continent-item {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-      }
+    .continent-circle {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      font-weight: bold;
+      margin-bottom: 8px;
+      background: linear-gradient(135deg, #5f7ef2 0%, #68bff8 100%);
+    }
 
-      .continent-circle {
-        width: 80px;
-        height: 80px;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 24px;
-        font-weight: bold;
-        margin-bottom: 8px;
-        background: linear-gradient(135deg, #5f7ef2 0%, #68bff8 100%);
-      }
+    .continent-name {
+      font-size: 12px;
+      color: #94a3b8;
+    }
 
-      .continent-circle.color-1 {
-        background: linear-gradient(135deg, #5f7ef2 0%, #68bff8 100%);
-      }
+    .few-last-visits-block {
+      grid-column: 1;
+      grid-row: 3/5;
+    }
 
-      .continent-circle.color-2 {
-        background: linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%);
-      }
+    .general-stats-block {
+      grid-column: 2/4;
+      grid-row: 4;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+    }
 
-      .continent-circle.color-3 {
-        background: linear-gradient(135deg, #6b7280 0%, #9ca3af 100%);
-      }
+    .stat-card {
+      background-color: #1e2533;
+      border-radius: 12px;
+      padding: 15px;
+      text-align: center;
+    }
 
-      .continent-circle.color-4 {
-        background: linear-gradient(135deg, #10b981 0%, #34d399 100%);
-      }
+    .stat-label {
+      font-size: 12px;
+      color: #94a3b8;
+      margin-bottom: 8px;
+    }
 
-      .continent-circle.color-5 {
-        background: linear-gradient(135deg, #ef4444 0%, #f87171 100%);
-      }
+    .stat-value {
+      font-size: 24px;
+      font-weight: bold;
+      color: #ffffff;
+    }
 
-      .continent-circle.color-6 {
-        background: linear-gradient(135deg, #8b5cf6 0%, #a78bfa 100%);
-      }
+    .line {
+      display: flex;
+      gap: 10px;
+    }
 
-      .continent-name {
-        font-size: 12px;
-        color: #94a3b8;
-      }
+    .logout-btn,
+    .modif-btn {
+      height: 35px;
+      width: 180px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 8px;
+      color: white;
+      text-decoration: none;
+      font-weight: 500;
+    }
 
-      .few-last-visits-block {
-        grid-column: 1;
-        grid-row: 3/5;
-      }
+    .logout-btn {
+      background-color: #F25F61;
+    }
 
-      .visit-item {
-        padding: 10px;
-        border-bottom: 1px solid #2d3748;
-        font-size: 12px;
-      }
+    .modif-btn {
+      background-color: #5F7EF2;
+    }
 
-      .visit-item:last-child {
-        border-bottom: none;
-      }
+    .map-list-block {
+      height: 500px;
+      background-color: #1e2533;
+      max-width: 1500px;
+      margin: 0 auto;
+      padding-top: 50px;
+      border-radius: 20px;
+      margin-top: 10px;
+    }
+  </style>
+</head>
 
-      .visit-name {
-        color: #ffffff;
-        font-weight: 500;
-      }
+<body>
+  @layout('components/layout/index', { title: 'Accueil' })
 
-      .visit-location {
-        color: #94a3b8;
-        font-size: 11px;
-      }
+    <main>
+      <div class="info-block">
+        <div class="name-block">
+          <div class="name-avatar">
+            <img class="avatar" src="" alt="Avatar" />
+            <div class="name">
+              <h2>{{ auth.user.fullName }}</h2>
+            </div>
+          </div>
+          <div class="line">
+            <form method="POST" action="{{ route('auth.logout') }}">
+              {{ csrfField() }}
+              <button type="submit" class="logout-btn">
+                {{ t('messages.profile.logout') }}
+              </button>
+            </form>
+            <a href="" class="modif-btn">
+              {{ t('messages.profile.edit_account') }}
+            </a>
+          </div>
+        </div>
 
-      .general-stats-block {
-        grid-column: 2/4;
-        grid-row: 4;
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        background-color: #ffffff;
-        gap: 10px;
-      }
+        <div class="last-visit-block">
+          <div>
+            <p style="color: #ffffff; font-weight: 500; margin-bottom: 10px;">
+              {{ t('messages.profile.last_visit') }}
+            </p>
+            @if(stats.lastVisit)
+              <img src="{{ stats.lastVisit.localImageMain || stats.lastVisit.mainImageUrl }}" 
+                   alt="{{ stats.lastVisit.nameFr }}" />
+              <h3 style="margin: 0; color: #ffffff; font-size: 14px;">
+                {{ stats.lastVisit.nameFr }}
+              </h3>
+              <p style="margin: 5px 0 0 0; color: #94a3b8; font-size: 12px;">
+                @if(stats.lastVisit.statesNames && stats.lastVisit.statesNames.length > 0)
+                  {{ stats.lastVisit.statesNames[0] }}
+                @end
+              </p>
+            @else
+              <p style="color: #94a3b8;">
+                {{ t('messages.profile.no_visit_yet') }}
+              </p>
+            @end
+          </div>
+        </div>
 
-      .stat-card {
-        background-color: #1e2533;
-        border-radius: 12px;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        color: #d1d5db;
-        padding: 15px;
-      }
+        <div class="progress-block">
+          <p style="margin-top: 0;">{{ t('messages.profile.global_progress') }}</p>
+          <div class="progress-value">{{ stats.visitedSites }} / {{ stats.totalSites }}</div>
+          <div class="progress-bar">
+            <div class="progress-fill" style="width: {{ stats.completionPercentage }}%;"></div>
+          </div>
+          <p style="margin-bottom: 0; margin-top: 8px; font-size: 12px; color: #94a3b8;">
+            {{ stats.completionPercentage }}%
+          </p>
+        </div>
 
-      .stat-label {
-        font-size: 12px;
-        color: #94a3b8;
-        margin-bottom: 8px;
-      }
-
-      .stat-value {
-        font-size: 24px;
-        font-weight: bold;
-        color: #ffffff;
-      }
-
-      .line {
-        display: flex;
-        gap: 10px;
-      }
-
-      .logout-btn,
-      .modif-btn {
-        height: 35px;
-        width: 180px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        border-radius: 8px;
-        color: white;
-        text-decoration: none;
-        font-weight: 500;
-      }
-
-      .logout-btn {
-        background-color: #F25F61;
-      }
-
-      .modif-btn {
-        background-color: #5F7EF2;
-      }
-
-      .map-list-block {
-        height: 500px;
-        background-color: #1e2533;
-        max-width: 1500px;
-        margin: 0 auto;
-        padding-top: 50px;
-        border-radius: 20px;
-        margin-top: 10px;
-      }
-    </style>
-  </head>
-
-  <body>
-    @layout('components/layout/index', { title: 'Accueil' })
-
-      <main>
-        <div class="info-block">
-          <div class="name-block">
-            <div class="name-avatar">
-              <img class="avatar" src="" alt="Avatar" />
-              <div class="name">
-                <h2>
-                  {{ auth.user.fullName }}
-                </h2>
+        <div class="continent-stats-block">
+          <p style="margin-top: 0;">{{ t('messages.profile.continent_exploration') }}</p>
+          <div class="boss">
+            @each(data in stats.regionStats)
+              <div class="continent-item">
+                <div class="continent-circle color-{{ data.colorIndex }}">{{ data.percentage }}%</div>
+                <div class="continent-name">{{ data.region }}</div>
               </div>
-            </div>
-            <div class="line">
-              <form method="POST" action="{{ route('auth.logout') }}">
-                {{ csrfField() }}
-                <button type="submit" class="logout-btn">Se déconnecter</button>
-              </form>
-              <a href="" class="modif-btn">Modifier le compte</a>
-            </div>
-          </div>
-
-          <div class="last-visit-block">
-            <div>
-              <p style="color: #ffffff; font-weight: 500; margin-bottom: 10px;">Dernier visite</p>
-              @if(stats.lastVisit)
-                <img src="{{ stats.lastVisit.localImageMain || stats.lastVisit.mainImageUrl }}" alt="{{ stats.lastVisit.nameFr }}" />
-                <h3 style="margin: 0; color: #ffffff; font-size: 14px;">{{ stats.lastVisit.nameFr }}</h3>
-                <p style="margin: 5px 0 0 0; color: #94a3b8; font-size: 12px;">
-                  @if(stats.lastVisit.statesNames && stats.lastVisit.statesNames.length > 0)
-                    {{ stats.lastVisit.statesNames[0] }}
-                  @end
-                </p>
-              @else
-                <p style="color: #94a3b8;">Aucune visite enregistrée</p>
-              @end
-            </div>
-          </div>
-
-          <div class="progress-block">
-            <p style="margin-top: 0;">Ma progression globale</p>
-            <div class="progress-value">{{ stats.visitedSites }} / {{ stats.totalSites }}</div>
-            <div class="progress-bar">
-              <div class="progress-fill" style="width: {{ (stats.visitedSites / stats.totalSites * 100) }}%;"></div>
-            </div>
-            <p style="margin-bottom: 0; margin-top: 8px; font-size: 12px; color: #94a3b8;">{{ stats.completionPercentage }}%</p>
-          </div>
-
-          <div class="continent-stats-block">
-            <p style="margin-top: 0;">Par région</p>
-            <div class="boss">
-              @each(data in stats.regionStats)
-                <div class="continent-item">
-                  <div class="continent-circle color-{{ data.colorIndex }}">{{ data.percentage }}%</div>
-                  <div style="font-size: 12px; color: #ffffff; font-weight: 500;">{{ data.region }}</div>
-                </div>
-              @endeach
-            </div>
-          </div>
-
-          <div class="few-last-visits-block">
-            <p style="margin-top: 0;">Derniers voyages</p>
-          </div>
-
-          <div class="general-stats-block">
-            <div class="stat-card">
-              <span class="stat-label">Sites de la patrimoine mondiale visités</span>
-              <span class="stat-value">{{ stats.visitedSites }}/{{ stats.totalSites }}</span>
-            </div>
-            <div class="stat-card">
-              <span class="stat-label">Pourcentage des sites UNESCO visités</span>
-              <span class="stat-value">{{ stats.completionPercentage }}%</span>
-            </div>
-            <div class="stat-card">
-              <span class="stat-label">Région la plus visitée</span>
-              <span class="stat-value">{{ stats.mostVisitedRegion || 'N/A' }}</span>
-            </div>
-            <div class="stat-card">
-              <span class="stat-label">Pays le plus visité</span>
-              <span class="stat-value">{{ stats.mostVisitedCountry || 'N/A' }}</span>
-            </div>
+            @endeach
           </div>
         </div>
 
-        <div class="map-list-block">
+        <div class="few-last-visits-block">
+          <p style="margin-top: 0;">{{ t('messages.profile.recent_visits') }}</p>
         </div>
-      </main>
-    </body>
+
+        <div class="general-stats-block">
+          <div class="stat-card">
+            <span class="stat-label">{{ t('messages.profile.visited_sites') }}</span>
+            <span class="stat-value">{{ stats.visitedSites }}/{{ stats.totalSites }}</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-label">{{ t('messages.profile.completion_rate') }}</span>
+            <span class="stat-value">{{ stats.completionPercentage }}%</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-label">{{ t('messages.profile.most_visited_region') }}</span>
+            <span class="stat-value">{{ stats.mostVisitedRegion || 'N/A' }}</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-label">{{ t('messages.profile.most_visited_country') }}</span>
+            <span class="stat-value">{{ stats.mostVisitedCountry || 'N/A' }}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="map-list-block">
+        
+      </div>
+    </main>
+
   @end
-
+</body>
 </html>

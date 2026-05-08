@@ -10,24 +10,24 @@
       <div class="search-container">
         <div class="search-pill">
           <span class="material-symbols-outlined">search</span>
-          <input type="text" placeholder="Rechercher un site..." />
+          <input type="text" placeholder="{{ t('messages.home.search_placeholder') }}" />
         </div>
 
         <div class="filter-pill active" onclick="setFilter('all')">
-          <span>Sites</span>
+          <span>{{ t('messages.home.filter_sites') }}</span>
         </div>
 
         <div class="filter-pill" onclick="setFilter('marked')">
-          <span>Marqués</span>
+          <span>{{ t('messages.home.filter_to_visit') }}</span>
         </div>
 
         <div class="filter-pill" onclick="setFilter('visited')">
-          <span>Visités</span>
+          <span>{{ t('messages.home.filter_visited') }}</span>
         </div>
 
         <label class="toggle-pill" for="markerToggle">
           <input type="checkbox" id="markerToggle" />
-          <span>Markers</span>
+          <span>{{ t('messages.home.toggle_markers') }}</span>
         </label>
       </div>
 
@@ -44,7 +44,7 @@
           </a>
           <form method="POST" action="{{ route('auth.logout') }}">
             {{ csrfField() }}
-            <button type="submit" class="logout-icon-btn" title="Se déconnecter">
+            <button type="submit" class="logout-icon-btn" title="{{ t('messages.home.logout_title') }}">
               <span class="material-symbols-outlined">logout</span>
             </button>
           </form>
@@ -53,10 +53,10 @@
         <div class="auth-pill-group">
           <a href="{{ route('auth.login.show') }}" class="auth-pill login">
             <span class="material-symbols-outlined">login</span>
-            Se connecter
+            {{ t('messages.home.login') }}
           </a>
           <a href="{{ route('auth.register.show') }}" class="auth-pill register">
-            Créer un compte
+            {{ t('messages.home.register') }}
           </a>
         </div>
         @end
@@ -89,16 +89,16 @@
     </div>
     <div class="stats-footer-container">
       <h3 class="stats-title">
-        Mes statistiques
+        {{ t('messages.home.stats_title') }}
       </h3>
       <div class="stats-grid">
         <div class="stat-box">
           <span class="stat-number" id="visitedCount"></span>
-          <span class="stat-label">Sites visités</span>
+          <span class="stat-label">{{ t('messages.home.sites_visited') }}</span>
         </div>
         <div class="stat-box">
           <span class="stat-number" id="markedCount"></span>
-          <span class="stat-label">Sites marqués</span>
+          <span class="stat-label">{{ t('messages.header.bookmarked_sites') }}</span>
         </div>
       </div>
     </div>
@@ -108,6 +108,7 @@
   @!unesco.detail()
 </template>
 <script>
+  
   const initialAsideContent = document.getElementById("aside-dynamic-content").innerHTML;
 
   // function handleCardClick(index, lon, lat) {
@@ -148,7 +149,7 @@
               <div class="detail-view">
                   <button class="back-btn" onclick="restoreList()">
                       <span class="material-symbols-outlined">arrow_back</span>
-                      Retour en arrière
+                      {{ t('messages.home.back_button') }}
                   </button>
                     <div class="detail-image-container">
                       <img src="${item.localImageMain || 'https://placehold.co/600x400'}" class="detail-img" />
@@ -162,12 +163,12 @@
                 @if(auth.user)
                 <button class="action-btn btn-add" id="visitSiteBtn" onclick="visitSite('${visitUrl}', '${unescoId}')">
                   <!--<span class="material-symbols-outlined">add</span>-->
-                  Ajouter à mes visites
+                  {{ t('messages.home.add_to_visited') }}
                 </button>
 
                 <button class="action-btn btn-visit" id="markSiteBtn" onclick="markSite('${markUrl}', '${unescoId}')">
                   <!--<span class="material-symbols-outlined">check</span>-->
-                  Marquer le Site
+                  {{ t('messages.home.mark_site') }}
                 </button>
                 @end
               </div>
@@ -230,7 +231,7 @@
     zoom: 1.8,
     center: [10, 20]
   });
-  
+
   // Conteneur pour les boutons
   const buttonContainer = document.createElement('div');
   buttonContainer.style.position = 'absolute';
@@ -239,7 +240,7 @@
   buttonContainer.style.zIndex = '1000';
   buttonContainer.style.display = 'flex';
   buttonContainer.style.gap = '5px';
-  
+
   // 2d button
   const button2D = document.createElement('button');
   button2D.textContent = '2D';
@@ -251,7 +252,7 @@
     button3D.style.backgroundColor = '';
     button3D.style.color = '';
   });
-  
+
   // 3d button
   const button3D = document.createElement('button');
   button3D.textContent = '3D';
@@ -265,11 +266,11 @@
     button2D.style.backgroundColor = '';
     button2D.style.color = '';
   });
-  
+
   // Ajout des boutons au conteneur
   buttonContainer.appendChild(button2D);
   buttonContainer.appendChild(button3D);
-  
+
   // Ajout du conteneur à la carte
   document.getElementById('map').parentNode.appendChild(buttonContainer);
 
@@ -277,11 +278,11 @@
     toggleMarkers();
   });
 
-    map.on("load", () => {
-      loadMarkers(unescosData);
-      toggleMarkers();
-      console.log(markersData);
-    });
+  map.on("load", () => {
+    loadMarkers(unescosData);
+    toggleMarkers();
+    console.log(markersData);
+  });
 
   let markerInstances = [];
 
@@ -324,7 +325,7 @@
         // "all" view → show true state hierarchy
         if (isVisited) {
           color = visitedMarkersColor;
-        } 
+        }
         else if (isMarked) {
           color = markedMarkersColor;
         }
@@ -408,10 +409,10 @@
       const button = document.getElementById("visitSiteBtn")
       if (marker) {
         markersData[markersData.findIndex((marker) => marker.unescoId == unescoId)].isVisited = !marker.isVisited
-        button.innerText = marker.isVisited ? "Enlever de mes visites" : "Ajouter à mes visites"
+        button.innerText = marker.isVisited ? "{{ t('messages.home.remove_from_visited') }}" : "{{ t('messages.home.add_to_visited') }}"
         // Flips the isVisited in the gotten data, it modifies the now local data, not the distant one, simply to keep the UI up to date.
       } else {
-        markersData.push({isMarked: 0, isVisited: 1, unescoId: unescoId})
+        markersData.push({ isMarked: 0, isVisited: 1, unescoId: unescoId })
         button.innerText = "Enlever de mes visites"
       }
     }
@@ -424,11 +425,11 @@
       const button = document.getElementById("markSiteBtn")
       if (marker) {
         markersData[markersData.findIndex((marker) => marker.unescoId == unescoId)].isMarked = !marker.isMarked
-        button.innerText = marker.isMarked ? "Démarquer le Site" : "Marquer le Site"
+        button.innerText = marker.isMarked ? "{{ t('messages.home.unmark_site') }}" : "{{ t('messages.home.mark_site') }}"
         // Flips the isMarked in the gotten data, it modifies the now local data, not the distant one, simply to keep the UI up to date.
       } else {
         // If the marker doesn't exist we manually, locally create it as the db would and change it's values manually 
-        markersData.push({isMarked: 1, isVisited: 0, unescoId: unescoId})
+        markersData.push({ isMarked: 1, isVisited: 0, unescoId: unescoId })
         button.innerText = "Démarquer le Site"
       }
     }
@@ -444,7 +445,7 @@
       }
     });
   }
-  
+
   function zoomToLocation(lng, lat) {
     map.flyTo({
       center: [lng, lat],
