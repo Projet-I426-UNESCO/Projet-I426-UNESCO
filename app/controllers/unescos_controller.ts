@@ -1,6 +1,5 @@
 import type { HttpContext } from '@adonisjs/core/http'
 import Unesco from '#models/unesco'
-import { dd } from '@adonisjs/core/services/dumper'
 import Marker from '#models/marker'
 
 export default class UnescosController {
@@ -20,18 +19,44 @@ export default class UnescosController {
     // Appel de la vue
     return view.render('pages/home', { unescos, markers })
   }
+
   async sites({ view }: HttpContext) {
     const unescos = await Unesco.query().exec()
     return view.render('pages/sites', { unescos })
   }
+
   async bookmarks({ view, auth }: HttpContext) {
-    const unescos = await Unesco.query().exec()
-    return view.render('pages/bookmarks', { unescos })
+    await auth.check()
+
+    let markedUnescos: Unesco[] = []
+    if (auth.user) {
+      const markers = await Marker.query()
+        .where('user_id', auth.user.id)
+        .where('is_marked', true)
+        .preload('unesco')
+
+      markedUnescos = markers.map((marker) => marker.unesco)
+    }
+
+    return view.render('pages/bookmarks', { markedUnescos })
   }
+
   async visits({ view, auth }: HttpContext) {
-    const unescos = await Unesco.query().exec()
-    return view.render('pages/visits', { unescos })
+    await auth.check()
+
+    let visitedUnescos: Unesco[] = []
+    if (auth.user) {
+      const markers = await Marker.query()
+        .where('user_id', auth.user.id)
+        .where('is_visited', true)
+        .preload('unesco')
+
+      visitedUnescos = markers.map((marker) => marker.unesco)
+    }
+
+    return view.render('pages/visits', { visitedUnescos })
   }
+
   async profile({ view, auth }: HttpContext) {
     const userId = auth.user!.id
 
@@ -43,7 +68,8 @@ export default class UnescosController {
     const totalSites = await Unesco.query().count('* as total').first()
     const totalCount = totalSites ? totalSites.$extras.total : 0
 
-    const lastVisit = visitedMarkers.length > 0 ? visitedMarkers[visitedMarkers.length - 1].unesco : null
+    const lastVisit =
+      visitedMarkers.length > 0 ? visitedMarkers[visitedMarkers.length - 1].unesco : null
 
     const visitsByRegion: Record<string, number> = {}
     visitedMarkers.forEach((marker) => {
@@ -52,14 +78,18 @@ export default class UnescosController {
       }
     })
 
-    const completionPercentage = totalCount > 0 ? Math.round((visitedMarkers.length / totalCount) * 100 * 10) / 10 : 0
+    const completionPercentage =
+      totalCount > 0 ? Math.round((visitedMarkers.length / totalCount) * 100 * 10) / 10 : 0
 
-    const allRegions = await Unesco.query()
-      .whereNotNull('region')
-      .select('region')
-      .distinct()
+    const allRegions = await Unesco.query().whereNotNull('region').select('region').distinct()
 
-    const regionStats: Array<{ region: string; visited: number; total: number; percentage: number; colorIndex: number }> = []
+    const regionStats: Array<{
+      region: string
+      visited: number
+      total: number
+      percentage: number
+      colorIndex: number
+    }> = []
 
     allRegions.forEach((row, index) => {
       if (row.region) {
@@ -74,14 +104,11 @@ export default class UnescosController {
       }
     })
 
-    for (let i = 0; i < regionStats.length; i++) {
-      const total = await Unesco.query()
-        .where('region', regionStats[i].region)
-        .count('* as count')
-        .first()
+    for (const stat of regionStats) {
+      const total = await Unesco.query().where('region', stat.region).count('* as count').first()
       const totalInRegion = total ? total.$extras.count : 0
-      regionStats[i].total = totalInRegion
-      regionStats[i].percentage = totalInRegion > 0 ? Math.round((regionStats[i].visited / totalInRegion) * 100) : 0
+      stat.total = totalInRegion
+      stat.percentage = totalInRegion > 0 ? Math.round((stat.visited / totalInRegion) * 100) : 0
     }
 
     const mostVisitedCountry = (() => {
@@ -101,7 +128,10 @@ export default class UnescosController {
       return sorted.length > 0 ? sorted[0][0] : null
     })()
 
-    const mostVisitedRegion = regionStats.length > 0 ? regionStats.reduce((a, b) => (a.visited > b.visited ? a : b)).region : null
+    const mostVisitedRegion =
+      regionStats.length > 0
+        ? regionStats.reduce((a, b) => (a.visited > b.visited ? a : b)).region
+        : null
 
     return view.render('pages/profile', {
       stats: {
@@ -116,6 +146,7 @@ export default class UnescosController {
       },
     })
   }
+
   /**
    * Display form to create a new record
    */
@@ -124,7 +155,7 @@ export default class UnescosController {
   /**
    * Handle form submission for the create action
    */
-  async store({ request }: HttpContext) {}
+  async store({}: HttpContext) {}
 
   /**
    * Show individual record
@@ -144,15 +175,15 @@ export default class UnescosController {
   /**
    * Edit individual record
    */
-  async edit({ params }: HttpContext) {}
-  /**
+  async edit({}: HttpContext) {}
 
+  /**
    * Handle form submission for the edit action
    */
-  async update({ params, request }: HttpContext) {}
+  async update({}: HttpContext) {}
 
   /**
    * Delete record
    */
-  async destroy({ params }: HttpContext) {}
+  async destroy({}: HttpContext) {}
 }
