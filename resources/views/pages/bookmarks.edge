@@ -38,6 +38,13 @@
           <button class="delete-btn" onclick="unmarkSite({{ unesco.id }})">
             <span class="material-symbols-outlined">delete</span>Retirer des favoris
           </button>
+          <button
+            class="action-btn btn-add"
+            id="visitSiteBtn"
+            onclick="visitSite('{{ route('marker.visit', { unescoId: unesco.id }) }}', {{ unesco.id }})"
+          >
+            Ajouter à mes visites
+            </button>
         </a>
       @end
     </div>
