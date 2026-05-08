@@ -32,8 +32,89 @@ export default class UnescosController {
     const unescos = await Unesco.query().exec()
     return view.render('pages/visits', { unescos })
   }
-  async profile({ view }: HttpContext) {
-    return view.render('pages/profile')
+  async profile({ view, auth }: HttpContext) {
+    const userId = auth.user!.id
+
+    const markers = await Marker.query().where('user_id', userId).preload('unesco')
+
+    const visitedMarkers = markers.filter((m) => m.isVisited)
+    const markedMarkers = markers.filter((m) => m.isMarked)
+
+    const totalSites = await Unesco.query().count('* as total').first()
+    const totalCount = totalSites ? totalSites.$extras.total : 0
+
+    const lastVisit = visitedMarkers.length > 0 ? visitedMarkers[visitedMarkers.length - 1].unesco : null
+
+    const visitsByRegion: Record<string, number> = {}
+    visitedMarkers.forEach((marker) => {
+      if (marker.unesco && marker.unesco.region) {
+        visitsByRegion[marker.unesco.region] = (visitsByRegion[marker.unesco.region] || 0) + 1
+      }
+    })
+
+    const completionPercentage = totalCount > 0 ? Math.round((visitedMarkers.length / totalCount) * 100 * 10) / 10 : 0
+
+    const allRegions = await Unesco.query()
+      .whereNotNull('region')
+      .select('region')
+      .distinct()
+
+    const regionStats: Array<{ region: string; visited: number; total: number; percentage: number; colorIndex: number }> = []
+
+    allRegions.forEach((row, index) => {
+      if (row.region) {
+        const visited = visitsByRegion[row.region] || 0
+        regionStats.push({
+          region: row.region,
+          visited,
+          total: 0,
+          percentage: 0,
+          colorIndex: (index % 6) + 1,
+        })
+      }
+    })
+
+    for (let i = 0; i < regionStats.length; i++) {
+      const total = await Unesco.query()
+        .where('region', regionStats[i].region)
+        .count('* as count')
+        .first()
+      const totalInRegion = total ? total.$extras.count : 0
+      regionStats[i].total = totalInRegion
+      regionStats[i].percentage = totalInRegion > 0 ? Math.round((regionStats[i].visited / totalInRegion) * 100) : 0
+    }
+
+    const mostVisitedCountry = (() => {
+      const countries: Record<string, number> = {}
+      visitedMarkers.forEach((marker) => {
+        if (
+          marker.unesco &&
+          marker.unesco.statesNames &&
+          Array.isArray(marker.unesco.statesNames) &&
+          marker.unesco.statesNames.length > 0
+        ) {
+          const country = marker.unesco.statesNames[0]
+          countries[country] = (countries[country] || 0) + 1
+        }
+      })
+      const sorted = Object.entries(countries).sort(([, a], [, b]) => b - a)
+      return sorted.length > 0 ? sorted[0][0] : null
+    })()
+
+    const mostVisitedRegion = regionStats.length > 0 ? regionStats.reduce((a, b) => (a.visited > b.visited ? a : b)).region : null
+
+    return view.render('pages/profile', {
+      stats: {
+        visitedSites: visitedMarkers.length,
+        totalSites: totalCount,
+        markedSites: markedMarkers.length,
+        completionPercentage,
+        lastVisit,
+        regionStats,
+        mostVisitedCountry,
+        mostVisitedRegion,
+      },
+    })
   }
   /**
    * Display form to create a new record

@@ -13,11 +13,11 @@
     />
     <style>
       @import url("https://fonts.googleapis.com/css2?family=K2D:wght@300;400;500&display=swap");
-      
+
       main {
         padding: 25px;
       }
-      
+
       .info-block {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
@@ -31,23 +31,21 @@
         justify-items: stretch;
         align-items: stretch;
       }
-      
+
       .info-block>div {
         background-color: #1e2533;
         border-radius: 20px;
         padding: 20px;
         color: #d1d5db;
       }
-      
+
       .info-block>div:last-child {
         background-color: #0f172a;
         border-radius: 20px;
         padding: 0px;
         color: #d1d5db;
       }
-      
-      /*background-color: #0f172a;*/
-      
+
       .name-block {
         display: flex;
         align-items: center;
@@ -56,13 +54,13 @@
         background: linear-gradient(90deg, rgba(30, 41, 59, 1) 0%, rgba(15, 23, 42, 1) 100%);
         border: 1px solid #2D313E;
       }
-      
+
       .name-avatar {
         display: flex;
         align-items: center;
         gap: 20px;
       }
-      
+
       .avatar {
         height: 100px;
         width: 100px;
@@ -70,34 +68,65 @@
         border-radius: 50%;
         object-fit: cover;
       }
-      
+
       .name h2 {
         color: #ffffff;
         font-size: 28px;
         margin: 0;
       }
-      
+
       .name p {
         color: #94a3b8;
         font-size: 14px;
         margin: 0;
       }
-      
+
       .last-visit-block {
         grid-column: 3;
         grid-row: 1/4;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
       }
-      
+
+      .last-visit-block img {
+        width: 100%;
+        height: 250px;
+        object-fit: cover;
+        border-radius: 12px;
+        margin-bottom: 10px;
+      }
+
       .progress-block {
         grid-column: 1/2;
         grid-row: 2;
       }
-      
+
+      .progress-value {
+        font-size: 32px;
+        font-weight: bold;
+        color: #ffffff;
+        margin-top: 10px;
+      }
+
+      .progress-bar {
+        background-color: #2d3748;
+        border-radius: 8px;
+        height: 12px;
+        margin-top: 10px;
+        overflow: hidden;
+      }
+
+      .progress-fill {
+        background: linear-gradient(90deg, #5f7ef2 0%, #68bff8 100%);
+        height: 100%;
+      }
+
       .continent-stats-block {
         grid-column: 2;
         grid-row: 2/4;
       }
-      
+
       .continent-stats-block .boss {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
@@ -105,17 +134,81 @@
         text-align: center;
         justify-content: stretch;
       }
-      
-      .continent-stats-block>div {
-        justify-self: center;
-        align-self: center;
+
+      .continent-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
       }
-      
+
+      .continent-circle {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 24px;
+        font-weight: bold;
+        margin-bottom: 8px;
+        background: linear-gradient(135deg, #5f7ef2 0%, #68bff8 100%);
+      }
+
+      .continent-circle.color-1 {
+        background: linear-gradient(135deg, #5f7ef2 0%, #68bff8 100%);
+      }
+
+      .continent-circle.color-2 {
+        background: linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%);
+      }
+
+      .continent-circle.color-3 {
+        background: linear-gradient(135deg, #6b7280 0%, #9ca3af 100%);
+      }
+
+      .continent-circle.color-4 {
+        background: linear-gradient(135deg, #10b981 0%, #34d399 100%);
+      }
+
+      .continent-circle.color-5 {
+        background: linear-gradient(135deg, #ef4444 0%, #f87171 100%);
+      }
+
+      .continent-circle.color-6 {
+        background: linear-gradient(135deg, #8b5cf6 0%, #a78bfa 100%);
+      }
+
+      .continent-name {
+        font-size: 12px;
+        color: #94a3b8;
+      }
+
       .few-last-visits-block {
         grid-column: 1;
         grid-row: 3/5;
       }
-      
+
+      .visit-item {
+        padding: 10px;
+        border-bottom: 1px solid #2d3748;
+        font-size: 12px;
+      }
+
+      .visit-item:last-child {
+        border-bottom: none;
+      }
+
+      .visit-name {
+        color: #ffffff;
+        font-weight: 500;
+      }
+
+      .visit-location {
+        color: #94a3b8;
+        font-size: 11px;
+      }
+
       .general-stats-block {
         grid-column: 2/4;
         grid-row: 4;
@@ -124,46 +217,35 @@
         background-color: #ffffff;
         gap: 10px;
       }
-      
-      .general-stats-block>div {
+
+      .stat-card {
         background-color: #1e2533;
         border-radius: 12px;
         display: flex;
+        flex-direction: column;
         justify-content: center;
         align-items: center;
         color: #d1d5db;
-        font-size: 18px;
+        padding: 15px;
       }
-      
-      .item {
-        width: 60px;
-        height: 60px;
-        background-color: #68bff8;
-        border-radius: 50%;
-        align-items: center;
-        flex-direction: column;
+
+      .stat-label {
+        font-size: 12px;
+        color: #94a3b8;
+        margin-bottom: 8px;
       }
-      
-      .continent-text {
-        margin-top: 60px;
-        justify-self: center;
+
+      .stat-value {
+        font-size: 24px;
+        font-weight: bold;
+        color: #ffffff;
       }
-      
-      .map-list-block {
-        height: 500px;
-        background-color: #1e2533;
-        max-width: 1500px;
-        margin: 0 auto;
-        padding-top: 50px;
-        border-radius: 20px;
-        margin-top: 10px;
-      }
-      
+
       .line {
         display: flex;
         gap: 10px;
       }
-      
+
       .logout-btn,
       .modif-btn {
         height: 35px;
@@ -176,13 +258,23 @@
         text-decoration: none;
         font-weight: 500;
       }
-      
+
       .logout-btn {
         background-color: #F25F61;
       }
-      
+
       .modif-btn {
         background-color: #5F7EF2;
+      }
+
+      .map-list-block {
+        height: 500px;
+        background-color: #1e2533;
+        max-width: 1500px;
+        margin: 0 auto;
+        padding-top: 50px;
+        border-radius: 20px;
+        margin-top: 10px;
       }
     </style>
   </head>
@@ -211,53 +303,63 @@
           </div>
 
           <div class="last-visit-block">
-            <p>
-              Dernière visite
-            </p>
-            <p>
-            </p>
+            <div>
+              <p style="color: #ffffff; font-weight: 500; margin-bottom: 10px;">Dernier visite</p>
+              @if(stats.lastVisit)
+                <img src="{{ stats.lastVisit.localImageMain || stats.lastVisit.mainImageUrl }}" alt="{{ stats.lastVisit.nameFr }}" />
+                <h3 style="margin: 0; color: #ffffff; font-size: 14px;">{{ stats.lastVisit.nameFr }}</h3>
+                <p style="margin: 5px 0 0 0; color: #94a3b8; font-size: 12px;">
+                  @if(stats.lastVisit.statesNames && stats.lastVisit.statesNames.length > 0)
+                    {{ stats.lastVisit.statesNames[0] }}
+                  @end
+                </p>
+              @else
+                <p style="color: #94a3b8;">Aucune visite enregistrée</p>
+              @end
+            </div>
           </div>
 
           <div class="progress-block">
-            <p>
-              Progression Globale
-            </p>
-            <p>
-              %
-            </p>
+            <p style="margin-top: 0;">Ma progression globale</p>
+            <div class="progress-value">{{ stats.visitedSites }} / {{ stats.totalSites }}</div>
+            <div class="progress-bar">
+              <div class="progress-fill" style="width: {{ (stats.visitedSites / stats.totalSites * 100) }}%;"></div>
+            </div>
+            <p style="margin-bottom: 0; margin-top: 8px; font-size: 12px; color: #94a3b8;">{{ stats.completionPercentage }}%</p>
           </div>
 
           <div class="continent-stats-block">
-            <p>
-              Exploration par continent
-            </p>
-            <div class="continent-grid">
-
+            <p style="margin-top: 0;">Par région</p>
+            <div class="boss">
+              @each(data in stats.regionStats)
+                <div class="continent-item">
+                  <div class="continent-circle color-{{ data.colorIndex }}">{{ data.percentage }}%</div>
+                  <div style="font-size: 12px; color: #ffffff; font-weight: 500;">{{ data.region }}</div>
+                </div>
+              @endeach
             </div>
           </div>
 
           <div class="few-last-visits-block">
-            <p>
-              Visites récentes
-            </p>
+            <p style="margin-top: 0;">Derniers voyages</p>
           </div>
 
           <div class="general-stats-block">
             <div class="stat-card">
-              <span>Sites visités</span>
-
+              <span class="stat-label">Sites de la patrimoine mondiale visités</span>
+              <span class="stat-value">{{ stats.visitedSites }}/{{ stats.totalSites }}</span>
             </div>
             <div class="stat-card">
-              <span>Continents</span>
-
+              <span class="stat-label">Pourcentage des sites UNESCO visités</span>
+              <span class="stat-value">{{ stats.completionPercentage }}%</span>
             </div>
             <div class="stat-card">
-              <span>Taux de complétion</span>
-
+              <span class="stat-label">Région la plus visitée</span>
+              <span class="stat-value">{{ stats.mostVisitedRegion || 'N/A' }}</span>
             </div>
             <div class="stat-card">
-              <span>Pays explorés</span>
-
+              <span class="stat-label">Pays le plus visité</span>
+              <span class="stat-value">{{ stats.mostVisitedCountry || 'N/A' }}</span>
             </div>
           </div>
         </div>
@@ -267,5 +369,5 @@
       </main>
     </body>
   @end
-  
+
 </html>
