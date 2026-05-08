@@ -62,10 +62,9 @@ export default class DownloadImages extends BaseCommand {
       .toFile(path.join(paths.thumb, filenameThumb))
 
     // Sauvegarder les chemins des images
-
     const DOMAIN = 'unesco.etml.net'
-    site.localImageMain = `https://${DOMAIN}/${paths.main}/${filenameMain}`
-    site.localImageThumb = `https://${DOMAIN}/${paths.thumb}/${filenameThumb}`
+    site.localImageMain = `https://${DOMAIN}/unesco/images/main/${filenameMain}`
+    site.localImageThumb = `https://${DOMAIN}/unesco/images/thumb/${filenameThumb}`
     await site.save()
   }
 
@@ -89,7 +88,7 @@ export default class DownloadImages extends BaseCommand {
     // Initialiser le navigateur
     const browser = await puppeteer.launch({
       executablePath: '/usr/bin/chromium',
-      headless: true,
+      headless: false,
       args: [
         '--no-sandbox',
         '--disable-setuid-sandbox',
