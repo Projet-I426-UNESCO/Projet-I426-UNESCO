@@ -1,161 +1,485 @@
 @layout('components/layout/index', { title: 'Sites marqués', page: 'bookmarks' })
-  <!--TODO : ajouter les filtres(par date cr/decr, par pays, par nom cr/decr ) et la recherche-->
-  <main class="sites-main">
+
+<main class="home-main">
+  <div class="explorer-container">
+    <div class="map-container">
+      <div id="map">
+      </div>
+    </div>
     <div class="controls">
       <div class="search-container">
         <div class="search-pill">
           <span class="material-symbols-outlined">search</span>
-          <input type="text" placeholder="Rechercher un site..." />
+          <input id="siteSearchInput" type="text" placeholder="{{ t('messages.home.search_placeholder') }}"
+            autocomplete="off" />
         </div>
-        <div class="search-pill">
-          <button class="filter" onclick="openFilters()">            <span class="material-symbols-outlined">filter_list</span></button>
+
+        <div class="filter-pill active" onclick="setFilter('marked')">
+          <span>{{ t('messages.home.filter_to_visit') }}</span>
+        </div>
+
+        <label class="toggle-pill" for="markerToggle">
+          <input type="checkbox" id="markerToggle" checked />
+          <span>{{ t('messages.home.toggle_markers') }}</span>
+        </label>
+      </div>
+
+      <div class="user-profile">
+        @if(auth.user)
+        <div class="auth-pill logged-in">
+          <a href="{{ route('profile.show') }}" class="user-trigger">
+            <div class="avatar-circle">
+            </div>
+            <div class="user-details">
+              <span class="user-name">{{ auth.user.fullName }}</span>
+            </div>
+          </a>
+          <form method="POST" action="{{ route('auth.logout') }}">
+            {{ csrfField() }}
+            <button type="submit" class="logout-icon-btn" title="{{ t('messages.home.logout_title') }}">
+              <span class="material-symbols-outlined">logout</span>
+            </button>
+          </form>
+        </div>
+        @else
+        <div class="auth-pill-group">
+          <a href="{{ route('auth.login.show') }}" class="auth-pill login">
+            <span class="material-symbols-outlined">login</span>
+            {{ t('messages.home.login') }}
+          </a>
+          <a href="{{ route('auth.register.show') }}" class="auth-pill register">
+            {{ t('messages.home.register') }}
+          </a>
+        </div>
+        @end
+      </div>
+    </div>
+  </div>
+
+  <aside>
+    <div id="aside-dynamic-content">
+      @each((unesco, index) in unescos)
+      @if(unesco.coordinates)
+      <div class="site-card"
+        onclick="handleCardClick({{ index }}, {{ unesco.id }}, {{ unesco.coordinates.lon }}, {{ unesco.coordinates.lat }})">
+        <div class="card-info">
+          @if(unesco.localImageThumb)
+          <img src="{{ unesco.localImageThumb }}" class="card-img" />
+          @else
+          <img src="https://placehold.co/600x400" class="card-img" />
+          @end
+          <h4>
+            {{ unesco.nameFr }}
+          </h4>
           <p>
-            @if(filter)
-              Filtre: {{ filter }}
-            @else
-              Filtre: aucun
-            @end
+            {{ unesco.statesNames }}
           </p>
         </div>
       </div>
-    </div>
-    <div class="sites-grid">
-      @each((unesco) in markedUnescos)
-        <a href="{{ route('site.show', { id: unesco.id }) }}" class="site-box">
-          @if(unesco.localImageThumb)
-            <img src="{{ unesco.localImageThumb }}" class="site-box-img" />
-          @else
-            <img src="../../../public/placeholders/placeholderImage.png" class="site-box-img" />
-          @end
-          <div class="site-box-info">
-            <h3>
-              {{ unesco.nameFr }}
-            </h3>
-            <p>
-              {{ unesco.statesNames }}
-            </p>
-          </div>
-          <button class="delete-btn" onclick="unmarkSite({{ unesco.id }})">
-            <span class="material-symbols-outlined">delete</span>Retirer des favoris
-          </button>
-          <button
-            class="action-btn btn-add"
-            id="visitSiteBtn"
-            onclick="visitSite('{{ route('marker.visit', { unescoId: unesco.id }) }}', {{ unesco.id }})"
-          >
-            Ajouter à mes visites
-            </button>
-        </a>
+      @end
       @end
     </div>
-
-    @if(markedUnescos.length === 0)
-      <div class="empty-state">
-        <p>
-          Aucun site marqué pour le moment
-        </p>
-      </div>
-    @end
-    
-    <div id="filterPopup" class="filter-popup">
-      <div class="filter-popup-content">
-        <div class="filter-popup-header">
-          <h2>
-            Filtres
-          </h2>
-          <button class="filter-close-btn" onclick="closeFilters()">
-            <span class="material-symbols-outlined">close</span>
-          </button>
+    <div class="stats-footer-container">
+      <h3 class="stats-title">
+        {{ t('messages.home.stats_title') }}
+      </h3>
+      <div class="stats-grid">
+        <div class="stat-box">
+          <span class="stat-number" id="visitedCount"></span>
+          <span class="stat-label">{{ t('messages.home.sites_visited') }}</span>
         </div>
-        <div class="filter-popup-body">
-          <div class="filter-section">
-            <label>Région / Pays</label>
-            <input type="text" id="countryFilter" placeholder="Rechercher un pays..." />
-          </div>
-          <div class="filter-section">
-            <label>Type de site</label>
-            <select id="typeFilter">
-              <option value="">
-                Tous les types
-              </option>
-              <option value="cultural">
-                Culturel
-              </option>
-              <option value="natural">
-                Naturel
-              </option>
-              <option value="mixed">
-                Mixte
-              </option>
-            </select>
-          </div>
-          <select id="increase">
-            <option value="increase">
-              Croisant
-            </option>
-            <option value="decrease">
-              Décroisant
-            </option>
-          </select>
-        </div>
-        <div class="filter-popup-footer">
-          <button class="btn-primary" onclick="applyFilters()">Appliquer</button>
-          <button class="btn-secondary" onclick="resetFilters()">Réinitialiser</button>
+        <div class="stat-box">
+          <span class="stat-number" id="markedCount"></span>
+          <span class="stat-label">{{ t('messages.header.bookmarked_sites') }}</span>
         </div>
       </div>
     </div>
-  </main>
+  </aside>
+</main>
+<template id="unesco-detail-template">
+  @!unesco.detail()
+</template>
+<script>
 
-  <script>
-    function openFilters() {
-      const popup = document.getElementById("filterPopup");
-      popup.classList.add("show");
+  const csrfToken = "{{ csrfToken }}";
+
+  const visitUrlTemplate = "{{ route('marker.visit', { unescoId: '__ID__' }) }}";
+  const markUrlTemplate = "{{ route('marker.mark', { unescoId: '__ID__' }) }}";
+
+  // Filtre pré-initialisé à "marked" pour cette page
+  let activeFilter = "marked";
+  let searchQuery = "";
+
+  function handleCardClick(index, unescoId, lon, lat) {
+    zoomToLocation(lon, lat);
+
+    const visitUrl = visitUrlTemplate.replace('__ID__', unescoId);
+    const markUrl = markUrlTemplate.replace('__ID__', unescoId);
+
+    const item = unescosData[index];
+    const container = document.getElementById("aside-dynamic-content");
+    container.innerHTML = `
+              <div class="detail-view">
+                  <button class="back-btn" onclick="restoreList()">
+                      <span class="material-symbols-outlined">arrow_back</span>
+                      {{ t('messages.home.back_button') }}
+                  </button>
+                    <div class="detail-image-container">
+                      <img src="${item.localImageMain || 'https://placehold.co/600x400'}" class="detail-img" />
+                    </div>
+                  <div class="detail-image-container">
+                  <h2>${item.nameEn} </h2>
+                  <p class="desc">
+                      ${item.shortDescriptionFr || "Située au large des côtes, cette formation géologique est une structure monumentale unique au monde."}
+                  </p>
+                  <a href="/site/${item.id}" class="detail-link">En savoir plus</a>
+                @if(auth.user)
+                <button class="action-btn btn-add" id="visitSiteBtn" onclick="visitSite('${visitUrl}', '${unescoId}')">
+                  {{ t('messages.home.add_to_visited') }}
+                </button>
+
+                <button class="action-btn btn-visit" id="markSiteBtn" onclick="markSite('${markUrl}', '${unescoId}')">
+                  {{ t('messages.home.mark_site') }}
+                </button>
+                @end
+              </div>
+          </div>
+      `;
+    container.scrollTop = 0;
+
+    for (let i = 0; i < 2; i++) {
+      flipVisitSiteUI(unescoId)
+      flipMarkSiteUI(unescoId)
+    }
+    updateStats()
+  }
+
+  function updateFilterUI(mode) {
+    document.querySelectorAll(".filter-pill").forEach(p => {
+      p.classList.remove("active");
+    });
+
+    const map = {
+      all: 0,
+      marked: 1,
+      visited: 2
+    };
+
+    document.querySelectorAll(".filter-pill")[map[mode]].classList.add("active");
+  }
+
+  function setFilter(mode) {
+    activeFilter = mode;
+    updateFilterUI(mode);
+    applyFilters();
+  }
+
+  function restoreList() {
+    applyFilters();
+  }
+
+  const unescosData = {{{ JSON.stringify(unescos) }}};
+  const markersData = {{{ JSON.stringify(markers) }}};
+  const unescoIndexById = new Map(unescosData.map((unesco, index) => [unesco.id, index]));
+  const searchInput = document.getElementById("siteSearchInput");
+
+  function normalizeSearchValue(value) {
+    return (value || "")
+      .toString()
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .toLowerCase()
+      .trim();
+  }
+
+  function markerMatchesActiveFilter(markerState) {
+    if (activeFilter === "visited") return Boolean(markerState?.isVisited);
+    if (activeFilter === "marked") return Boolean(markerState?.isMarked);
+    return true;
+  }
+
+  function matchesSearch(unesco) {
+    const normalizedQuery = normalizeSearchValue(searchQuery);
+    if (!normalizedQuery) return true;
+
+    const searchableText = [unesco.nameFr, unesco.nameEn, unesco.statesNames]
+      .map(normalizeSearchValue)
+      .join(" ");
+
+    return searchableText.includes(normalizedQuery);
+  }
+
+  function getFilteredUnescos() {
+    return unescosData.filter((unesco) => {
+      if (!unesco.coordinates) return false;
+
+      const markerState = markersData?.find((marker) => marker.unescoId == unesco.id);
+
+      return markerMatchesActiveFilter(markerState) && matchesSearch(unesco);
+    });
+  }
+
+  function renderSiteList(unescos) {
+    const container = document.getElementById("aside-dynamic-content");
+
+    if (!unescos.length) {
+      container.innerHTML = `<p class="empty-search-result">Aucun site ne correspond a votre recherche.</p>`;
+      return;
     }
 
-    function closeFilters() {
-      const popup = document.getElementById("filterPopup");
-      popup.classList.remove("show");
-    }
+    container.innerHTML = unescos
+      .map((unesco) => {
+        const index = unescoIndexById.get(unesco.id);
 
-    function applyFilters() {
-      const countryFilter = document.getElementById("countryFilter").value;
-      const typeFilter = document.getElementById("typeFilter").value;
-      const sites = document.querySelectorAll(".site-box");
-      sites.forEach(site => {
-        let visible = true;
-        if (countryFilter) {
-          const country = site.querySelector(".site-box-info p").textContent.toLowerCase();
-          visible = visible && country.includes(countryFilter.toLowerCase());
+        return `
+          <div class="site-card" onclick="handleCardClick(${index}, ${unesco.id}, ${unesco.coordinates.lon}, ${unesco.coordinates.lat})">
+            <div class="card-info">
+              <img src="${unesco.localImageThumb || "https://placehold.co/600x400"}" class="card-img" />
+              <h4>${unesco.nameFr || unesco.nameEn || "Site UNESCO"}</h4>
+              <p>${unesco.statesNames || ""}</p>
+            </div>
+          </div>
+        `;
+      })
+      .join("");
+  }
+
+  function applyFilters() {
+    const filteredUnescos = getFilteredUnescos();
+    renderSiteList(filteredUnescos);
+    loadMarkers(filteredUnescos);
+  }
+
+  if (searchInput) {
+    searchInput.addEventListener("input", (event) => {
+      searchQuery = event.target.value || "";
+      applyFilters();
+    });
+  }
+
+  mapboxgl.accessToken = "pk.eyJ1IjoiNjdza2liaWRpc2NydW0iLCJhIjoiY21sYXdlamR3MGcyOTNlcXoxdHQ2bXliaiJ9.BXx6EzzxvsFrDg5yeo1LUQ";
+
+  const map = new mapboxgl.Map({
+    container: "map",
+    style: "mapbox://styles/mapbox/standard",
+    projection: "globe",
+    zoom: 1.8,
+    center: [10, 20]
+  });
+
+  const buttonContainer = document.createElement('div');
+  buttonContainer.style.position = 'absolute';
+  buttonContainer.style.bottom = '10px';
+  buttonContainer.style.right = '10px';
+  buttonContainer.style.zIndex = '1000';
+  buttonContainer.style.display = 'flex';
+  buttonContainer.style.gap = '5px';
+
+  const button2D = document.createElement('button');
+  button2D.textContent = '2D';
+  button2D.style.padding = '5px 10px';
+  button2D.addEventListener('click', () => {
+    map.setProjection('equirectangular');
+    button2D.style.backgroundColor = '#5f7ef2';
+    button2D.style.color = 'white';
+    button3D.style.backgroundColor = '';
+    button3D.style.color = '';
+  });
+
+  const button3D = document.createElement('button');
+  button3D.textContent = '3D';
+  button3D.style.padding = '5px 10px';
+  button3D.style.backgroundColor = '#5f7ef2';
+  button3D.style.color = 'white';
+  button3D.addEventListener('click', () => {
+    map.setProjection('globe');
+    button3D.style.backgroundColor = '#5f7ef2';
+    button3D.style.color = 'white';
+    button2D.style.backgroundColor = '';
+    button2D.style.color = '';
+  });
+
+  buttonContainer.appendChild(button2D);
+  buttonContainer.appendChild(button3D);
+  document.getElementById('map').parentNode.appendChild(buttonContainer);
+
+  document.getElementById("markerToggle").addEventListener("click", () => {
+    toggleMarkers();
+  });
+
+  map.on("load", () => {
+    // Applique le filtre "marked" dès le chargement
+    // markers déjà cochés par défaut, pas besoin de toggle
+    applyFilters();
+    updateStats();
+  });
+
+  let markerInstances = [];
+  let markersVisible = false; // false car toggleMarkers() va l'inverser au clic
+
+  const allMarkersColor = "#61afef";
+  const visitedMarkersColor = "#fe8d50";
+  const markedMarkersColor = "#8bf7df";
+
+  function loadMarkers(unescos) {
+    markerInstances.forEach(m => m.remove());
+    markerInstances = [];
+
+    unescos.forEach(unesco => {
+      if (!unesco.coordinates) return;
+
+      const markerState = markersData?.find(
+        m => m.unescoId == unesco.id
+      );
+
+      if (activeFilter === "visited" && !markerState?.isVisited) return;
+      if (activeFilter === "marked" && !markerState?.isMarked) return;
+
+      let color = allMarkersColor;
+
+      const isVisited = markerState?.isVisited;
+      const isMarked = markerState?.isMarked;
+
+      if (activeFilter === "visited") {
+        color = visitedMarkersColor;
+      }
+      else if (activeFilter === "marked") {
+        color = markedMarkersColor;
+      }
+      else if (activeFilter === "all") {
+        color = allMarkersColor;
+      }
+      else {
+        if (isVisited) { color = visitedMarkersColor; }
+        else if (isMarked) { color = markedMarkersColor; }
+      }
+
+      const marker = new mapboxgl.Marker({ color })
+        .setLngLat([unesco.coordinates.lon, unesco.coordinates.lat])
+        .addTo(map);
+
+      if (!markersVisible) {
+        marker.remove();
+      }
+
+      markerInstances.push(marker);
+    });
+  }
+
+  map.addControl(new mapboxgl.NavigationControl());
+
+  function getMarkedSitesCount() {
+    return markersData.filter((marker) => marker.isMarked == 1).length
+  }
+
+  function getVisitedSitesCount() {
+    return markersData.filter((marker) => marker.isVisited == 1).length
+  }
+
+  function updateStats() {
+    const visited = getVisitedSitesCount();
+    const marked = getMarkedSitesCount();
+    const total = unescosData.length;
+
+    document.getElementById("visitedCount").innerText = `${visited}/${total}`;
+    document.getElementById("markedCount").innerText = `${marked}/${total}`;
+  }
+
+  async function visitSite(url, unescoId) {
+    try {
+      const res = await fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "x-csrf-token": csrfToken
         }
-        site.style.display = visible ? "flex" : "none";
       });
-      closeFilters();
-    }
 
-    function resetFilters() {
-      document.getElementById("countryFilter").value = "";
-      document.getElementById("typeFilter").value = "";
-      const sites = document.querySelectorAll(".site-box");
-      sites.forEach(site => {
-        site.style.display = "flex";
-      });
-      closeFilters();
-    }
+      if (!res.ok) throw new Error("Request failed");
 
-    function unmarkSite(unescoId) {
-      fetch(`/api/markers/${unescoId}/mark`, {
-        method: "POST"
-      }).then(response => response.json()).then(data => {
-        if (data.success) {
-          window.location.reload();
+      flipVisitSiteUI(unescoId)
+      loadMarkers(getFilteredUnescos())
+      updateStats()
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  async function markSite(url, unescoId) {
+    try {
+      const res = await fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "x-csrf-token": csrfToken
         }
       });
-    }
 
-    document.getElementById("filterPopup").addEventListener("click", function(e) {
-      if (e.target === this) {
-        closeFilters();
+      if (!res.ok) throw new Error("Request failed");
+
+      flipMarkSiteUI(unescoId)
+      loadMarkers(getFilteredUnescos())
+      updateStats()
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  function flipVisitSiteUI(unescoId) {
+    if (markersData) {
+      const marker = markersData.find((marker) => marker.unescoId == unescoId)
+      const button = document.getElementById("visitSiteBtn")
+      if (marker) {
+        markersData[markersData.findIndex((marker) => marker.unescoId == unescoId)].isVisited = !marker.isVisited
+        if (button) {
+          button.innerText = marker.isVisited ? "{{ t('messages.home.remove_from_visited') }}" : "{{ t('messages.home.add_to_visited') }}"
+        }
+      } else {
+        markersData.push({ isMarked: 0, isVisited: 1, unescoId: unescoId })
+        if (button) {
+          button.innerText = "Enlever de mes visites"
+        }
+      }
+    }
+  }
+
+  function flipMarkSiteUI(unescoId) {
+    if (markersData) {
+      const marker = markersData.find((marker) => marker.unescoId == unescoId)
+      const button = document.getElementById("markSiteBtn")
+      if (marker) {
+        markersData[markersData.findIndex((marker) => marker.unescoId == unescoId)].isMarked = !marker.isMarked
+        if (button) {
+          button.innerText = marker.isMarked ? "{{ t('messages.home.unmark_site') }}" : "{{ t('messages.home.mark_site') }}"
+        }
+      } else {
+        markersData.push({ isMarked: 1, isVisited: 0, unescoId: unescoId })
+        if (button) {
+          button.innerText = "Démarquer le Site"
+        }
+      }
+    }
+  }
+
+  function toggleMarkers() {
+    markersVisible = !markersVisible;
+    markerInstances.forEach(marker => {
+      if (markersVisible) {
+        marker.addTo(map);
+      } else {
+        marker.remove();
       }
     });
-  </script>
+  }
+
+  function zoomToLocation(lng, lat) {
+    map.flyTo({
+      center: [lng, lat],
+      zoom: 12,
+      essential: true,
+      duration: 3500,
+      curve: 1.5
+    });
+  }
+</script>
 @end

@@ -26,22 +26,25 @@ export default class UnescosController {
   }
   async bookmarks({ view, auth }: HttpContext) {
     await auth.check()
+    const unescos = await Unesco.query().exec()
 
-    let markedUnescos: Unesco[] = []
+    let markers: Marker[] = []
     if (auth.user) {
-      const markers = await Marker.query()
-        .where('user_id', auth.user.id)
-        .where('is_marked', true)
-        .preload('unesco')
-
-      markedUnescos = markers.map((marker) => marker.unesco)
+      markers = await Marker.query().where('user_id', auth.user.id).exec()
     }
 
-    return view.render('pages/bookmarks', { markedUnescos })
+    return view.render('pages/bookmarks', { unescos, markers })
   }
   async visits({ view, auth }: HttpContext) {
+    await auth.check()
     const unescos = await Unesco.query().exec()
-    return view.render('pages/visits', { unescos })
+
+    let markers: Marker[] = []
+    if (auth.user) {
+      markers = await Marker.query().where('user_id', auth.user.id).exec()
+    }
+
+    return view.render('pages/visits', { unescos, markers })
   }
   async profile({ view, auth }: HttpContext) {
     const userId = auth.user!.id
@@ -139,12 +142,12 @@ export default class UnescosController {
   /**
    * Display form to create a new record
    */
-  async create({}: HttpContext) {}
+  async create({ }: HttpContext) { }
 
   /**
    * Handle form submission for the create action
    */
-  async store({ request }: HttpContext) {}
+  async store({ request }: HttpContext) { }
 
   /**
    * Show individual record
@@ -164,15 +167,15 @@ export default class UnescosController {
   /**
    * Edit individual record
    */
-  async edit({ params }: HttpContext) {}
+  async edit({ params }: HttpContext) { }
   /**
 
    * Handle form submission for the edit action
    */
-  async update({ params, request }: HttpContext) {}
+  async update({ params, request }: HttpContext) { }
 
   /**
    * Delete record
    */
-  async destroy({ params }: HttpContext) {}
+  async destroy({ params }: HttpContext) { }
 }
