@@ -62,12 +62,15 @@
     "logout": "Se déconnecter",
     "edit_account": "Modifier le compte",
     "last_visit": "Dernière visite",
+    "no_visit_yet": "Aucune visite pour l'instant",
     "global_progress": "Progression Globale",
-    "continent_exploration": "Exploration par continent",
+    "continent_exploration": "Par continent",
     "recent_visits": "Visites récentes",
-    "visited_sites": "Sites visités",
+    "visited_sites": "Sites de la patrimoine mondiale visité",
     "continents": "Continents",
-    "completion_rate": "Taux de complétion",
+    "completion_rate": "Pourcentage des sites UNESCO visités",
+    "most_visited_region": "Continent le plus visité",
+    "most_visited_country": "Pays le plus visité",
     "countries_explored": "Pays explorés"
   }
 }

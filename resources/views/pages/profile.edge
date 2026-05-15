@@ -121,34 +121,136 @@
       grid-row: 2/4;
     }
 
+    .boss {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px 8px;
+      margin-top: 12px;
+    }
+
     .continent-item {
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
+      gap: 8px;
     }
 
-    .continent-circle {
+    .continent-donut {
+      position: relative;
       width: 80px;
       height: 80px;
-      border-radius: 50%;
+    }
+
+    .continent-donut svg {
+      width: 80px;
+      height: 80px;
+      transform: rotate(-90deg);
+    }
+
+    .continent-donut .track {
+      fill: none;
+      stroke: #2d3748;
+      stroke-width: 7;
+    }
+
+    .continent-donut .arc {
+      fill: none;
+      stroke-width: 7;
+      stroke-linecap: round;
+      transition: stroke-dashoffset 0.6s ease;
+    }
+
+    .continent-donut .arc.color-1 { stroke: #5f7ef2; }
+    .continent-donut .arc.color-2 { stroke: #f59e0b; }
+    .continent-donut .arc.color-3 { stroke: #10b981; }
+    .continent-donut .arc.color-4 { stroke: #ec4899; }
+    .continent-donut .arc.color-5 { stroke: #8b5cf6; }
+    .continent-donut .arc.color-6 { stroke: #06b6d4; }
+
+    .continent-donut-label {
+      position: absolute;
+      inset: 0;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 24px;
+      font-size: 15px;
       font-weight: bold;
-      margin-bottom: 8px;
-      background: linear-gradient(135deg, #5f7ef2 0%, #68bff8 100%);
+      color: #ffffff;
     }
 
     .continent-name {
-      font-size: 12px;
+      font-size: 11px;
       color: #94a3b8;
+      text-align: center;
+      line-height: 1.3;
     }
 
     .few-last-visits-block {
       grid-column: 1;
       grid-row: 3/5;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .recent-visits-title {
+      font-size: 22px;
+      font-weight: 700;
+      color: #ffffff;
+      margin: 0 0 16px 0;
+    }
+
+    .visit-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      padding: 14px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+      height: 80px;
+      max-height: 100px;
+      overflow: hidden;
+      box-sizing: border-box;
+    }
+
+    .visit-item:last-child {
+      border-bottom: none;
+    }
+
+    .visit-item-left {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+
+    .visit-item-name {
+      font-size: 16px;
+      font-weight: 600;
+      color: #ffffff;
+      text-decoration: none;
+    }
+
+    .visit-item-name:hover {
+      color: #737df3;
+    }
+
+    .visit-item-country {
+      font-size: 13px;
+      color: #64748b;
+    }
+
+    .visit-item-date {
+      font-size: 15px;
+      font-weight: 600;
+      color: #ffffff;
+      white-space: nowrap;
+      padding-left: 12px;
+    }
+
+    .no-visits-msg {
+      color: #64748b;
+      font-size: 14px;
+      margin-top: 8px;
     }
 
     .general-stats-block {
@@ -164,12 +266,16 @@
       border-radius: 12px;
       padding: 15px;
       text-align: center;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 6px;
     }
 
     .stat-label {
+      display: block;
       font-size: 12px;
       color: #94a3b8;
-      margin-bottom: 8px;
     }
 
     .stat-value {
@@ -281,7 +387,19 @@
           <div class="boss">
             @each(data in stats.regionStats)
               <div class="continent-item">
-                <div class="continent-circle color-{{ data.colorIndex }}">{{ data.percentage }}%</div>
+                <div class="continent-donut">
+                  {{-- circumference = 2 * π * r = 2 * 3.14159 * 31 ≈ 194.78 --}}
+                  <svg viewBox="0 0 80 80">
+                    <circle class="track" cx="40" cy="40" r="31" />
+                    <circle
+                      class="arc color-{{ data.colorIndex }}"
+                      cx="40" cy="40" r="31"
+                      stroke-dasharray="194.78"
+                      stroke-dashoffset="{{ 194.78 - (194.78 * data.percentage / 100) }}"
+                    />
+                  </svg>
+                  <div class="continent-donut-label">{{ data.percentage }}%</div>
+                </div>
                 <div class="continent-name">{{ data.region }}</div>
               </div>
             @endeach
@@ -289,7 +407,20 @@
         </div>
 
         <div class="few-last-visits-block">
-          <p style="margin-top: 0;">{{ t('messages.profile.recent_visits') }}</p>
+          <h2 class="recent-visits-title">{{ t('messages.profile.recent_visits') }}</h2>
+          @if(stats.recentVisits.length > 0)
+            @each(visit in stats.recentVisits)
+              <div class="visit-item">
+                <div class="visit-item-left">
+                  <a href="/site/{{ visit.id }}" class="visit-item-name">{{ visit.name }}</a>
+                  <span class="visit-item-country">{{ visit.country }}</span>
+                </div>
+                <span class="visit-item-date">{{ visit.date }}</span>
+              </div>
+            @endeach
+          @else
+            <p class="no-visits-msg">{{ t('messages.profile.no_visit_yet') }}</p>
+          @end
         </div>
 
         <div class="general-stats-block">

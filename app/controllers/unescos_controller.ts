@@ -126,6 +126,17 @@ export default class UnescosController {
         ? regionStats.reduce((a, b) => (a.visited > b.visited ? a : b)).region
         : null
 
+    const recentVisits = visitedMarkers
+      .filter((m) => m.unesco)
+      .sort((a, b) => b.updatedAt.toMillis() - a.updatedAt.toMillis())
+      .slice(0, 3)
+      .map((m) => ({
+        name: m.unesco.nameFr || m.unesco.nameEn,
+        country: Array.isArray(m.unesco.statesNames) ? m.unesco.statesNames.join(', ') : (m.unesco.statesNames || ''),
+        id: m.unesco.id,
+        date: m.updatedAt.setLocale('fr').toFormat('d MMMM yyyy'),
+      }))
+
     return view.render('pages/profile', {
       stats: {
         visitedSites: visitedMarkers.length,
@@ -136,6 +147,7 @@ export default class UnescosController {
         regionStats,
         mostVisitedCountry,
         mostVisitedRegion,
+        recentVisits,
       },
     })
   }
