@@ -7,10 +7,8 @@
   <title>
     {{ t('messages.profile.title') }} -
   </title>
-  <link
-    rel="stylesheet"
-    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
-  />
+  <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
   <style>
     @import url("https://fonts.googleapis.com/css2?family=K2D:wght@300;400;500&display=swap");
 
@@ -28,14 +26,14 @@
       align-items: stretch;
     }
 
-    .info-block > div {
+    .info-block>div {
       background-color: #1e2533;
       border-radius: 20px;
       padding: 20px;
       color: #d1d5db;
     }
 
-    .info-block > div:last-child {
+    .info-block>div:last-child {
       background-color: #0f172a;
       padding: 0;
     }
@@ -61,6 +59,8 @@
       border: 4px solid #2D313E;
       border-radius: 50%;
       object-fit: cover;
+      background-color: #2d3748;
+      color: transparent;
     }
 
     .name h2 {
@@ -161,12 +161,29 @@
       transition: stroke-dashoffset 0.6s ease;
     }
 
-    .continent-donut .arc.color-1 { stroke: #5f7ef2; }
-    .continent-donut .arc.color-2 { stroke: #f59e0b; }
-    .continent-donut .arc.color-3 { stroke: #10b981; }
-    .continent-donut .arc.color-4 { stroke: #ec4899; }
-    .continent-donut .arc.color-5 { stroke: #8b5cf6; }
-    .continent-donut .arc.color-6 { stroke: #06b6d4; }
+    .continent-donut .arc.color-1 {
+      stroke: #5f7ef2;
+    }
+
+    .continent-donut .arc.color-2 {
+      stroke: #f59e0b;
+    }
+
+    .continent-donut .arc.color-3 {
+      stroke: #10b981;
+    }
+
+    .continent-donut .arc.color-4 {
+      stroke: #ec4899;
+    }
+
+    .continent-donut .arc.color-5 {
+      stroke: #8b5cf6;
+    }
+
+    .continent-donut .arc.color-6 {
+      stroke: #06b6d4;
+    }
 
     .continent-donut-label {
       position: absolute;
@@ -289,25 +306,53 @@
       gap: 10px;
     }
 
-    .logout-btn,
-    .modif-btn {
-      height: 35px;
-      width: 180px;
+    /* 1. Aligner le formulaire et le lien sur la même ligne */
+    .line {
       display: flex;
+      gap: 12px;
+      /* Espace entre les deux boutons */
       align-items: center;
-      justify-content: center;
-      border-radius: 8px;
-      color: white;
+    }
+
+    .line form {
+      display: inline-block;
+      margin: 0;
+    }
+
+    .profile-btn {
+      appearance: none;
+      border: none;
+      background: none;
       text-decoration: none;
+
+      font-family: inherit;
+      font-size: 14px;
       font-weight: 500;
+
+      padding: 10px 20px;
+      border-radius: 6px;
+      display: inline-block;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-align: center;
+    }
+
+    .modif-btn {
+      background-color: #3b82f6;
+      color: white;
+    }
+
+    .modif-btn:hover {
+      background-color: #2563eb;
     }
 
     .logout-btn {
-      background-color: #F25F61;
+      background-color: #ef4444;
+      color: white;
     }
 
-    .modif-btn {
-      background-color: #5F7EF2;
+    .logout-btn:hover {
+      background-color: #dc2626;
     }
 
     .map-list-block {
@@ -319,135 +364,269 @@
       border-radius: 20px;
       margin-top: 10px;
     }
+
+    /* --- MODAL MODIFIER PROFIL --- */
+    .edit-modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.6);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+    }
+    .edit-modal-overlay.show { display: flex; }
+    .edit-modal {
+      background: #1e2533;
+      border-radius: 16px;
+      padding: 28px;
+      width: 380px;
+      max-width: 95vw;
+      border: 1px solid rgba(255,255,255,0.08);
+      box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+    }
+    .edit-modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 22px;
+    }
+    .edit-modal-header h3 { color: white; margin: 0; font-size: 18px; font-weight: 600; }
+    .edit-modal-close {
+      background: none; border: none; color: #64748b;
+      font-size: 24px; cursor: pointer; line-height: 1; padding: 0 4px;
+    }
+    .edit-modal-close:hover { color: white; }
+    .edit-alert { border-radius: 8px; padding: 10px 14px; font-size: 13px; margin-bottom: 16px; }
+    .edit-alert-error   { background: rgba(239,68,68,0.15); color: #f87171; border: 1px solid rgba(239,68,68,0.3); }
+    .edit-alert-success { background: rgba(16,185,129,0.15); color: #34d399; border: 1px solid rgba(16,185,129,0.3); }
+    .edit-form { display: flex; flex-direction: column; gap: 10px; }
+    .edit-avatar-preview {
+      width: 80px; height: 80px; border-radius: 50%;
+      background: #2d3748;
+      display: flex; align-items: center; justify-content: center;
+      overflow: hidden; margin: 0 auto 8px; flex-shrink: 0;
+    }
+    .edit-avatar-preview img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
+    .avatar-placeholder { font-size: 40px; color: white; }
+    .edit-field-label { font-size: 12px; color: #94a3b8; font-weight: 500; }
+    .edit-upload-btn {
+      display: flex; align-items: center; gap: 8px;
+      background: #2b3447; color: #d1d5db; border-radius: 8px;
+      padding: 9px 14px; font-size: 14px; cursor: pointer;
+      border: 1px solid rgba(255,255,255,0.07);
+    }
+    .edit-upload-btn:hover { background: #334155; }
+    .edit-upload-btn .material-symbols-outlined { font-size: 18px; }
+    .edit-file-name { font-size: 12px; color: #64748b; min-height: 16px; }
+    .edit-input {
+      background: #141827; border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 8px; padding: 10px 14px; color: white;
+      font-size: 14px; font-family: inherit; outline: none;
+    }
+    .edit-input:focus { border-color: #6366f1; }
+    .edit-submit-btn {
+      background: #6366f1; color: white; border: none;
+      border-radius: 8px; padding: 11px; font-size: 14px;
+      font-weight: 600; font-family: inherit; cursor: pointer; margin-top: 6px;
+    }
+    .edit-submit-btn:hover { background: #4f46e5; }
   </style>
 </head>
 
 <body>
   @layout('components/layout/index', { title: 'Accueil' })
 
-    <main>
-      <div class="info-block">
-        <div class="name-block">
-          <div class="name-avatar">
-            <img class="avatar" src="" alt="Avatar" />
-            <div class="name">
-              <h2>{{ auth.user.fullName }}</h2>
-            </div>
-          </div>
-          <div class="line">
-            <form method="POST" action="{{ route('auth.logout') }}">
-              {{ csrfField() }}
-              <button type="submit" class="logout-btn">
-                {{ t('messages.profile.logout') }}
-              </button>
-            </form>
-            <a href="" class="modif-btn">
-              {{ t('messages.profile.edit_account') }}
-            </a>
+  <main>
+    <div class="info-block">
+      <div class="name-block">
+        <div class="name-avatar">
+          <img class="avatar" src="{{ auth.user.avatar || '' }}" alt="Avatar" />
+          <div class="name">
+            <h2>{{ auth.user.fullName }}</h2>
           </div>
         </div>
+        <div class="line">
+          <form method="POST" action="{{ route('auth.logout') }}">
+            {{ csrfField() }}
+            <button type="submit" class="profile-btn logout-btn">
+              {{ t('messages.profile.logout') }}
+            </button>
+          </form>
 
-        <div class="last-visit-block">
-          <div>
-            <p style="color: #ffffff; font-weight: 500; margin-bottom: 10px;">
-              {{ t('messages.profile.last_visit') }}
-            </p>
-            @if(stats.lastVisit)
-              <img src="{{ stats.lastVisit.localImageMain || stats.lastVisit.mainImageUrl }}" 
-                   alt="{{ stats.lastVisit.nameFr }}" />
-              <h3 style="margin: 0; color: #ffffff; font-size: 14px;">
-                {{ stats.lastVisit.nameFr }}
-              </h3>
-              <p style="margin: 5px 0 0 0; color: #94a3b8; font-size: 12px;">
-                @if(stats.lastVisit.statesNames && stats.lastVisit.statesNames.length > 0)
-                  {{ stats.lastVisit.statesNames[0] }}
-                @end
-              </p>
-            @else
-              <p style="color: #94a3b8;">
-                {{ t('messages.profile.no_visit_yet') }}
-              </p>
-            @end
-          </div>
+          <button class="profile-btn modif-btn" onclick="document.getElementById('editModal').classList.add('show')">
+            {{ t('messages.profile.edit_account') }}
+          </button>
         </div>
+      </div>
 
-        <div class="progress-block">
-          <p style="margin-top: 0;">{{ t('messages.profile.global_progress') }}</p>
-          <div class="progress-value">{{ stats.visitedSites }} / {{ stats.totalSites }}</div>
-          <div class="progress-bar">
-            <div class="progress-fill" style="width: {{ stats.completionPercentage }}%;"></div>
-          </div>
-          <p style="margin-bottom: 0; margin-top: 8px; font-size: 12px; color: #94a3b8;">
-            {{ stats.completionPercentage }}%
+      <div class="last-visit-block">
+        <div>
+          <p style="color: #ffffff; font-weight: 500; margin-bottom: 10px;">
+            {{ t('messages.profile.last_visit') }}
           </p>
-        </div>
-
-        <div class="continent-stats-block">
-          <p style="margin-top: 0;">{{ t('messages.profile.continent_exploration') }}</p>
-          <div class="boss">
-            @each(data in stats.regionStats)
-              <div class="continent-item">
-                <div class="continent-donut">
-                  {{-- circumference = 2 * π * r = 2 * 3.14159 * 31 ≈ 194.78 --}}
-                  <svg viewBox="0 0 80 80">
-                    <circle class="track" cx="40" cy="40" r="31" />
-                    <circle
-                      class="arc color-{{ data.colorIndex }}"
-                      cx="40" cy="40" r="31"
-                      stroke-dasharray="194.78"
-                      stroke-dashoffset="{{ 194.78 - (194.78 * data.percentage / 100) }}"
-                    />
-                  </svg>
-                  <div class="continent-donut-label">{{ data.percentage }}%</div>
-                </div>
-                <div class="continent-name">{{ data.region }}</div>
-              </div>
-            @endeach
-          </div>
-        </div>
-
-        <div class="few-last-visits-block">
-          <h2 class="recent-visits-title">{{ t('messages.profile.recent_visits') }}</h2>
-          @if(stats.recentVisits.length > 0)
-            @each(visit in stats.recentVisits)
-              <div class="visit-item">
-                <div class="visit-item-left">
-                  <a href="/site/{{ visit.id }}" class="visit-item-name">{{ visit.name }}</a>
-                  <span class="visit-item-country">{{ visit.country }}</span>
-                </div>
-                <span class="visit-item-date">{{ visit.date }}</span>
-              </div>
-            @endeach
+          @if(stats.lastVisit)
+          <img src="{{ stats.lastVisit.localImageMain || stats.lastVisit.mainImageUrl }}"
+            alt="{{ stats.lastVisit.nameFr }}" />
+          <h3 style="margin: 0; color: #ffffff; font-size: 14px;">
+            {{ stats.lastVisit.nameFr }}
+          </h3>
+          <p style="margin: 5px 0 0 0; color: #94a3b8; font-size: 12px;">
+            @if(stats.lastVisit.statesNames && stats.lastVisit.statesNames.length > 0)
+            {{ stats.lastVisit.statesNames[0] }}
+            @end
+          </p>
           @else
-            <p class="no-visits-msg">{{ t('messages.profile.no_visit_yet') }}</p>
+          <p style="color: #94a3b8;">
+            {{ t('messages.profile.no_visit_yet') }}
+          </p>
           @end
         </div>
+      </div>
 
-        <div class="general-stats-block">
-          <div class="stat-card">
-            <span class="stat-label">{{ t('messages.profile.visited_sites') }}</span>
-            <span class="stat-value">{{ stats.visitedSites }}/{{ stats.totalSites }}</span>
+      <div class="progress-block">
+        <p style="margin-top: 0;">{{ t('messages.profile.global_progress') }}</p>
+        <div class="progress-value">{{ stats.visitedSites }} / {{ stats.totalSites }}</div>
+        <div class="progress-bar">
+          <div class="progress-fill" style="width: {{ stats.completionPercentage }}%;"></div>
+        </div>
+        <p style="margin-bottom: 0; margin-top: 8px; font-size: 12px; color: #94a3b8;">
+          {{ stats.completionPercentage }}%
+        </p>
+      </div>
+
+      <div class="continent-stats-block">
+        <p style="margin-top: 0;">{{ t('messages.profile.continent_exploration') }}</p>
+        <div class="boss">
+          @each(data in stats.regionStats)
+          <div class="continent-item">
+            <div class="continent-donut">
+              {{-- circumference = 2 * π * r = 2 * 3.14159 * 31 ≈ 194.78 --}}
+              <svg viewBox="0 0 80 80">
+                <circle class="track" cx="40" cy="40" r="31" />
+                <circle class="arc color-{{ data.colorIndex }}" cx="40" cy="40" r="31" stroke-dasharray="194.78"
+                  stroke-dashoffset="{{ 194.78 - (194.78 * data.percentage / 100) }}" />
+              </svg>
+              <div class="continent-donut-label">{{ data.percentage }}%</div>
+            </div>
+            <div class="continent-name">{{ data.region }}</div>
           </div>
-          <div class="stat-card">
-            <span class="stat-label">{{ t('messages.profile.completion_rate') }}</span>
-            <span class="stat-value">{{ stats.completionPercentage }}%</span>
-          </div>
-          <div class="stat-card">
-            <span class="stat-label">{{ t('messages.profile.most_visited_region') }}</span>
-            <span class="stat-value">{{ stats.mostVisitedRegion || 'N/A' }}</span>
-          </div>
-          <div class="stat-card">
-            <span class="stat-label">{{ t('messages.profile.most_visited_country') }}</span>
-            <span class="stat-value">{{ stats.mostVisitedCountry || 'N/A' }}</span>
-          </div>
+          @endeach
         </div>
       </div>
 
-      <div class="map-list-block">
-        
+      <div class="few-last-visits-block">
+        <h2 class="recent-visits-title">{{ t('messages.profile.recent_visits') }}</h2>
+        @if(stats.recentVisits.length > 0)
+        @each(visit in stats.recentVisits)
+        <div class="visit-item">
+          <div class="visit-item-left">
+            <a href="/site/{{ visit.id }}" class="visit-item-name">{{ visit.name }}</a>
+            <span class="visit-item-country">{{ visit.country }}</span>
+          </div>
+          <span class="visit-item-date">{{ visit.date }}</span>
+        </div>
+        @endeach
+        @else
+        <p class="no-visits-msg">{{ t('messages.profile.no_visit_yet') }}</p>
+        @end
       </div>
-    </main>
+
+      <div class="general-stats-block">
+        <div class="stat-card">
+          <span class="stat-label">{{ t('messages.profile.visited_sites') }}</span>
+          <span class="stat-value">{{ stats.visitedSites }}/{{ stats.totalSites }}</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-label">{{ t('messages.profile.completion_rate') }}</span>
+          <span class="stat-value">{{ stats.completionPercentage }}%</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-label">{{ t('messages.profile.most_visited_region') }}</span>
+          <span class="stat-value">{{ stats.mostVisitedRegion || 'N/A' }}</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-label">{{ t('messages.profile.most_visited_country') }}</span>
+          <span class="stat-value">{{ stats.mostVisitedCountry || 'N/A' }}</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="map-list-block">
+
+    </div>
+
+    {{-- ===== MODAL MODIFIER PROFIL ===== --}}
+    <div id="editModal" class="edit-modal-overlay" onclick="handleOverlayClick(event)">
+      <div class="edit-modal">
+        <div class="edit-modal-header">
+          <h3>Modifier le profil</h3>
+          <button class="edit-modal-close" onclick="document.getElementById('editModal').classList.remove('show')">&times;</button>
+        </div>
+
+        @if(flashMessages.has('editError'))
+          <div class="edit-alert edit-alert-error">{{ flashMessages.get('editError') }}</div>
+        @end
+        @if(flashMessages.has('editSuccess'))
+          <div class="edit-alert edit-alert-success">{{ flashMessages.get('editSuccess') }}</div>
+        @end
+
+        <form method="POST" action="{{ route('profile.update') }}" enctype="multipart/form-data" class="edit-form">
+          {{ csrfField() }}
+
+          <div class="edit-avatar-preview">
+            <img id="avatarPreview"
+              src="{{ auth.user.avatar || '' }}"
+              alt="Photo de profil"
+              onerror="this.style.display='none'" />
+            <span id="avatarPlaceholder" class="avatar-placeholder material-symbols-outlined"
+              style="{{ auth.user.avatar ? 'display:none' : '' }}">person</span>
+          </div>
+
+          <label class="edit-field-label" for="avatarInput">Photo de profil</label>
+          <label class="edit-upload-btn" for="avatarInput">
+            <span class="material-symbols-outlined">upload</span>
+            Choisir une image
+          </label>
+          <input type="file" id="avatarInput" name="avatar" accept="image/*"
+            style="display:none" onchange="previewAvatar(event)" />
+          <span id="avatarFileName" class="edit-file-name"></span>
+
+          <label class="edit-field-label" for="nicknameInput">Pseudo</label>
+          <input class="edit-input" type="text" id="nicknameInput" name="nickname"
+            placeholder="{{ auth.user.fullName }}" value="{{ auth.user.fullName }}" />
+
+          <button type="submit" class="edit-submit-btn">Enregistrer</button>
+        </form>
+      </div>
+    </div>
+  </main>
+
+
+
+  <script>
+    function previewAvatar(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      document.getElementById('avatarFileName').textContent = file.name;
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const img = document.getElementById('avatarPreview');
+        const placeholder = document.getElementById('avatarPlaceholder');
+        img.src = e.target.result;
+        img.style.display = 'block';
+        if (placeholder) placeholder.style.display = 'none';
+      };
+      reader.readAsDataURL(file);
+    }
+    function handleOverlayClick(e) {
+      if (e.target === document.getElementById('editModal')) {
+        document.getElementById('editModal').classList.remove('show');
+      }
+    }
+  </script>
 
   @end
 </body>
+
 </html>
