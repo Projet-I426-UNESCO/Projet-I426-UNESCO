@@ -375,86 +375,191 @@
       align-items: center;
       justify-content: center;
     }
-    .edit-modal-overlay.show { display: flex; }
+
+    .edit-modal-overlay.show {
+      display: flex;
+    }
+
     .edit-modal {
       background: #1e2533;
       border-radius: 16px;
       padding: 28px;
       width: 380px;
       max-width: 95vw;
-      border: 1px solid rgba(255,255,255,0.08);
-      box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
     }
+
     .edit-modal-header {
       display: flex;
       align-items: center;
       justify-content: space-between;
       margin-bottom: 22px;
     }
-    .edit-modal-header h3 { color: white; margin: 0; font-size: 18px; font-weight: 600; }
+
+    .edit-modal-header h3 {
+      color: white;
+      margin: 0;
+      font-size: 18px;
+      font-weight: 600;
+    }
+
     .edit-modal-close {
-      background: none; border: none; color: #64748b;
-      font-size: 24px; cursor: pointer; line-height: 1; padding: 0 4px;
+      background: none;
+      border: none;
+      color: #64748b;
+      font-size: 24px;
+      cursor: pointer;
+      line-height: 1;
+      padding: 0 4px;
     }
-    .edit-modal-close:hover { color: white; }
-    .edit-alert { border-radius: 8px; padding: 10px 14px; font-size: 13px; margin-bottom: 16px; }
-    .edit-alert-error   { background: rgba(239,68,68,0.15); color: #f87171; border: 1px solid rgba(239,68,68,0.3); }
-    .edit-alert-success { background: rgba(16,185,129,0.15); color: #34d399; border: 1px solid rgba(16,185,129,0.3); }
-    .edit-form { display: flex; flex-direction: column; gap: 10px; }
+
+    .edit-modal-close:hover {
+      color: white;
+    }
+
+    .edit-alert {
+      border-radius: 8px;
+      padding: 10px 14px;
+      font-size: 13px;
+      margin-bottom: 16px;
+    }
+
+    .edit-alert-error {
+      background: rgba(239, 68, 68, 0.15);
+      color: #f87171;
+      border: 1px solid rgba(239, 68, 68, 0.3);
+    }
+
+    .edit-alert-success {
+      background: rgba(16, 185, 129, 0.15);
+      color: #34d399;
+      border: 1px solid rgba(16, 185, 129, 0.3);
+    }
+
+    .edit-form {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
     .edit-avatar-preview {
-      width: 80px; height: 80px; border-radius: 50%;
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
       background: #2d3748;
-      display: flex; align-items: center; justify-content: center;
-      overflow: hidden; margin: 0 auto 8px; flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      margin: 0 auto 8px;
+      flex-shrink: 0;
     }
-    .edit-avatar-preview img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
-    .avatar-placeholder { font-size: 40px; color: white; }
-    .edit-field-label { font-size: 12px; color: #94a3b8; font-weight: 500; }
+
+    .edit-avatar-preview img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 50%;
+    }
+
+    .avatar-placeholder {
+      font-size: 40px;
+      color: white;
+    }
+
+    .edit-field-label {
+      font-size: 12px;
+      color: #94a3b8;
+      font-weight: 500;
+    }
+
     .edit-upload-btn {
-      display: flex; align-items: center; gap: 8px;
-      background: #2b3447; color: #d1d5db; border-radius: 8px;
-      padding: 9px 14px; font-size: 14px; cursor: pointer;
-      border: 1px solid rgba(255,255,255,0.07);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: #2b3447;
+      color: #d1d5db;
+      border-radius: 8px;
+      padding: 9px 14px;
+      font-size: 14px;
+      cursor: pointer;
+      border: 1px solid rgba(255, 255, 255, 0.07);
     }
-    .edit-upload-btn:hover { background: #334155; }
-    .edit-upload-btn .material-symbols-outlined { font-size: 18px; }
-    .edit-file-name { font-size: 12px; color: #64748b; min-height: 16px; }
+
+    .edit-upload-btn:hover {
+      background: #334155;
+    }
+
+    .edit-upload-btn .material-symbols-outlined {
+      font-size: 18px;
+    }
+
+    .edit-file-name {
+      font-size: 12px;
+      color: #64748b;
+      min-height: 16px;
+    }
+
     .edit-input {
-      background: #141827; border: 1px solid rgba(255,255,255,0.1);
-      border-radius: 8px; padding: 10px 14px; color: white;
-      font-size: 14px; font-family: inherit; outline: none;
+      background: #141827;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 8px;
+      padding: 10px 14px;
+      color: white;
+      font-size: 14px;
+      font-family: inherit;
+      outline: none;
     }
-    .edit-input:focus { border-color: #6366f1; }
+
+    .edit-input:focus {
+      border-color: #6366f1;
+    }
+
     .edit-submit-btn {
-      background: #6366f1; color: white; border: none;
-      border-radius: 8px; padding: 11px; font-size: 14px;
-      font-weight: 600; font-family: inherit; cursor: pointer; margin-top: 6px;
+      background: #6366f1;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 11px;
+      font-size: 14px;
+      font-weight: 600;
+      font-family: inherit;
+      cursor: pointer;
+      margin-top: 6px;
     }
-    .edit-submit-btn:hover { background: #4f46e5; }
+
+    .edit-submit-btn:hover {
+      background: #4f46e5;
+    }
 
     /* --- MAP SECTION --- */
     .profile-map-section {
       max-width: 1500px;
       margin: 40px auto 0 auto;
     }
+
     .map-header {
       display: flex;
       justify-content: space-between;
       align-items: flex-start;
       margin-bottom: 20px;
     }
+
     .map-title {
       font-size: 26px;
       font-weight: 700;
       color: #ffffff;
       margin: 0;
     }
+
     .map-controls {
       display: flex;
       flex-direction: column;
       align-items: flex-end;
       gap: 12px;
     }
+
     .map-toggle-group {
       display: flex;
       background-color: #0f172a;
@@ -462,6 +567,7 @@
       padding: 4px;
       border: 1px solid rgba(255, 255, 255, 0.08);
     }
+
     .map-toggle-btn {
       background: none;
       border: none;
@@ -474,10 +580,12 @@
       transition: all 0.2s ease;
       font-family: inherit;
     }
+
     .map-toggle-btn.active {
       background-color: #3b82f6;
       color: #ffffff;
     }
+
     .open-tab-btn {
       display: flex;
       align-items: center;
@@ -492,20 +600,24 @@
       transition: all 0.2s ease;
       text-decoration: none;
     }
+
     .open-tab-btn:hover {
       background-color: #2563eb;
     }
+
     .open-tab-btn .material-symbols-outlined {
       font-size: 18px;
     }
+
     .map-box-container {
       height: 576px;
       width: 100%;
-      border-radius: 20px;
+      border-radius: 10px;
       overflow: hidden;
       border: 1px solid rgba(255, 255, 255, 0.08);
       box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
     }
+
     #profile-map {
       height: 100%;
       width: 100%;
@@ -516,19 +628,22 @@
       max-width: 1500px;
       margin: 40px auto 30px auto;
     }
+
     .list-title {
       font-size: 26px;
       font-weight: 700;
       color: #ffffff;
       margin: 0 0 20px 0;
     }
+
     .list-card {
       background-color: #1e2533;
-      border-radius: 20px;
+      border-radius: 10px;
       padding: 24px 30px;
       border: 1px solid rgba(255, 255, 255, 0.08);
       box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
     }
+
     .list-card-header {
       display: flex;
       justify-content: space-between;
@@ -536,23 +651,28 @@
       padding-bottom: 12px;
       margin-bottom: 10px;
     }
+
     .list-header-left {
       font-size: 15px;
       font-weight: 600;
       color: #94a3b8;
     }
+
     .list-header-right {
       font-size: 15px;
       font-weight: 600;
       color: #94a3b8;
       text-align: right;
     }
+
     .continent-accordion {
       border-bottom: 1px solid rgba(255, 255, 255, 0.05);
     }
+
     .continent-accordion:last-child {
       border-bottom: none;
     }
+
     .continent-accordion-trigger {
       display: flex;
       align-items: center;
@@ -564,25 +684,30 @@
       cursor: pointer;
       user-select: none;
     }
+
     .continent-accordion-trigger .chevron {
       font-size: 20px;
       transition: transform 0.25s ease;
       color: #94a3b8;
     }
+
     .continent-accordion.collapsed .chevron {
       transform: rotate(-90deg);
     }
+
     .continent-accordion-content {
       overflow: hidden;
       transition: max-height 0.3s cubic-bezier(0.4, 0, 0.2, 1), padding-bottom 0.3s ease;
       padding-bottom: 14px;
       max-height: 1000px;
     }
+
     .continent-accordion.collapsed .continent-accordion-content {
       max-height: 0;
       padding-bottom: 0;
       pointer-events: none;
     }
+
     .site-row {
       display: flex;
       justify-content: space-between;
@@ -590,42 +715,51 @@
       padding: 12px 0 12px 10px;
       border-bottom: 1px solid rgba(255, 255, 255, 0.03);
     }
+
     .site-row:last-child {
       border-bottom: none;
     }
+
     .site-row-left {
       display: flex;
       align-items: center;
       gap: 12px;
     }
+
     .category-dot {
       width: 10px;
       height: 10px;
       flex-shrink: 0;
     }
+
     .category-dot.cultural {
       background-color: #f59e0b;
       transform: rotate(45deg);
       border-radius: 1.5px;
     }
+
     .category-dot.natural {
       background-color: #10b981;
       border-radius: 50%;
     }
+
     .category-dot.mixed {
       background-color: #f97316;
       transform: rotate(45deg);
       border-radius: 1.5px;
     }
+
     .site-row-name {
       font-size: 15px;
       font-weight: 500;
       color: #d1d5db;
       transition: color 0.2s ease;
     }
+
     .site-row-name:hover {
       color: #3b82f6;
     }
+
     .site-row-right {
       font-size: 14px;
       color: #94a3b8;
@@ -758,7 +892,8 @@
         <h2 class="map-title" id="mapTitle">Carte des sites visités</h2>
         <div class="map-controls">
           <div class="map-toggle-group">
-            <button class="map-toggle-btn active" id="btnMapVisited" onclick="setMapFilter('visited')">Sites visités</button>
+            <button class="map-toggle-btn active" id="btnMapVisited" onclick="setMapFilter('visited')">Sites
+              visités</button>
             <button class="map-toggle-btn" id="btnMapMarked" onclick="setMapFilter('marked')">Sites marqués</button>
           </div>
           <a href="{{ route('visits') }}" target="_blank" class="open-tab-btn" id="openTabBtn">
@@ -780,7 +915,7 @@
           <div class="list-header-left">Continent / Site</div>
           <div class="list-header-right">Ajouté dans la liste</div>
         </div>
-        
+
         <div id="accordion-list-container">
           <!-- Accordions will be rendered dynamically by JavaScript -->
         </div>
@@ -792,23 +927,22 @@
       <div class="edit-modal">
         <div class="edit-modal-header">
           <h3>Modifier le profil</h3>
-          <button class="edit-modal-close" onclick="document.getElementById('editModal').classList.remove('show')">&times;</button>
+          <button class="edit-modal-close"
+            onclick="document.getElementById('editModal').classList.remove('show')">&times;</button>
         </div>
 
         @if(flashMessages.has('editError'))
-          <div class="edit-alert edit-alert-error">{{ flashMessages.get('editError') }}</div>
+        <div class="edit-alert edit-alert-error">{{ flashMessages.get('editError') }}</div>
         @end
         @if(flashMessages.has('editSuccess'))
-          <div class="edit-alert edit-alert-success">{{ flashMessages.get('editSuccess') }}</div>
+        <div class="edit-alert edit-alert-success">{{ flashMessages.get('editSuccess') }}</div>
         @end
 
         <form method="POST" action="{{ route('profile.update') }}" enctype="multipart/form-data" class="edit-form">
           {{ csrfField() }}
 
           <div class="edit-avatar-preview">
-            <img id="avatarPreview"
-              src="{{ auth.user.avatar || '' }}"
-              alt="Photo de profil"
+            <img id="avatarPreview" src="{{ auth.user.avatar || '' }}" alt="Photo de profil"
               onerror="this.style.display='none'" />
             <span id="avatarPlaceholder" class="avatar-placeholder material-symbols-outlined"
               style="{{ auth.user.avatar ? 'display:none' : '' }}">person</span>
@@ -819,8 +953,8 @@
             <span class="material-symbols-outlined">upload</span>
             Choisir une image
           </label>
-          <input type="file" id="avatarInput" name="avatar" accept="image/*"
-            style="display:none" onchange="previewAvatar(event)" />
+          <input type="file" id="avatarInput" name="avatar" accept="image/*" style="display:none"
+            onchange="previewAvatar(event)" />
           <span id="avatarFileName" class="edit-file-name"></span>
 
           <label class="edit-field-label" for="nicknameInput">Pseudo</label>
@@ -910,10 +1044,10 @@
       if (!container) return;
 
       const data = mode === 'visited' ? visitedByRegion : markedByRegion;
-      
+
       if (!data || data.length === 0) {
-        const noMsg = mode === 'visited' 
-          ? "{{ t('messages.profile.no_visit_yet') }}" 
+        const noMsg = mode === 'visited'
+          ? "{{ t('messages.profile.no_visit_yet') }}"
           : "Aucun site marqué pour l'instant";
         container.innerHTML = `<p class="no-visits-msg" style="text-align: center; padding: 20px 0;">${noMsg}</p>`;
         return;
@@ -979,7 +1113,7 @@
       // Update button classes
       const btnVisited = document.getElementById('btnMapVisited');
       const btnMarked = document.getElementById('btnMapMarked');
-      
+
       if (mode === 'visited') {
         btnVisited.classList.add('active');
         btnMarked.classList.remove('active');
