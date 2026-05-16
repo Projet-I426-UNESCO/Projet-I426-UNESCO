@@ -431,6 +431,206 @@
       font-weight: 600; font-family: inherit; cursor: pointer; margin-top: 6px;
     }
     .edit-submit-btn:hover { background: #4f46e5; }
+
+    /* --- MAP SECTION --- */
+    .profile-map-section {
+      max-width: 1500px;
+      margin: 40px auto 0 auto;
+    }
+    .map-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 20px;
+    }
+    .map-title {
+      font-size: 26px;
+      font-weight: 700;
+      color: #ffffff;
+      margin: 0;
+    }
+    .map-controls {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 12px;
+    }
+    .map-toggle-group {
+      display: flex;
+      background-color: #0f172a;
+      border-radius: 8px;
+      padding: 4px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .map-toggle-btn {
+      background: none;
+      border: none;
+      color: #94a3b8;
+      padding: 8px 18px;
+      border-radius: 6px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-family: inherit;
+    }
+    .map-toggle-btn.active {
+      background-color: #3b82f6;
+      color: #ffffff;
+    }
+    .open-tab-btn {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background-color: #3b82f6;
+      color: #ffffff;
+      padding: 9px 18px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-decoration: none;
+    }
+    .open-tab-btn:hover {
+      background-color: #2563eb;
+    }
+    .open-tab-btn .material-symbols-outlined {
+      font-size: 18px;
+    }
+    .map-box-container {
+      height: 576px;
+      width: 100%;
+      border-radius: 20px;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+    }
+    #profile-map {
+      height: 100%;
+      width: 100%;
+    }
+
+    /* --- LIST SECTION --- */
+    .profile-list-section {
+      max-width: 1500px;
+      margin: 40px auto 30px auto;
+    }
+    .list-title {
+      font-size: 26px;
+      font-weight: 700;
+      color: #ffffff;
+      margin: 0 0 20px 0;
+    }
+    .list-card {
+      background-color: #1e2533;
+      border-radius: 20px;
+      padding: 24px 30px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+    }
+    .list-card-header {
+      display: flex;
+      justify-content: space-between;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      padding-bottom: 12px;
+      margin-bottom: 10px;
+    }
+    .list-header-left {
+      font-size: 15px;
+      font-weight: 600;
+      color: #94a3b8;
+    }
+    .list-header-right {
+      font-size: 15px;
+      font-weight: 600;
+      color: #94a3b8;
+      text-align: right;
+    }
+    .continent-accordion {
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+    .continent-accordion:last-child {
+      border-bottom: none;
+    }
+    .continent-accordion-trigger {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 18px;
+      font-weight: 700;
+      color: #ffffff;
+      padding: 16px 0;
+      cursor: pointer;
+      user-select: none;
+    }
+    .continent-accordion-trigger .chevron {
+      font-size: 20px;
+      transition: transform 0.25s ease;
+      color: #94a3b8;
+    }
+    .continent-accordion.collapsed .chevron {
+      transform: rotate(-90deg);
+    }
+    .continent-accordion-content {
+      overflow: hidden;
+      transition: max-height 0.3s cubic-bezier(0.4, 0, 0.2, 1), padding-bottom 0.3s ease;
+      padding-bottom: 14px;
+      max-height: 1000px;
+    }
+    .continent-accordion.collapsed .continent-accordion-content {
+      max-height: 0;
+      padding-bottom: 0;
+      pointer-events: none;
+    }
+    .site-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 0 12px 10px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+    }
+    .site-row:last-child {
+      border-bottom: none;
+    }
+    .site-row-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .category-dot {
+      width: 10px;
+      height: 10px;
+      flex-shrink: 0;
+    }
+    .category-dot.cultural {
+      background-color: #f59e0b;
+      transform: rotate(45deg);
+      border-radius: 1.5px;
+    }
+    .category-dot.natural {
+      background-color: #10b981;
+      border-radius: 50%;
+    }
+    .category-dot.mixed {
+      background-color: #f97316;
+      transform: rotate(45deg);
+      border-radius: 1.5px;
+    }
+    .site-row-name {
+      font-size: 15px;
+      font-weight: 500;
+      color: #d1d5db;
+      transition: color 0.2s ease;
+    }
+    .site-row-name:hover {
+      color: #3b82f6;
+    }
+    .site-row-right {
+      font-size: 14px;
+      color: #94a3b8;
+      text-align: right;
+    }
   </style>
 </head>
 
@@ -552,8 +752,39 @@
       </div>
     </div>
 
-    <div class="map-list-block">
+    <!-- Map Section -->
+    <div class="profile-map-section">
+      <div class="map-header">
+        <h2 class="map-title" id="mapTitle">Carte des sites visités</h2>
+        <div class="map-controls">
+          <div class="map-toggle-group">
+            <button class="map-toggle-btn active" id="btnMapVisited" onclick="setMapFilter('visited')">Sites visités</button>
+            <button class="map-toggle-btn" id="btnMapMarked" onclick="setMapFilter('marked')">Sites marqués</button>
+          </div>
+          <a href="{{ route('visits') }}" target="_blank" class="open-tab-btn" id="openTabBtn">
+            Ouvrir dans un nouveau onglet
+            <span class="material-symbols-outlined">open_in_new</span>
+          </a>
+        </div>
+      </div>
+      <div class="map-box-container">
+        <div id="profile-map"></div>
+      </div>
+    </div>
 
+    <!-- Full Visited Sites List Section -->
+    <div class="profile-list-section">
+      <h2 class="list-title" id="listTitle">Liste complète des sites visités</h2>
+      <div class="list-card">
+        <div class="list-card-header">
+          <div class="list-header-left">Continent / Site</div>
+          <div class="list-header-right">Ajouté dans la liste</div>
+        </div>
+        
+        <div id="accordion-list-container">
+          <!-- Accordions will be rendered dynamically by JavaScript -->
+        </div>
+      </div>
     </div>
 
     {{-- ===== MODAL MODIFIER PROFIL ===== --}}
@@ -624,6 +855,188 @@
         document.getElementById('editModal').classList.remove('show');
       }
     }
+
+    // --- MAPBOX & ACCORDION SCRIPTS ---
+    const markersData = {{{ JSON.stringify(mapMarkers) }}};
+    const visitedByRegion = {{{ JSON.stringify(visitedByRegion) }}};
+    const markedByRegion = {{{ JSON.stringify(markedByRegion) }}};
+    let currentMapFilter = 'visited';
+    let activeMarkerInstances = [];
+
+    const visitedMarkersColor = "#fe8d50";
+    const markedMarkersColor = "#8bf7df";
+
+    mapboxgl.accessToken = "pk.eyJ1IjoiNjdza2liaWRpc2NydW0iLCJhIjoiY21sYXdlamR3MGcyOTNlcXoxdHQ2bXliaiJ9.BXx6EzzxvsFrDg5yeo1LUQ";
+
+    const profileMap = new mapboxgl.Map({
+      container: "profile-map",
+      style: "mapbox://styles/mapbox/standard",
+      projection: "mercator",
+      zoom: 1.5,
+      center: [10, 20]
+    });
+
+    profileMap.addControl(new mapboxgl.NavigationControl());
+
+    function renderProfileMapMarkers() {
+      // Clear previous markers
+      activeMarkerInstances.forEach(marker => marker.remove());
+      activeMarkerInstances = [];
+
+      markersData.forEach(data => {
+        if (currentMapFilter === 'visited' && !data.isVisited) return;
+        if (currentMapFilter === 'marked' && !data.isMarked) return;
+
+        const color = currentMapFilter === 'visited' ? visitedMarkersColor : markedMarkersColor;
+
+        const popup = new mapboxgl.Popup({ offset: 25 })
+          .setHTML(`<div style="color: #1e293b; padding: 4px;"><h4 style="margin: 0 0 4px 0; font-size: 14px; font-weight: 600;">${data.name}</h4><a href="/site/${data.id}" style="color: #3b82f6; font-size: 12px; font-weight: 600; text-decoration: none;">Voir le site</a></div>`);
+
+        const marker = new mapboxgl.Marker({ color })
+          .setLngLat([data.lon, data.lat])
+          .setPopup(popup)
+          .addTo(profileMap);
+
+        activeMarkerInstances.push(marker);
+      });
+    }
+
+    profileMap.on('load', () => {
+      renderProfileMapMarkers();
+    });
+
+    function renderDynamicAccordionList(mode) {
+      const container = document.getElementById('accordion-list-container');
+      if (!container) return;
+
+      const data = mode === 'visited' ? visitedByRegion : markedByRegion;
+      
+      if (!data || data.length === 0) {
+        const noMsg = mode === 'visited' 
+          ? "{{ t('messages.profile.no_visit_yet') }}" 
+          : "Aucun site marqué pour l'instant";
+        container.innerHTML = `<p class="no-visits-msg" style="text-align: center; padding: 20px 0;">${noMsg}</p>`;
+        return;
+      }
+
+      let html = '';
+      data.forEach((item, index) => {
+        let sitesHtml = '';
+        item.sites.forEach(site => {
+          let dotClass = 'mixed';
+          let dotTitle = 'Mixte';
+          if (site.category === 'cultural' || site.category === 'Culturel') {
+            dotClass = 'cultural';
+            dotTitle = 'Culturel';
+          } else if (site.category === 'natural' || site.category === 'Naturel') {
+            dotClass = 'natural';
+            dotTitle = 'Naturel';
+          }
+
+          sitesHtml += `
+            <div class="site-row">
+              <div class="site-row-left">
+                <div class="category-dot ${dotClass}" title="${dotTitle}"></div>
+                <a href="/site/${site.id}" class="site-row-name">${site.name}</a>
+              </div>
+              <div class="site-row-right">
+                ${site.addedAt}
+              </div>
+            </div>
+          `;
+        });
+
+        html += `
+          <div class="continent-accordion" id="accordion-${index}">
+            <div class="continent-accordion-trigger" onclick="toggleAccordion('${index}')">
+              <span class="material-symbols-outlined chevron">expand_more</span>
+              <span>${item.regionName}</span>
+            </div>
+            <div class="continent-accordion-content">
+              ${sitesHtml}
+            </div>
+          </div>
+        `;
+      });
+
+      container.innerHTML = html;
+
+      // Force recalculate scrollHeight for transition after DOM update
+      setTimeout(() => {
+        const accordions = container.querySelectorAll('.continent-accordion');
+        accordions.forEach((acc) => {
+          const content = acc.querySelector('.continent-accordion-content');
+          if (content && !acc.classList.contains('collapsed')) {
+            content.style.maxHeight = content.scrollHeight + 'px';
+          }
+        });
+      }, 50);
+    }
+
+    function setMapFilter(mode) {
+      currentMapFilter = mode;
+
+      // Update button classes
+      const btnVisited = document.getElementById('btnMapVisited');
+      const btnMarked = document.getElementById('btnMapMarked');
+      
+      if (mode === 'visited') {
+        btnVisited.classList.add('active');
+        btnMarked.classList.remove('active');
+      } else {
+        btnVisited.classList.remove('active');
+        btnMarked.classList.add('active');
+      }
+
+      renderProfileMapMarkers();
+
+      // Dynamic external link
+      const openTabBtn = document.getElementById('openTabBtn');
+      if (openTabBtn) {
+        if (mode === 'visited') {
+          openTabBtn.href = "{{ route('visits') }}";
+        } else {
+          openTabBtn.href = "{{ route('bookmarks') }}";
+        }
+      }
+
+      // Update headers
+      const mapTitle = document.getElementById('mapTitle');
+      const listTitle = document.getElementById('listTitle');
+      if (mapTitle) {
+        mapTitle.textContent = mode === 'visited' ? "Carte des sites visités" : "Carte des sites marqués";
+      }
+      if (listTitle) {
+        listTitle.textContent = mode === 'visited' ? "Liste complète des sites visités" : "Liste complète des sites marqués";
+      }
+
+      // Dynamic List Rendering
+      renderDynamicAccordionList(mode);
+    }
+
+    // Collapsible Accordion logic
+    function toggleAccordion(index) {
+      const accordion = document.getElementById(`accordion-${index}`);
+      if (!accordion) return;
+
+      const content = accordion.querySelector('.continent-accordion-content');
+      if (!content) return;
+
+      const isCollapsed = accordion.classList.contains('collapsed');
+
+      if (isCollapsed) {
+        accordion.classList.remove('collapsed');
+        content.style.maxHeight = content.scrollHeight + 'px';
+      } else {
+        accordion.classList.add('collapsed');
+        content.style.maxHeight = '0px';
+      }
+    }
+
+    // Set scroll height dynamically on DOM load so smooth expand/collapse transition works
+    window.addEventListener('DOMContentLoaded', () => {
+      renderDynamicAccordionList('visited');
+    });
   </script>
 
   @end

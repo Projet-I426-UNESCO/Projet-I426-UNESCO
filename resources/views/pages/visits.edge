@@ -28,8 +28,7 @@
         @if(auth.user)
         <div class="auth-pill logged-in">
           <a href="{{ route('profile.show') }}" class="user-trigger">
-            <div class="avatar-circle">
-            </div>
+            <img class="avatar-circle" src="{{ auth.user.avatar || '' }}" alt="Avatar" />
             <div class="user-details">
               <span class="user-name">{{ auth.user.fullName }}</span>
             </div>

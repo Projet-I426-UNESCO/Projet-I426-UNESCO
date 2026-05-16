@@ -637,12 +637,14 @@ aside {
 .avatar-circle {
   width: 34px;
   height: 34px;
-  background: linear-gradient(135deg, #6366f1, #a855f7);
+  background: #2d3748;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: white;
+  color: transparent;
+  object-fit: cover;
+  flex-shrink: 0;
   font-weight: bold;
   font-size: 14px;
 }

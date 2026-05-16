@@ -137,6 +137,91 @@ export default class UnescosController {
         date: m.updatedAt.setLocale('fr').toFormat('d MMMM yyyy'),
       }))
 
+    // Group visited markers by region (continent)
+    const visitedByRegionMap: Record<string, Array<{
+      id: number
+      name: string
+      category: string | null
+      addedAt: string
+    }>> = {}
+
+    visitedMarkers.forEach((m) => {
+      if (m.unesco) {
+        const regionName = m.unesco.region || 'Autre'
+        if (!visitedByRegionMap[regionName]) {
+          visitedByRegionMap[regionName] = []
+        }
+        visitedByRegionMap[regionName].push({
+          id: m.unesco.id,
+          name: m.unesco.nameFr || m.unesco.nameEn || '',
+          category: m.unesco.category,
+          addedAt: m.updatedAt.setLocale('fr').toFormat("d MMMM yyyy 'à' H:mm"),
+        })
+      }
+    })
+
+    // Sort sites under each region alphabetically
+    Object.keys(visitedByRegionMap).forEach((regionName) => {
+      visitedByRegionMap[regionName].sort((a, b) => a.name.localeCompare(b.name))
+    })
+
+    // Convert map to sorted array of objects for safe Edge template rendering
+    const visitedByRegion = Object.entries(visitedByRegionMap)
+      .map(([regionName, sites]) => ({
+        regionName,
+        sites,
+      }))
+      .sort((a, b) => a.regionName.localeCompare(b.regionName))
+
+    // Group marked markers by region (continent)
+    const markedByRegionMap: Record<string, Array<{
+      id: number
+      name: string
+      category: string | null
+      addedAt: string
+    }>> = {}
+
+    markedMarkers.forEach((m) => {
+      if (m.unesco) {
+        const regionName = m.unesco.region || 'Autre'
+        if (!markedByRegionMap[regionName]) {
+          markedByRegionMap[regionName] = []
+        }
+        markedByRegionMap[regionName].push({
+          id: m.unesco.id,
+          name: m.unesco.nameFr || m.unesco.nameEn || '',
+          category: m.unesco.category,
+          addedAt: m.updatedAt.setLocale('fr').toFormat("d MMMM yyyy 'à' H:mm"),
+        })
+      }
+    })
+
+    // Sort sites under each region alphabetically
+    Object.keys(markedByRegionMap).forEach((regionName) => {
+      markedByRegionMap[regionName].sort((a, b) => a.name.localeCompare(b.name))
+    })
+
+    // Convert map to sorted array of objects
+    const markedByRegion = Object.entries(markedByRegionMap)
+      .map(([regionName, sites]) => ({
+        regionName,
+        sites,
+      }))
+      .sort((a, b) => a.regionName.localeCompare(b.regionName))
+
+    // Format all markers with coordinates for the interactive profile map
+    const mapMarkers = markers
+      .filter((m) => m.unesco && m.unesco.coordinates)
+      .map((m) => ({
+        id: m.unesco.id,
+        name: m.unesco.nameFr || m.unesco.nameEn,
+        lon: m.unesco.coordinates.lon,
+        lat: m.unesco.coordinates.lat,
+        isVisited: m.isVisited,
+        isMarked: m.isMarked,
+        category: m.unesco.category,
+      }))
+
     return view.render('pages/profile', {
       stats: {
         visitedSites: visitedMarkers.length,
@@ -149,6 +234,9 @@ export default class UnescosController {
         mostVisitedRegion,
         recentVisits,
       },
+      mapMarkers,
+      visitedByRegion,
+      markedByRegion,
     })
   }
   /**
