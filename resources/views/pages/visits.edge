@@ -71,40 +71,68 @@
   </div>
 
   <div class="sites-grid">
-    @if(unescos)
+    @if(unescos && unescos.length > 0)
     @each((unesco) in unescos)
-    <a href="{{ route('site.show', { id: unesco.id }) }}" class="site-box">
-      @if(unesco.localImageThumb)
-      <img src="{{ unesco.localImageMain }}" class="site-box-img" />
-      @else
-      <img src="../../../public/placeholders/placeholderImage.png" class="site-box-img" />
-      @end
-      <div class="site-box-info">
-        <h3>
-          {{ unesco.nameFr }}
-        </h3>
-        <p>
-          {{ unesco.statesNames }}
-        </p>
+    <div class="site-box">
+
+      <a href="{{ route('site.show', { id: unesco.id }) }}">
+        @if(unesco.localImageThumb)
+        <img src="{{ unesco.localImageMain }}" class="site-box-img" />
+        @else
+        <img src="../../../public/placeholders/placeholderImage.png" class="site-box-img" />
+        @end
+        <div class="site-box-info">
+          <h3>
+            {{ unesco.nameFr }}
+          </h3>
+          <p>
+            {{ unesco.statesNames }}
+          </p>
+        </div>
+      </a>
+
+      <div class="add_button">
+        <button class="btn-primary" id="visitSiteBtn{{unesco.id}}"
+          onclick="visitSite('{{ route('marker.visit', { unescoId: unesco.id }) }}', {{unesco.id}})">
+          <span>Enlever de mes visites</span></button>
+        <button class="btn-primary button_mark" id="markSiteBtn{{unesco.id}}"
+          onclick="markSite('{{ route('marker.mark', { unescoId: unesco.id }) }}', {{unesco.id}})"> <span>
+            @each(marker in markers)
+            @if(marker.unescoId == unesco.id && marker.isMarked)
+            Démarquer le Site
+            @elseif(marker.unescoId == unesco.id && !marker.isMarked)
+            Marquer le Site
+            @end
+            @end
+        </button>
       </div>
-      @if(unesco.added)
-      <button class="delete-btn"> <span class="material-symbols-outlined">delete</span>Supprimer de la liste</button>
-      @else
-      <button class="btn-primary"> <span class="material-symbols-outlined">add</span>Ajouter à ma liste</button>
-      @end
-      @if(unesco.visited)
-      <button class="visited-btn"> <span class="material-symbols-outlined">check</span>Site visité</button>
-      @else
-      <button class="action-btn btn-visit"> <span class="material-symbols-outlined">check</span>Marquer comme
-        visité</button>
-      @end
-    </a>
+    </div>
     @end
     @else
-    <p>Vous n'avez pas de site visité.</p>
+    <p class="no_site">Vous n'avez pas encore de site visité.</p>
     @end
   </div>
 </main>
+
+<style>
+  .sites-grid {
+    gap: 50px;
+    margin: 0 20px;
+  }
+
+  .add_button {
+    margin-top: auto;
+    margin-bottom: 10px;
+  }
+
+  .button_mark {
+    background-color: #313644 !important;
+  }
+
+  .no_site {
+    color: white;
+  }
+</style>
 
 <script>
   function openFilters() {
@@ -147,5 +175,88 @@
       closeFilters();
     }
   });
+
+
+  const csrfToken = "{{ csrfToken }}";
+  const markersData = {{{ JSON.stringify(markers) }}};
+
+  async function visitSite(url, unescoId) {
+    try {
+      const res = await fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "x-csrf-token": csrfToken
+        }
+      });
+
+      if (!res.ok) throw new Error("Request failed");
+
+      console.log(`Visiting sequence with unescoId : ${unescoId} `);
+
+      flipVisitSiteUI(unescoId)
+
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  async function markSite(url, unescoId) {
+    try {
+      const res = await fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "x-csrf-token": csrfToken
+        }
+      });
+
+      if (!res.ok) throw new Error("Request failed");
+
+      console.log(`Marking sequence with unescoId : ${unescoId} `);
+
+      flipMarkSiteUI(unescoId)
+
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  function flipVisitSiteUI(unescoId) {
+    // if the marker exists Flip the isVisited value in UI
+    if (markersData) {
+      const marker = markersData.find((marker) => marker.unescoId == unescoId)
+      const button = document.getElementById("visitSiteBtn" + unescoId)
+      console.log(button)
+      if (marker) {
+        markersData[markersData.findIndex((marker) => marker.unescoId == unescoId)].isVisited = !marker.isVisited
+        button.innerText = marker.isVisited ? "Enlever de mes visites" : "Ajouter à mes visites"
+        // Flips the isVisited in the gotten data, it modifies the now local data, not the distant one, simply to keep the UI up to date.
+      } else {
+        markersData.push({ isMarked: 0, isVisited: 1, unescoId: unescoId })
+        button.innerText = "Enlever de mes visites"
+      }
+    }
+  }
+
+  function flipMarkSiteUI(unescoId) {
+    // if the marker exists Flip the isMarked value in UI
+    if (markersData) {
+      const marker = markersData.find((marker) => marker.unescoId == unescoId)
+      const button = document.getElementById("markSiteBtn" + unescoId)
+      console.log(button)
+      if (marker) {
+        markersData[markersData.findIndex((marker) => marker.unescoId == unescoId)].isMarked = !marker.isMarked
+        button.innerText = marker.isMarked ? "Démarquer le Site" : "Marquer le Site"
+        // Flips the isMarked in the gotten data, it modifies the now local data, not the distant one, simply to keep the UI up to date.
+      } else {
+        // If the marker doesn't exist we manually, locally create it as the db would and change it's values manually
+        markersData.push({ isMarked: 1, isVisited: 0, unescoId: unescoId })
+        button.innerText = "Démarquer le Site"
+      }
+    }
+  }
+
+
 </script>
 @end

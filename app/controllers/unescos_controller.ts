@@ -29,7 +29,9 @@ export default class UnescosController {
     const unescos = await Unesco.query().exec()
     return view.render('pages/bookmarks', { unescos })
   }
+
   async visits({ view, auth }: HttpContext) {
+    await auth.check()
     const user = await User.query().where('id', auth.user!.id).firstOrFail()
 
     const unescos = await Unesco.query()
@@ -39,8 +41,14 @@ export default class UnescosController {
       .select('unescos.*')
       .groupBy('unescos.id')
 
-    return view.render('pages/visits', { unescos })
+    let markers: Marker[] = []
+    if (auth.user) {
+      markers = await Marker.query().where('user_id', auth.user.id).exec()
+    }
+
+    return view.render('pages/visits', { unescos, markers })
   }
+
   async profile({ view, auth }: HttpContext) {
     const userId = auth.user!.id
 
