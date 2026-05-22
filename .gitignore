@@ -4,6 +4,7 @@ build
 tmp
 .npm-cache
 package-lock.json
+public/uploads/avatars
 
 # Secrets
 .env
