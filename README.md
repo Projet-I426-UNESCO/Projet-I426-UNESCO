@@ -33,7 +33,7 @@ node ace generate:key
 
 Recevoir les données de l'Unesco
 ```sh
-node ace get:data
+node ace get:data # Si vous avez une erreur, essayer de créer le dossier data dans "public/".
 ```
 
 Préparer la db
