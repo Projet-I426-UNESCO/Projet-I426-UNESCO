@@ -21,10 +21,20 @@ export default class UnescosController {
     // Appel de la vue
     return view.render('pages/home', { unescos, markers })
   }
-  async sites({ view }: HttpContext) {
+
+  async sites({ auth, view }: HttpContext) {
+        await auth.check()
     const unescos = await Unesco.query().exec()
-    return view.render('pages/sites', { unescos })
+
+    let markers = null
+    if (auth.user) {
+      // Gets the user's markers if he's logged in
+      markers = await Marker.query().where('user_id', auth.user.id).exec()
+    }
+
+    return view.render('pages/sites', { unescos, markers })
   }
+
   async bookmarks({ view, auth }: HttpContext) {
     await auth.check()
     const unescos = await Unesco.query().exec()
