@@ -23,7 +23,7 @@ export default class DownloadImages extends BaseCommand {
   static options: CommandOptions = { startApp: true }
 
   // Fonction pour traiter un site unique
-  async processSite(page: any, site: Unesco, paths: { main: string; thumb: string }) {
+  async processSite(page: any, site: Unesco, paths: { main: string; thumb: string; visitedSites: string }) {
     const base64DataUrl = await page.evaluate(async (imageUrl: string) => {
       const signal = AbortSignal.timeout(15000)
 
@@ -55,11 +55,17 @@ export default class DownloadImages extends BaseCommand {
         .webp({ quality: 70, effort: 6 })
         .toFile(path.join(paths.main, filename)),
 
-      //Thumb
+      // Thumb
       sharp(buffer, { limitInputPixels: false })
         .resize({ width: 180, height: 180, fit: 'cover' })
         .webp({ quality: 60, effort: 6 })
         .toFile(path.join(paths.thumb, filename)),
+
+      // 400x200
+      sharp(buffer, { limitInputPixels: false })
+        .resize({ width: 400, height: 200, fit: 'cover' })
+        .webp({ quality: 60, effort: 6 })
+        .toFile(path.join(paths.visitedSites, filename)),
     ])
   }
 
@@ -69,11 +75,13 @@ export default class DownloadImages extends BaseCommand {
     const paths = {
       main: path.join(storePath, 'main'),
       thumb: path.join(storePath, 'thumb'),
+      visitedSites: path.join(storePath, 'visited_sites'),
     }
 
     // Créer les dossiers de stockage
     await fs.mkdir(paths.main, { recursive: true })
     await fs.mkdir(paths.thumb, { recursive: true })
+    await fs.mkdir(paths.visitedSites, { recursive: true })
 
     // Récupérer tous les sites depuis la db
     const sites = await Unesco.all()
