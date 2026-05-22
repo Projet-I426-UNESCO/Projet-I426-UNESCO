@@ -84,5 +84,14 @@
     "most_visited_region": "Continent le plus visité",
     "most_visited_country": "Pays le plus visité",
     "countries_explored": "Pays explorés"
+  },
+  "site": {
+    "country": "Pays",
+    "inscription_date": "Date d'inscription",
+    "criteria": "Critères d'admission",
+    "size": "Taille",
+    "dossier_no": "No de dossier",
+    "category": "Catégorie",
+    "map_title": "Monument sur la carte :"
   }
 }

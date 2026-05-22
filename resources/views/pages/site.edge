@@ -1,295 +1,57 @@
-@layout('components/layout/index', { title: 'Sites', page: 'sites' })
+@layout('components/layout/index', { title: i18n.locale === 'en' ? (unesco.nameEn || unesco.nameFr) : (unesco.nameFr ||
+unesco.nameEn), page: 'sites' })
 
-<main class="sites-main">
-  <div class="controls">
-    <div class="search-container">
-      <details class="filter-dropdown">
-        <summary class="search-pill filter-dropdown-toggle" title="{{ t('messages.filters.button_title') }}">
-          <span class="material-symbols-outlined">tune</span>
-        </summary>
-        <div class="filter-dropdown-content">
-          <div class="filter-section">
-            <span class="filter-section-title">{{ t('messages.filters.category') }}</span>
-            <div class="filter-options" data-filter-group="category">
-              <label class="filter-option">
-                <input type="checkbox" value="cultural" />
-                <span>{{ t('messages.sites.filter_type_cultural') }}</span>
-              </label>
-              <label class="filter-option">
-                <input type="checkbox" value="natural" />
-                <span>{{ t('messages.sites.filter_type_natural') }}</span>
-              </label>
-              <label class="filter-option">
-                <input type="checkbox" value="mixed" />
-                <span>{{ t('messages.sites.filter_type_mixed') }}</span>
-              </label>
-            </div>
-          </div>
-          <div class="filter-section">
-            <span class="filter-section-title">{{ t('messages.filters.region') }}</span>
-            <div class="filter-options" data-filter-group="region"></div>
-          </div>
-          <div class="filter-section">
-            <span class="filter-section-title">{{ t('messages.filters.country') }}</span>
-            <input class="filter-input" type="text" data-filter-input="country"
-              placeholder="{{ t('messages.filters.search_country_placeholder') }}" />
-          </div>
-          <div class="filter-section">
-            <span class="filter-section-title">{{ t('messages.filters.continent') }}</span>
-            <div class="filter-options" data-filter-group="continent"></div>
-          </div>
-          <div class="filter-section">
-            <span class="filter-section-title">{{ t('messages.filters.date_inscribed') }}</span>
-            <div class="filter-range">
-              <input class="filter-input" type="number" data-filter-input="dateFrom"
-                placeholder="{{ t('messages.filters.from') }}" />
-              <input class="filter-input" type="number" data-filter-input="dateTo"
-                placeholder="{{ t('messages.filters.to') }}" />
-            </div>
-          </div>
-          <div class="filter-actions">
-            <button type="button" class="filter-reset" data-filter-reset>
-              {{ t('messages.filters.reset') }}
-            </button>
-          </div>
+<head>
+  <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+  <link href="https://api.mapbox.com/mapbox-gl-js/v3.3.0/mapbox-gl.css" rel="stylesheet">
+  <script src='https://api.mapbox.com/mapbox-gl-js/v3.2.0/mapbox-gl.js'></script>
+</head>
+
+<main class="site_main">
+  <div class="site_grid">
+    <div class="left_page">
+      <h1>{{ i18n.locale === 'en' ? (unesco.nameEn || unesco.nameFr) : (unesco.nameFr || unesco.nameEn) }}</h1>
+      <p>{{ i18n.locale === 'en' ? (unesco.shortDescriptionEn || unesco.shortDescriptionFr) : (unesco.shortDescriptionFr
+        || unesco.shortDescriptionEn) }}</p>
+    </div>
+    <div class="right_page">
+      <img src="{{ img ? img : unesco.localImageMain }}" alt="" class="site_img">
+      <div class="site_temp">
+        <div class="site_information">
+          <p>{{ t('messages.site.country') }} : {{ unesco.statesNames }}</p>
+          <p>{{ t('messages.site.inscription_date') }} : {{ unesco.dateInscribed }}</p>
+          <p>{{ t('messages.site.criteria') }} : </p> <a href="https://whc.unesco.org/fr/criteres">{{ unesco.criteriaTxt
+            }}</a>
+          <p>{{ t('messages.site.size') }} : {{ unesco.areaHectares }} he</p>
+          <p>{{ t('messages.site.dossier_no') }} : {{ unesco.idNo }}</p>
+          <p>{{ t('messages.site.category') }} : {{ unesco.category }}</p>
         </div>
-      </details>
-      <div class="search-pill">
-        <span class="material-symbols-outlined">search</span>
-        <input id="siteSearchInput" type="text" placeholder="{{ t('messages.sites.search_placeholder') }}" />
+        <div class="add_site">
+          @if(auth.user)
+          <button class="action-btn btn-add" id="visitSiteBtn"
+            onclick="visitSite('{{ route('marker.visit', { unescoId: unesco.id }) }}', {{unesco.id}})">
+            {{ t('messages.home.add_to_visited') }}
+          </button>
+
+          <button class="action-btn btn-visit" id="markSiteBtn"
+            onclick="markSite('{{ route('marker.mark', { unescoId: unesco.id }) }}', {{unesco.id}})">
+            {{ t('messages.home.mark_site') }}
+          </button>
+          @end
+        </div>
+      </div>
+    </div>
+    <div class="map_container">
+      <h3>{{ t('messages.site.map_title') }} </h3>
+      <div id="map">
       </div>
     </div>
   </div>
 
-  <div class="sites-grid">
-    @each((unesco) in unescos)
-      <a href="{{ route('site.show', { id: unesco.id }) }}" class="site-box"
-        data-category="{{ unesco.category || '' }}"
-        data-region="{{ unesco.region || '' }}"
-        data-countries="{{ Array.isArray(unesco.statesNames) ? unesco.statesNames.join(', ') : (unesco.statesNames || '') }}"
-        data-date-inscribed="{{ unesco.dateInscribed || '' }}">
-        @if(unesco.localImageThumb)
-          <img src="{{ unesco.localImageThumb }}" class="site-box-img" />
-        @else
-          <img src="https://placehold.co/300x200" class="site-box-img" />
-        @end
-
-        <div class="site-box-info">
-          <h3>{{ unesco.nameFr }}</h3>
-          <p>{{ unesco.statesNames }}</p>
-        </div>
-
-        @if(unesco.added)
-          <button class="delete-btn">
-            <span class="material-symbols-outlined">delete</span>
-            {{ t('messages.sites.remove_from_list') }}
-          </button>
-        @else
-          <button class="btn-primary">
-            <span class="material-symbols-outlined">add</span>
-            {{ t('messages.sites.add_to_list') }}
-          </button>
-        @end
-
-        @if(unesco.visited)
-          <button class="visited-btn">
-            <span class="material-symbols-outlined">check</span>
-            {{ t('messages.sites.site_visited') }}
-          </button>
-        @else
-          <button class="action-btn btn-visit">
-            <span class="material-symbols-outlined">check</span>
-            {{ t('messages.sites.mark_as_visited') }}
-          </button>
-        @end
-      </a>
-    @end
-  </div>
-
 </main>
 
-<script>
-  const searchInput = document.getElementById("siteSearchInput");
-  const filterCategoryContainer = document.querySelector('[data-filter-group="category"]');
-  const filterRegionContainer = document.querySelector('[data-filter-group="region"]');
-  const filterContinentContainer = document.querySelector('[data-filter-group="continent"]');
-  const filterCountryInput = document.querySelector('[data-filter-input="country"]');
-  const filterDateFromInput = document.querySelector('[data-filter-input="dateFrom"]');
-  const filterDateToInput = document.querySelector('[data-filter-input="dateTo"]');
-  const filterResetButton = document.querySelector('[data-filter-reset]');
-  const siteCards = Array.from(document.querySelectorAll(".site-box"));
-
-  function normalizeSearchValue(value) {
-    return (value || "")
-      .toString()
-      .normalize("NFD")
-      .replace(/[\u0300-\u036f]/g, "")
-      .toLowerCase()
-      .trim();
-  }
-
-  const continentByRegion = {
-    "Europe and North America": ["Europe", "North America"],
-    "Latin America and the Caribbean": ["South America", "North America"],
-    "Asia and the Pacific": ["Asia", "Oceania"],
-    "Arab States": ["Asia", "Africa"],
-    "Africa": ["Africa"],
-  };
-
-  function getContinentsByRegion(region) {
-    return continentByRegion[region] || [];
-  }
-
-  function renderCheckboxOptions(container, values) {
-    if (!container) return;
-    container.innerHTML = values
-      .map((value, index) => {
-        const inputId = `${container.dataset.filterGroup || "filter"}-${index}`;
-        return `
-          <label class="filter-option" for="${inputId}">
-            <input type="checkbox" id="${inputId}" value="${normalizeSearchValue(value)}" />
-            <span>${value}</span>
-          </label>
-        `;
-      })
-      .join("");
-  }
-
-  function getSelectedFilterValues(container) {
-    if (!container) return [];
-    return Array.from(container.querySelectorAll('input[type="checkbox"]:checked')).map(
-      (input) => input.value
-    );
-  }
-
-  function matchesAdvancedFilters(site, options) {
-    const {
-      selectedCategories,
-      selectedRegions,
-      selectedContinents,
-      countryQuery,
-      dateFrom,
-      dateTo,
-    } = options;
-
-    if (selectedCategories.length) {
-      const categoryValue = normalizeSearchValue(site.dataset.category);
-      if (!categoryValue || !selectedCategories.includes(categoryValue)) {
-        return false;
-      }
-    }
-
-    if (selectedRegions.length) {
-      const regionValue = normalizeSearchValue(site.dataset.region);
-      if (!regionValue || !selectedRegions.includes(regionValue)) {
-        return false;
-      }
-    }
-
-    if (selectedContinents.length) {
-      const continents = getContinentsByRegion(site.dataset.region).map(normalizeSearchValue);
-      if (!continents.some((continent) => selectedContinents.includes(continent))) {
-        return false;
-      }
-    }
-
-    if (countryQuery) {
-      const countries = normalizeSearchValue(site.dataset.countries);
-      if (!countries.includes(countryQuery)) {
-        return false;
-      }
-    }
-
-    const dateValue = Number.parseInt(site.dataset.dateInscribed || "", 10);
-    if (!Number.isNaN(dateFrom) && (!dateValue || dateValue < dateFrom)) {
-      return false;
-    }
-
-    if (!Number.isNaN(dateTo) && (!dateValue || dateValue > dateTo)) {
-      return false;
-    }
-
-    return true;
-  }
-
-  function filterSites() {
-    const searchQuery = normalizeSearchValue(searchInput?.value);
-    const selectedCategories = getSelectedFilterValues(filterCategoryContainer);
-    const selectedRegions = getSelectedFilterValues(filterRegionContainer);
-    const selectedContinents = getSelectedFilterValues(filterContinentContainer);
-    const countryQuery = normalizeSearchValue(filterCountryInput?.value);
-    const dateFrom = Number.parseInt(filterDateFromInput?.value || "", 10);
-    const dateTo = Number.parseInt(filterDateToInput?.value || "", 10);
-
-    siteCards.forEach((site) => {
-      const siteName = normalizeSearchValue(site.querySelector(".site-box-info h3")?.textContent);
-      const countryName = normalizeSearchValue(site.dataset.countries);
-      const siteText = `${siteName} ${countryName}`;
-
-      const matchesSearch = !searchQuery || siteText.includes(searchQuery);
-      const matchesAdvanced = matchesAdvancedFilters(site, {
-        selectedCategories,
-        selectedRegions,
-        selectedContinents,
-        countryQuery,
-        dateFrom,
-        dateTo,
-      });
-
-      site.style.display = matchesSearch && matchesAdvanced ? "flex" : "none";
-    });
-  }
-
-  function resetAdvancedFilters() {
-    document
-      .querySelectorAll('.filter-dropdown-content input[type="checkbox"]')
-      .forEach((input) => {
-        input.checked = false;
-      });
-
-    if (filterCountryInput) {
-      filterCountryInput.value = "";
-    }
-
-    if (filterDateFromInput) {
-      filterDateFromInput.value = "";
-    }
-
-    if (filterDateToInput) {
-      filterDateToInput.value = "";
-    }
-
-    filterSites();
-  }
-
-  function setupAdvancedFilters() {
-    const regions = [...new Set(siteCards.map((site) => site.dataset.region).filter(Boolean))].sort();
-    const continents = [
-      ...new Set(regions.flatMap((region) => getContinentsByRegion(region)).filter(Boolean)),
-    ].sort();
-
-    renderCheckboxOptions(filterRegionContainer, regions);
-    renderCheckboxOptions(filterContinentContainer, continents);
-
-    document.querySelectorAll(".filter-dropdown-content input").forEach((input) => {
-      const eventName = input.type === "checkbox" ? "change" : "input";
-      input.addEventListener(eventName, filterSites);
-    });
-
-    if (filterResetButton) {
-      filterResetButton.addEventListener("click", resetAdvancedFilters);
-    }
-  }
-
-  if (searchInput) {
-    searchInput.addEventListener("input", filterSites);
-  }
-
-  setupAdvancedFilters();
-</script>
-
 <style>
-
   @import url("https://fonts.googleapis.com/css2?family=K2D:wght@300;400;500&display=swap");
 
   html {
@@ -318,8 +80,8 @@
     gap: 10px;
     grid-template-columns: 1fr 1fr;
     grid-template-areas:
-    "left right"
-    "map map";
+      "left right"
+      "map map";
     background-color: #222937;
     padding: 10px;
     padding-bottom: 70px;
@@ -339,7 +101,7 @@
     border-radius: 7px;
   }
 
-  .add_site > button {
+  .add_site>button {
     width: 90%;
     background-color: #737df3;
     border-radius: 12px;
@@ -349,11 +111,11 @@
   }
 
 
-  .add_site > button:active {
+  .add_site>button:active {
     background-color: #4957ee !important;
   }
 
-  .add_site > button:hover {
+  .add_site>button:hover {
     cursor: pointer;
     background-color: #5f6cf5;
   }
@@ -378,64 +140,68 @@
     padding: 30px;
     cursor: default !important;
   }
-
 </style>
 <script>
   mapboxgl.accessToken = "pk.eyJ1IjoiNjdza2liaWRpc2NydW0iLCJhIjoiY21sYXdlamR3MGcyOTNlcXoxdHQ2bXliaiJ9.BXx6EzzxvsFrDg5yeo1LUQ";
 
   const csrfToken = "{{ csrfToken }}";
+  const tAddVisited = "{{ t('messages.home.add_to_visited') }}";
+  const tRemoveVisited = "{{ t('messages.home.remove_from_visited') }}";
+  const tMarkSite = "{{ t('messages.home.mark_site') }}";
+  const tUnmarkSite = "{{ t('messages.home.unmark_site') }}";
 
   document.addEventListener('DOMContentLoaded', () => {
-    const unesco = {{{ JSON.stringify(unesco) }}};
+    const unesco = {{{ JSON.stringify(unesco)
+  }}};
 
-    for (let i = 0; i < 2; i++) {
-      flipVisitSiteUI(unesco.id)
-      flipMarkSiteUI(unesco.id)
+  for (let i = 0; i < 2; i++) {
+    flipVisitSiteUI(unesco.id)
+    flipMarkSiteUI(unesco.id)
+  }
+
+  let map;
+
+  if (unesco.coordinates) {
+    map = new mapboxgl.Map({
+      container: "map",
+      style: "mapbox://styles/mapbox/standard",
+      projection: "equirectangular",
+      zoom: 10,
+      center: [unesco.coordinates.lon, unesco.coordinates.lat],
+      dragPan: false,
+      touchZoomRotate: false,
+      dragRotate: false,
+      keyboard: false,
+      doubleClickZoom: false,
+      minZoom: 3
+    });
+
+    map.scrollZoom.disable();
+    map.scrollZoom.enable({ around: 'center' });
+
+    map.touchZoomRotate.disable();
+    map.touchZoomRotate.enable({ around: 'center' });
+
+    // disable the grab cursor
+    map.getCanvas().style.cursor = 'default';
+
+    map.on('load', () => {
+      loadMarker(unesco.coordinates.lon, unesco.coordinates.lat);
+    });
+
+    map.addControl(new mapboxgl.NavigationControl({
+      showCompass: false,
+      showZoom: true,
+      visualizePitch: false
+    }), 'top-right');
+  }
+
+  function loadMarker(lng, lat) {
+    if (map) {
+      const marker = new mapboxgl.Marker().setLngLat([lng, lat]).addTo(map);
+      marker.getElement().style.cursor = 'default';
     }
-
-    let map;
-
-    if (unesco.coordinates) {
-      map = new mapboxgl.Map({
-        container: "map",
-        style: "mapbox://styles/mapbox/standard",
-        projection: "equirectangular",
-        zoom: 10,
-        center: [unesco.coordinates.lon, unesco.coordinates.lat],
-        dragPan: false,
-        touchZoomRotate: false,
-        dragRotate: false,
-        keyboard: false,
-        doubleClickZoom: false,
-        minZoom: 3
-      });
-
-      map.scrollZoom.disable();
-      map.scrollZoom.enable({ around: 'center' });
-
-      map.touchZoomRotate.disable();
-      map.touchZoomRotate.enable({ around: 'center' });
-
-      // disable the grab cursor
-      map.getCanvas().style.cursor = 'default';
-
-      map.on('load', () => {
-        loadMarker(unesco.coordinates.lon, unesco.coordinates.lat);
-      });
-
-      map.addControl(new mapboxgl.NavigationControl({
-        showCompass: false,
-        showZoom: true,
-        visualizePitch: false
-      }), 'top-right');
-    }
-
-    function loadMarker(lng, lat) {
-      if (map) {
-        const marker = new mapboxgl.Marker().setLngLat([lng, lat]).addTo(map);
-        marker.getElement().style.cursor = 'default';
-      }
-    }
+  }
   });
 
   const markersData = {{{ JSON.stringify(markers) }}};
@@ -487,14 +253,15 @@
     if (markersData) {
       const marker = markersData.find((marker) => marker.unescoId == unescoId)
       const button = document.getElementById("visitSiteBtn")
-      console.log(button)
-      if (marker) {
-        markersData[markersData.findIndex((marker) => marker.unescoId == unescoId)].isVisited = !marker.isVisited
-        button.innerText = marker.isVisited ? "Enlever de mes visites" : "Ajouter à mes visites"
-        // Flips the isVisited in the gotten data, it modifies the now local data, not the distant one, simply to keep the UI up to date.
-      } else {
-        markersData.push({isMarked: 0, isVisited: 1, unescoId: unescoId})
-        button.innerText = "Enlever de mes visites"
+      if (button) {
+        if (marker) {
+          markersData[markersData.findIndex((marker) => marker.unescoId == unescoId)].isVisited = !marker.isVisited
+          button.innerText = marker.isVisited ? tRemoveVisited : tAddVisited
+          // Flips the isVisited in the gotten data, it modifies the now local data, not the distant one, simply to keep the UI up to date.
+        } else {
+          markersData.push({ isMarked: 0, isVisited: 1, unescoId: unescoId })
+          button.innerText = tRemoveVisited
+        }
       }
     }
   }
@@ -504,15 +271,16 @@
     if (markersData) {
       const marker = markersData.find((marker) => marker.unescoId == unescoId)
       const button = document.getElementById("markSiteBtn")
-      console.log(button)
-      if (marker) {
-        markersData[markersData.findIndex((marker) => marker.unescoId == unescoId)].isMarked = !marker.isMarked
-        button.innerText = marker.isMarked ? "Démarquer le Site" : "Marquer le Site"
-        // Flips the isMarked in the gotten data, it modifies the now local data, not the distant one, simply to keep the UI up to date.
-      } else {
-        // If the marker doesn't exist we manually, locally create it as the db would and change it's values manually
-        markersData.push({isMarked: 1, isVisited: 0, unescoId: unescoId})
-        button.innerText = "Démarquer le Site"
+      if (button) {
+        if (marker) {
+          markersData[markersData.findIndex((marker) => marker.unescoId == unescoId)].isMarked = !marker.isMarked
+          button.innerText = marker.isMarked ? tUnmarkSite : tMarkSite
+          // Flips the isMarked in the gotten data, it modifies the now local data, not the distant one, simply to keep the UI up to date.
+        } else {
+          // If the marker doesn't exist we manually, locally create it as the db would and change it's values manually
+          markersData.push({ isMarked: 1, isVisited: 0, unescoId: unescoId })
+          button.innerText = tUnmarkSite
+        }
       }
     }
   }

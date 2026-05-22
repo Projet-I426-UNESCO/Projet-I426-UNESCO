@@ -81,5 +81,14 @@
     "continents": "Continents",
     "completion_rate": "Completion rate",
     "countries_explored": "Countries explored"
+  },
+  "site": {
+    "country": "Country",
+    "inscription_date": "Date inscribed",
+    "criteria": "Admission criteria",
+    "size": "Size",
+    "dossier_no": "File No.",
+    "category": "Category",
+    "map_title": "Monument on the map:"
   }
 }
