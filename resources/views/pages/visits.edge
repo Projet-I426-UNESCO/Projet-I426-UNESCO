@@ -1,155 +1,425 @@
-@layout('components/layout/index', { title: 'Sites visités', page: 'visits' })
+@layout('components/layout/index', { title: 'Sites visités' , page: 'visits' }) <main>
+  <div class="home-main">
+    <div class="explorer-container">
+      <div class="map-container">
+        <div id="map">
+        </div>
+      </div>
+      <div class="controls">
+        <div class="search-container">
+          <details class="filter-dropdown">
+            <summary class="search-pill filter-dropdown-toggle" title="{{ t('messages.filters.button_title') }}">
+              <span class="material-symbols-outlined">tune</span>
+            </summary>
+            <div class="filter-dropdown-content">
+              <div class="filter-section">
+                <span class="filter-section-title">{{ t('messages.filters.category') }}</span>
+                <div class="filter-options" data-filter-group="category">
+                  <label class="filter-option">
+                    <input type="checkbox" value="cultural" />
+                    <span>{{ t('messages.sites.filter_type_cultural') }}</span>
+                  </label>
+                  <label class="filter-option">
+                    <input type="checkbox" value="natural" />
+                    <span>{{ t('messages.sites.filter_type_natural') }}</span>
+                  </label>
+                  <label class="filter-option">
+                    <input type="checkbox" value="mixed" />
+                    <span>{{ t('messages.sites.filter_type_mixed') }}</span>
+                  </label>
+                </div>
+              </div>
+              <div class="filter-section">
+                <span class="filter-section-title">{{ t('messages.filters.region') }}</span>
+                <div class="filter-options" data-filter-group="region"></div>
+              </div>
+              <div class="filter-section">
+                <span class="filter-section-title">{{ t('messages.filters.country') }}</span>
+                <input class="filter-input" type="text" data-filter-input="country"
+                  placeholder="{{ t('messages.filters.search_country_placeholder') }}" />
+              </div>
+              <div class="filter-section">
+                <span class="filter-section-title">{{ t('messages.filters.continent') }}</span>
+                <div class="filter-options" data-filter-group="continent"></div>
+              </div>
+              <div class="filter-section">
+                <span class="filter-section-title">{{ t('messages.filters.date_inscribed') }}</span>
+                <div class="filter-range">
+                  <input class="filter-input" type="number" data-filter-input="dateFrom"
+                    placeholder="{{ t('messages.filters.from') }}" />
+                  <input class="filter-input" type="number" data-filter-input="dateTo"
+                    placeholder="{{ t('messages.filters.to') }}" />
+                </div>
+              </div>
+              <div class="filter-actions">
+                <button type="button" class="filter-reset" data-filter-reset>
+                  {{ t('messages.filters.reset') }}
+                </button>
+              </div>
+            </div>
+          </details>
+          <div class="search-pill">
+            <span class="material-symbols-outlined">search</span>
+            <input id="siteSearchInput" type="text" placeholder="{{ t('messages.home.search_placeholder') }}"
+              autocomplete="off" />
+          </div>
 
-<main class="home-main">
-  <div class="explorer-container">
-    <div class="map-container">
-      <div id="map">
+          <div class="filter-pill active" onclick="setFilter('visited')">
+            <span>{{ t('messages.home.filter_visited') }}</span>
+          </div>
+
+          <label class="toggle-pill" for="markerToggle">
+            <input type="checkbox" id="markerToggle" checked />
+            <span>{{ t('messages.home.toggle_markers') }}</span>
+          </label>
+        </div>
+
+        <div class="user-profile">
+          @if(auth.user)
+          <div class="auth-pill logged-in">
+            <a href="{{ route('profile.show') }}" class="user-trigger">
+              <img class="avatar-circle" src="{{ auth.user.avatar || '' }}" alt="Avatar" />
+              <div class="user-details">
+                <span class="user-name">{{ auth.user.fullName }}</span>
+              </div>
+            </a>
+            <form method="POST" action="{{ route('auth.logout') }}">
+              {{ csrfField() }}
+              <button type="submit" class="logout-icon-btn" title="{{ t('messages.home.logout_title') }}">
+                <span class="material-symbols-outlined">logout</span>
+              </button>
+            </form>
+          </div>
+          @else
+          <div class="auth-pill-group">
+            <a href="{{ route('auth.login.show') }}" class="auth-pill login">
+              <span class="material-symbols-outlined">login</span>
+              {{ t('messages.home.login') }}
+            </a>
+            <a href="{{ route('auth.register.show') }}" class="auth-pill register">
+              {{ t('messages.home.register') }}
+            </a>
+          </div>
+          @end
+        </div>
       </div>
     </div>
-    <div class="controls">
-      <div class="search-container">
-        <details class="filter-dropdown">
-          <summary class="search-pill filter-dropdown-toggle" title="{{ t('messages.filters.button_title') }}">
-            <span class="material-symbols-outlined">tune</span>
-          </summary>
-          <div class="filter-dropdown-content">
-            <div class="filter-section">
-              <span class="filter-section-title">{{ t('messages.filters.category') }}</span>
-              <div class="filter-options" data-filter-group="category">
-                <label class="filter-option">
-                  <input type="checkbox" value="cultural" />
-                  <span>{{ t('messages.sites.filter_type_cultural') }}</span>
-                </label>
-                <label class="filter-option">
-                  <input type="checkbox" value="natural" />
-                  <span>{{ t('messages.sites.filter_type_natural') }}</span>
-                </label>
-                <label class="filter-option">
-                  <input type="checkbox" value="mixed" />
-                  <span>{{ t('messages.sites.filter_type_mixed') }}</span>
-                </label>
-              </div>
-            </div>
-            <div class="filter-section">
-              <span class="filter-section-title">{{ t('messages.filters.region') }}</span>
-              <div class="filter-options" data-filter-group="region"></div>
-            </div>
-            <div class="filter-section">
-              <span class="filter-section-title">{{ t('messages.filters.country') }}</span>
-              <input class="filter-input" type="text" data-filter-input="country"
-                placeholder="{{ t('messages.filters.search_country_placeholder') }}" />
-            </div>
-            <div class="filter-section">
-              <span class="filter-section-title">{{ t('messages.filters.continent') }}</span>
-              <div class="filter-options" data-filter-group="continent"></div>
-            </div>
-            <div class="filter-section">
-              <span class="filter-section-title">{{ t('messages.filters.date_inscribed') }}</span>
-              <div class="filter-range">
-                <input class="filter-input" type="number" data-filter-input="dateFrom"
-                  placeholder="{{ t('messages.filters.from') }}" />
-                <input class="filter-input" type="number" data-filter-input="dateTo"
-                  placeholder="{{ t('messages.filters.to') }}" />
-              </div>
-            </div>
-            <div class="filter-actions">
-              <button type="button" class="filter-reset" data-filter-reset>
-                {{ t('messages.filters.reset') }}
-              </button>
-            </div>
+
+    <aside>
+      <div id="aside-dynamic-content">
+        @each((unesco, index) in unescos)
+        @if(unesco.coordinates)
+        <div class="site-card"
+          onclick="handleCardClick({{ index }}, {{ unesco.id }}, {{ unesco.coordinates.lon }}, {{ unesco.coordinates.lat }})">
+          <div class="card-info">
+            @if(unesco.localImageThumb)
+            <img src="{{ unesco.localImageThumb }}" class="card-img" />
+            @else
+            <img src="https://placehold.co/600x400" class="card-img" />
+            @end
+            <h4>
+              {{ unesco.nameFr }}
+            </h4>
+            <p>
+              {{ unesco.statesNames }}
+            </p>
           </div>
-        </details>
-        <div class="search-pill">
-          <span class="material-symbols-outlined">search</span>
-          <input id="siteSearchInput" type="text" placeholder="{{ t('messages.home.search_placeholder') }}"
-            autocomplete="off" />
-        </div>
-
-        <div class="filter-pill active" onclick="setFilter('visited')">
-          <span>{{ t('messages.home.filter_visited') }}</span>
-        </div>
-
-        <label class="toggle-pill" for="markerToggle">
-          <input type="checkbox" id="markerToggle" checked />
-          <span>{{ t('messages.home.toggle_markers') }}</span>
-        </label>
-      </div>
-
-      <div class="user-profile">
-        @if(auth.user)
-        <div class="auth-pill logged-in">
-          <a href="{{ route('profile.show') }}" class="user-trigger">
-            <img class="avatar-circle" src="{{ auth.user.avatar || '' }}" alt="Avatar" />
-            <div class="user-details">
-              <span class="user-name">{{ auth.user.fullName }}</span>
+          <div class="sites-main">
+            <div class="controls">
+              <div class="search-container">
+                <div class="search-pill">
+                  <span class="material-symbols-outlined">search</span>
+                  <input type="text" placeholder="Rechercher un site..." />
+                </div>
+                <div class="search-pill">
+                  <button class="filter" onclick="openFilters()"> <span
+                      class="material-symbols-outlined">filter_list</span></button>
+                  <p>
+                    @if(filter)
+                    Filtre: {{ filter }}
+                    @else
+                    Filtre: aucun
+                    @end
+                  </p>
+                </div>
+                @end
+                @end
+              </div>
+              <<<<<<< HEAD <div class="stats-footer-container">
+                <h3 class="stats-title">
+                  {{ t('messages.home.stats_title') }}
+                </h3>
+                <div class="stats-grid">
+                  <div class="stat-box">
+                    <span class="stat-number" id="visitedCount"></span>
+                    <span class="stat-label">{{ t('messages.home.sites_visited') }}</span>
+                  </div>
+                  <div class="stat-box">
+                    <span class="stat-number" id="markedCount"></span>
+                    <span class="stat-label">{{ t('messages.header.bookmarked_sites') }}</span>
+                  </div>
+                </div>
             </div>
-          </a>
-          <form method="POST" action="{{ route('auth.logout') }}">
-            {{ csrfField() }}
-            <button type="submit" class="logout-icon-btn" title="{{ t('messages.home.logout_title') }}">
-              <span class="material-symbols-outlined">logout</span>
-            </button>
-          </form>
+    </aside>
+  </div>
+  <template id="unesco-detail-template">
+    @!unesco.detail()
+  </template>
+
+  </div>
+  <div class="sites-grid">
+  </div>
+  <div id="filterPopup" class="filter-popup">
+    <div class="filter-popup-content">
+      <div class="filter-popup-header">
+        <h2>
+          Filtres
+        </h2>
+        <button class="filter-close-btn" onclick="closeFilters()">
+          <span class="material-symbols-outlined">close</span>
+        </button>
+      </div>
+      <div class="filter-popup-body">
+        <div class="filter-section">
+          <label>Région / Pays</label>
+          <input type="text" id="countryFilter" placeholder="Rechercher un pays..." />
         </div>
-        @else
-        <div class="auth-pill-group">
-          <a href="{{ route('auth.login.show') }}" class="auth-pill login">
-            <span class="material-symbols-outlined">login</span>
-            {{ t('messages.home.login') }}
-          </a>
-          <a href="{{ route('auth.register.show') }}" class="auth-pill register">
-            {{ t('messages.home.register') }}
-          </a>
+        <div class="filter-section">
+          <label>Type de site</label>
+          <select id="typeFilter">
+            <option value="">
+              Tous les types
+            </option>
+            <option value="cultural">
+              Culturel
+            </option>
+            <option value="natural">
+              Naturel
+            </option>
+            <option value="mixed">
+              Mixte
+            </option>
+          </select>
         </div>
-        @end
+        <select id="increase">
+          <option value="increase">
+            Croisant
+          </option>
+          <option value="decrease">
+            Décroisant
+          </option>
+        </select>
+      </div>
+      <div class="filter-popup-footer">
+        <button class="btn-primary" onclick="applyFilters()">Appliquer</button>
+        <button class="btn-secondary" onclick="resetFilters()">Réinitialiser</button>
       </div>
     </div>
   </div>
 
-  <aside>
-    <div id="aside-dynamic-content">
-      @each((unesco, index) in unescos)
-      @if(unesco.coordinates)
-      <div class="site-card"
-        onclick="handleCardClick({{ index }}, {{ unesco.id }}, {{ unesco.coordinates.lon }}, {{ unesco.coordinates.lat }})">
-        <div class="card-info">
-          @if(unesco.localImageThumb)
-          <img src="{{ unesco.localImageThumb }}" class="card-img" />
-          @else
-          <img src="https://placehold.co/600x400" class="card-img" />
-          @end
-          <h4>
+  <div class="sites-grid">
+    @if(unescos && unescos.length > 0)
+    @each((unesco) in unescos)
+    <div class="site-box">
+
+      <a href="{{ route('site.show', { id: unesco.id }) }}">
+        @if(unesco.localImageThumb)
+        <img src="{{ unesco.localImageMain }}" class="site-box-img" />
+        @else
+        <img src="../../../public/placeholders/placeholderImage.png" class="site-box-img" />
+        @end
+        <div class="site-box-info">
+          <h3>
             {{ unesco.nameFr }}
-          </h4>
+          </h3>
           <p>
             {{ unesco.statesNames }}
           </p>
         </div>
+      </a>
+
+      <div class="add_button">
+        <button class="btn-primary" id="visitSiteBtn{{unesco.id}}"
+          onclick="visitSite('{{ route('marker.visit', { unescoId: unesco.id }) }}', {{unesco.id}})">
+          <span>Enlever de mes visites</span></button>
+        <button class="btn-primary button_mark" id="markSiteBtn{{unesco.id}}"
+          onclick="markSite('{{ route('marker.mark', { unescoId: unesco.id }) }}', {{unesco.id}})"> <span>
+            @each(marker in markers)
+            @if(marker.unescoId == unesco.id && marker.isMarked)
+            Démarquer le Site
+            @elseif(marker.unescoId == unesco.id && !marker.isMarked)
+            Marquer le Site
+            @end
+            @end
+        </button>
       </div>
-      @end
-      @end
     </div>
-    <div class="stats-footer-container">
-      <h3 class="stats-title">
-        {{ t('messages.home.stats_title') }}
-      </h3>
-      <div class="stats-grid">
-        <div class="stat-box">
-          <span class="stat-number" id="visitedCount"></span>
-          <span class="stat-label">{{ t('messages.home.sites_visited') }}</span>
-        </div>
-        <div class="stat-box">
-          <span class="stat-number" id="markedCount"></span>
-          <span class="stat-label">{{ t('messages.header.bookmarked_sites') }}</span>
-        </div>
-      </div>
-    </div>
-  </aside>
+    @end
+    @else
+    <p class="no_site">Vous n'avez pas encore de site visité.</p>
+    @end
+  </div>
+  </div>
 </main>
-<template id="unesco-detail-template">
-  @!unesco.detail()
-</template>
+
+<style>
+  .sites-grid {
+    gap: 50px;
+    margin: 0 20px;
+  }
+
+  .add_button {
+    margin-top: auto;
+    margin-bottom: 10px;
+  }
+
+  .button_mark {
+    background-color: #313644 !important;
+  }
+
+  .no_site {
+    color: white;
+  }
+</style>
+
 <script>
+  function openFilters() {
+    const popup = document.getElementById("filterPopup");
+    popup.classList.add("show");
+  }
+
+  function closeFilters() {
+    const popup = document.getElementById("filterPopup");
+    popup.classList.remove("show");
+  }
+
+  function applyFilters() {
+    const countryFilter = document.getElementById("countryFilter").value;
+    const typeFilter = document.getElementById("typeFilter").value;
+    const sites = document.querySelectorAll(".site-box");
+    sites.forEach(site => {
+      let visible = true;
+      if (countryFilter) {
+        const country = site.querySelector(".site-box-info p").textContent.toLowerCase();
+        visible = visible && country.includes(countryFilter.toLowerCase());
+>>>>>>> site_visite_page
+      }
+      site.style.display = visible ? "flex" : "none";
+    });
+<<<<<<< HEAD
+  }
+
+  function zoomToLocation(lng, lat) {
+    map.flyTo({
+      center: [lng, lat],
+      zoom: 12,
+      essential: true,
+      duration: 3500,
+      curve: 1.5
+    });
+  }
+  closeFilters();
+  }
+
+  function resetFilters() {
+    document.getElementById("countryFilter").value = "";
+    document.getElementById("typeFilter").value = "";
+    const sites = document.querySelectorAll(".site-box");
+    sites.forEach(site => {
+      site.style.display = "flex";
+    });
+    closeFilters();
+  }
+
+  document.getElementById("filterPopup").addEventListener("click", function (e) {
+    if (e.target === this) {
+      closeFilters();
+    }
+  });
+
+
+  const csrfToken = "{{ csrfToken }}";
+  const markersData = {{{ JSON.stringify(markers) }}};
+
+  async function visitSite(url, unescoId) {
+    try {
+      const res = await fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "x-csrf-token": csrfToken
+        }
+      });
+
+      if (!res.ok) throw new Error("Request failed");
+
+      console.log(`Visiting sequence with unescoId : ${unescoId} `);
+
+      flipVisitSiteUI(unescoId)
+
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  async function markSite(url, unescoId) {
+    try {
+      const res = await fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "x-csrf-token": csrfToken
+        }
+      });
+
+      if (!res.ok) throw new Error("Request failed");
+
+      console.log(`Marking sequence with unescoId : ${unescoId} `);
+
+      flipMarkSiteUI(unescoId)
+
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  function flipVisitSiteUI(unescoId) {
+    // if the marker exists Flip the isVisited value in UI
+    if (markersData) {
+      const marker = markersData.find((marker) => marker.unescoId == unescoId)
+      const button = document.getElementById("visitSiteBtn" + unescoId)
+      console.log(button)
+      if (marker) {
+        markersData[markersData.findIndex((marker) => marker.unescoId == unescoId)].isVisited = !marker.isVisited
+        button.innerText = marker.isVisited ? "Enlever de mes visites" : "Ajouter à mes visites"
+  // Flips the isVisited in the gotten data, it modifies the now local data, not the distant one, simply to keep the UI
+  up to date.
+  } else {
+        markersData.push({ isMarked: 0, isVisited: 1, unescoId: unescoId })
+        button.innerText = "Enlever de mes visites"
+      }
+    }
+  }
+
+  function flipMarkSiteUI(unescoId) {
+    // if the marker exists Flip the isMarked value in UI
+    if (markersData) {
+      const marker = markersData.find((marker) => marker.unescoId == unescoId)
+      const button = document.getElementById("markSiteBtn" + unescoId)
+      console.log(button)
+      if (marker) {
+        markersData[markersData.findIndex((marker) => marker.unescoId == unescoId)].isMarked = !marker.isMarked
+        button.innerText = marker.isMarked ? "Démarquer le Site" : "Marquer le Site"
+  // Flips the isMarked in the gotten data, it modifies the now local data, not the distant one, simply to keep the UI
+  up to date.
+  } else {
+        // If the marker doesn't exist we manually, locally create it as the db would and change it's values manually
+        markersData.push({ isMarked: 1, isVisited: 0, unescoId: unescoId })
+        button.innerText = "Démarquer le Site"
+      }
+    }
+  }
+
 
   const csrfToken = "{{ csrfToken }}";
 
@@ -657,18 +927,6 @@
         marker.addTo(map);
       } else {
         marker.remove();
-      }
-    });
-  }
-
-  function zoomToLocation(lng, lat) {
-    map.flyTo({
-      center: [lng, lat],
-      zoom: 12,
-      essential: true,
-      duration: 3500,
-      curve: 1.5
-    });
-  }
 </script>
 @end
+>>>>>>> site_visite_page

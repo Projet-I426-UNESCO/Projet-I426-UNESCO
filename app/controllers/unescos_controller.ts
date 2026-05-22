@@ -2,6 +2,7 @@ import type { HttpContext } from '@adonisjs/core/http'
 import Unesco from '#models/unesco'
 import { dd } from '@adonisjs/core/services/dumper'
 import Marker from '#models/marker'
+import User from '#models/user'
 
 export default class UnescosController {
   /**
@@ -35,9 +36,17 @@ export default class UnescosController {
 
     return view.render('pages/bookmarks', { unescos, markers })
   }
+
   async visits({ view, auth }: HttpContext) {
     await auth.check()
-    const unescos = await Unesco.query().exec()
+    const user = await User.query().where('id', auth.user!.id).firstOrFail()
+
+    const unescos = await Unesco.query()
+      .join('markers', 'unescos.id', '=', 'markers.unesco_id')
+      .where('markers.user_id', user.id)
+      .where('markers.is_visited', true)
+      .select('unescos.*')
+      .groupBy('unescos.id')
 
     let markers: Marker[] = []
     if (auth.user) {
@@ -46,6 +55,7 @@ export default class UnescosController {
 
     return view.render('pages/visits', { unescos, markers })
   }
+
   async profile({ view, auth }: HttpContext) {
     const userId = auth.user!.id
 
