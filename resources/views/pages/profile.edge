@@ -303,14 +303,7 @@
 
     .line {
       display: flex;
-      gap: 10px;
-    }
-
-    /* 1. Aligner le formulaire et le lien sur la même ligne */
-    .line {
-      display: flex;
       gap: 12px;
-      /* Espace entre les deux boutons */
       align-items: center;
     }
 
@@ -353,16 +346,6 @@
 
     .logout-btn:hover {
       background-color: #dc2626;
-    }
-
-    .map-list-block {
-      height: 500px;
-      background-color: #1e2533;
-      max-width: 1500px;
-      margin: 0 auto;
-      padding-top: 50px;
-      border-radius: 20px;
-      margin-top: 10px;
     }
 
     /* --- MODAL MODIFIER PROFIL --- */
@@ -878,7 +861,6 @@
           @each(data in stats.regionStats)
           <div class="continent-item">
             <div class="continent-donut">
-              {{-- circumference = 2 * π * r = 2 * 3.14159 * 31 ≈ 194.78 --}}
               <svg viewBox="0 0 80 80">
                 <circle class="track" cx="40" cy="40" r="31" />
                 <circle class="arc color-{{ data.colorIndex }}" cx="40" cy="40" r="31" stroke-dasharray="194.78"
@@ -950,7 +932,6 @@
       </div>
     </div>
 
-    <!-- Full Visited Sites List Section -->
     <div class="profile-list-section">
       <h2 class="list-title" id="listTitle">Liste complète des sites visités</h2>
       <div class="list-card">
@@ -960,12 +941,10 @@
         </div>
 
         <div id="accordion-list-container">
-          <!-- Accordions will be rendered dynamically by JavaScript -->
         </div>
       </div>
     </div>
 
-    {{-- ===== MODAL MODIFIER PROFIL ===== --}}
     <div id="editModal" class="edit-modal-overlay" onclick="handleOverlayClick(event)">
       <div class="edit-modal">
         <div class="edit-modal-header">
@@ -1013,6 +992,43 @@
 
 
   <script>
+    const ui = {
+      accordionList: 'accordion-list-container',
+      btnMapVisited: 'btnMapVisited',
+      btnMapMarked: 'btnMapMarked',
+      openTabBtn: 'openTabBtn',
+      mapTitle: 'mapTitle',
+      listTitle: 'listTitle'
+    };
+
+    const labels = {
+      mapVisited: "Carte des sites visités",
+      mapMarked: "Carte des sites marqués",
+      listVisited: "Liste complète des sites visités",
+      listMarked: "Liste complète des sites marqués",
+      noMarked: "Aucun site marqué pour l'instant",
+      noVisits: "{{ t('messages.profile.no_visit_yet') }}"
+    };
+
+    const routes = {
+      visits: "{{ route('visits') }}",
+      bookmarks: "{{ route('bookmarks') }}"
+    };
+
+    const mapConfig = {
+      accessToken: "pk.eyJ1IjoiNjdza2liaWRpc2NydW0iLCJhIjoiY21sYXdlamR3MGcyOTNlcXoxdHQ2bXliaiJ9.BXx6EzzxvsFrDg5yeo1LUQ",
+      container: "profile-map",
+      style: "mapbox://styles/mapbox/standard",
+      projection: "mercator",
+      zoom: 1.5,
+      center: [10, 20]
+    };
+
+    const markerColors = {
+      visited: "#fe8d50",
+      marked: "#8bf7df"
+    };
+
     function previewAvatar(event) {
       const file = event.target.files[0];
       if (!file) return;
@@ -1040,17 +1056,14 @@
     let currentMapFilter = 'visited';
     let activeMarkerInstances = [];
 
-    const visitedMarkersColor = "#fe8d50";
-    const markedMarkersColor = "#8bf7df";
-
-    mapboxgl.accessToken = "pk.eyJ1IjoiNjdza2liaWRpc2NydW0iLCJhIjoiY21sYXdlamR3MGcyOTNlcXoxdHQ2bXliaiJ9.BXx6EzzxvsFrDg5yeo1LUQ";
+    mapboxgl.accessToken = mapConfig.accessToken;
 
     const profileMap = new mapboxgl.Map({
-      container: "profile-map",
-      style: "mapbox://styles/mapbox/standard",
-      projection: "mercator",
-      zoom: 1.5,
-      center: [10, 20]
+      container: mapConfig.container,
+      style: mapConfig.style,
+      projection: mapConfig.projection,
+      zoom: mapConfig.zoom,
+      center: mapConfig.center
     });
 
     profileMap.addControl(new mapboxgl.NavigationControl());
@@ -1064,7 +1077,7 @@
         if (currentMapFilter === 'visited' && !data.isVisited) return;
         if (currentMapFilter === 'marked' && !data.isMarked) return;
 
-        const color = currentMapFilter === 'visited' ? visitedMarkersColor : markedMarkersColor;
+        const color = currentMapFilter === 'visited' ? markerColors.visited : markerColors.marked;
 
         const popup = new mapboxgl.Popup({ offset: 25 })
           .setHTML(`<div style="color: #1e293b; padding: 4px;"><h4 style="margin: 0 0 4px 0; font-size: 14px; font-weight: 600;">${data.name}</h4><a href="/site/${data.id}" style="color: #3b82f6; font-size: 12px; font-weight: 600; text-decoration: none;">Voir le site</a></div>`);
@@ -1083,15 +1096,13 @@
     });
 
     function renderDynamicAccordionList(mode) {
-      const container = document.getElementById('accordion-list-container');
+      const container = document.getElementById(ui.accordionList);
       if (!container) return;
 
       const data = mode === 'visited' ? visitedByRegion : markedByRegion;
 
       if (!data || data.length === 0) {
-        const noMsg = mode === 'visited'
-          ? "{{ t('messages.profile.no_visit_yet') }}"
-          : "Aucun site marqué pour l'instant";
+        const noMsg = mode === 'visited' ? labels.noVisits : labels.noMarked;
         container.innerHTML = `<p class="no-visits-msg" style="text-align: center; padding: 20px 0;">${noMsg}</p>`;
         return;
       }
@@ -1154,8 +1165,8 @@
       currentMapFilter = mode;
 
       // Update button classes
-      const btnVisited = document.getElementById('btnMapVisited');
-      const btnMarked = document.getElementById('btnMapMarked');
+      const btnVisited = document.getElementById(ui.btnMapVisited);
+      const btnMarked = document.getElementById(ui.btnMapMarked);
 
       if (mode === 'visited') {
         btnVisited.classList.add('active');
@@ -1168,23 +1179,23 @@
       renderProfileMapMarkers();
 
       // Dynamic external link
-      const openTabBtn = document.getElementById('openTabBtn');
+      const openTabBtn = document.getElementById(ui.openTabBtn);
       if (openTabBtn) {
         if (mode === 'visited') {
-          openTabBtn.href = "{{ route('visits') }}";
+          openTabBtn.href = routes.visits;
         } else {
-          openTabBtn.href = "{{ route('bookmarks') }}";
+          openTabBtn.href = routes.bookmarks;
         }
       }
 
       // Update headers
-      const mapTitle = document.getElementById('mapTitle');
-      const listTitle = document.getElementById('listTitle');
+      const mapTitle = document.getElementById(ui.mapTitle);
+      const listTitle = document.getElementById(ui.listTitle);
       if (mapTitle) {
-        mapTitle.textContent = mode === 'visited' ? "Carte des sites visités" : "Carte des sites marqués";
+        mapTitle.textContent = mode === 'visited' ? labels.mapVisited : labels.mapMarked;
       }
       if (listTitle) {
-        listTitle.textContent = mode === 'visited' ? "Liste complète des sites visités" : "Liste complète des sites marqués";
+        listTitle.textContent = mode === 'visited' ? labels.listVisited : labels.listMarked;
       }
 
       // Dynamic List Rendering

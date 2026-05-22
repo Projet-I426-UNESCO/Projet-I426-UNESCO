@@ -17,13 +17,16 @@ export default class ProfileController {
     })
 
     // --- Validate and update nickname ---
-    if (nickname && nickname !== user.fullName) {
+    if (nickname && nickname !== user.fullName && nickname.length <= 20) {
       const existing = await User.findBy('full_name', nickname)
       if (existing) {
         session.flash('editError', 'Ce pseudo est déjà pris.')
         return response.redirect().back()
       }
       user.fullName = nickname
+    } else if (nickname.length > 20) {
+      session.flash('editError', 'Votre pseudo ne doit pas dépasser 20 caractères.')
+      return response.redirect().back()
     }
 
     // --- Handle avatar upload ---
