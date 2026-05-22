@@ -15,7 +15,7 @@
         </div>
 
         <div class="filter-pill active" onclick="setFilter('marked')">
-          <span>{{ t('messages.home.filter_to_visit') }}</span>
+          <span>{{ t('messages.home.toggle_markers') }}</span>
         </div>
 
         <label class="toggle-pill" for="markerToggle">
@@ -314,7 +314,7 @@
   });
 
   let markerInstances = [];
-  let markersVisible = false; // false car toggleMarkers() va l'inverser au clic
+  let markersVisible = true;
 
   const allMarkersColor = "#61afef";
   const visitedMarkersColor = "#fe8d50";
