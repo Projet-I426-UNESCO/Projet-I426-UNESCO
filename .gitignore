@@ -33,3 +33,5 @@ public/data
 sqlite3.exe
 
 public/unesco/*
+
+db.sqlite3
