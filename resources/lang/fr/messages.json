@@ -25,6 +25,18 @@
     "mark_site": "Marquer le Site",
     "unmark_site": "Démarquer le Site"
   },
+  "filters": {
+    "button_title": "Filtres",
+    "category": "Catégorie",
+    "region": "Région",
+    "country": "Pays",
+    "continent": "Continent",
+    "date_inscribed": "Date d'inscription",
+    "from": "De",
+    "to": "À",
+    "search_country_placeholder": "Rechercher un pays...",
+    "reset": "Réinitialiser"
+  },
   "sites": {
     "search_placeholder": "Rechercher un site...",
     "filter_none": "Filtre: aucun",

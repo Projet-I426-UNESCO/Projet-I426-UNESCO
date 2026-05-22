@@ -8,6 +8,57 @@
     </div>
     <div class="controls">
       <div class="search-container">
+        <details class="filter-dropdown">
+          <summary class="search-pill filter-dropdown-toggle" title="{{ t('messages.filters.button_title') }}">
+            <span class="material-symbols-outlined">tune</span>
+          </summary>
+          <div class="filter-dropdown-content">
+            <div class="filter-section">
+              <span class="filter-section-title">{{ t('messages.filters.category') }}</span>
+              <div class="filter-options" data-filter-group="category">
+                <label class="filter-option">
+                  <input type="checkbox" value="cultural" />
+                  <span>{{ t('messages.sites.filter_type_cultural') }}</span>
+                </label>
+                <label class="filter-option">
+                  <input type="checkbox" value="natural" />
+                  <span>{{ t('messages.sites.filter_type_natural') }}</span>
+                </label>
+                <label class="filter-option">
+                  <input type="checkbox" value="mixed" />
+                  <span>{{ t('messages.sites.filter_type_mixed') }}</span>
+                </label>
+              </div>
+            </div>
+            <div class="filter-section">
+              <span class="filter-section-title">{{ t('messages.filters.region') }}</span>
+              <div class="filter-options" data-filter-group="region"></div>
+            </div>
+            <div class="filter-section">
+              <span class="filter-section-title">{{ t('messages.filters.country') }}</span>
+              <input class="filter-input" type="text" data-filter-input="country"
+                placeholder="{{ t('messages.filters.search_country_placeholder') }}" />
+            </div>
+            <div class="filter-section">
+              <span class="filter-section-title">{{ t('messages.filters.continent') }}</span>
+              <div class="filter-options" data-filter-group="continent"></div>
+            </div>
+            <div class="filter-section">
+              <span class="filter-section-title">{{ t('messages.filters.date_inscribed') }}</span>
+              <div class="filter-range">
+                <input class="filter-input" type="number" data-filter-input="dateFrom"
+                  placeholder="{{ t('messages.filters.from') }}" />
+                <input class="filter-input" type="number" data-filter-input="dateTo"
+                  placeholder="{{ t('messages.filters.to') }}" />
+              </div>
+            </div>
+            <div class="filter-actions">
+              <button type="button" class="filter-reset" data-filter-reset>
+                {{ t('messages.filters.reset') }}
+              </button>
+            </div>
+          </div>
+        </details>
         <div class="search-pill">
           <span class="material-symbols-outlined">search</span>
           <input id="siteSearchInput" type="text" placeholder="{{ t('messages.home.search_placeholder') }}"
@@ -181,6 +232,13 @@
   const markersData = {{{ JSON.stringify(markers) }}};
   const unescoIndexById = new Map(unescosData.map((unesco, index) => [unesco.id, index]));
   const searchInput = document.getElementById("siteSearchInput");
+  const filterCategoryContainer = document.querySelector('[data-filter-group="category"]');
+  const filterRegionContainer = document.querySelector('[data-filter-group="region"]');
+  const filterContinentContainer = document.querySelector('[data-filter-group="continent"]');
+  const filterCountryInput = document.querySelector('[data-filter-input="country"]');
+  const filterDateFromInput = document.querySelector('[data-filter-input="dateFrom"]');
+  const filterDateToInput = document.querySelector('[data-filter-input="dateTo"]');
+  const filterResetButton = document.querySelector('[data-filter-reset]');
 
   function normalizeSearchValue(value) {
     return (value || "")
@@ -189,6 +247,91 @@
       .replace(/[\u0300-\u036f]/g, "")
       .toLowerCase()
       .trim();
+  }
+
+  const continentByRegion = {
+    "Europe and North America": ["Europe", "North America"],
+    "Latin America and the Caribbean": ["South America", "North America"],
+    "Asia and the Pacific": ["Asia", "Oceania"],
+    "Arab States": ["Asia", "Africa"],
+    "Africa": ["Africa"],
+  };
+
+  function getContinentsByRegion(region) {
+    return continentByRegion[region] || [];
+  }
+
+  function renderCheckboxOptions(container, values) {
+    if (!container) return;
+    container.innerHTML = values
+      .map((value, index) => {
+        const inputId = `${container.dataset.filterGroup || "filter"}-${index}`;
+        return `
+          <label class="filter-option" for="${inputId}">
+            <input type="checkbox" id="${inputId}" value="${normalizeSearchValue(value)}" />
+            <span>${value}</span>
+          </label>
+        `;
+      })
+      .join("");
+  }
+
+  function getSelectedFilterValues(container) {
+    if (!container) return [];
+    return Array.from(container.querySelectorAll('input[type="checkbox"]:checked')).map(
+      (input) => input.value
+    );
+  }
+
+  function matchesAdvancedFilters(unesco) {
+    const selectedCategories = getSelectedFilterValues(filterCategoryContainer);
+    const selectedRegions = getSelectedFilterValues(filterRegionContainer);
+    const selectedContinents = getSelectedFilterValues(filterContinentContainer);
+
+    if (selectedCategories.length) {
+      const categoryValue = normalizeSearchValue(unesco.category);
+      if (!categoryValue || !selectedCategories.includes(categoryValue)) {
+        return false;
+      }
+    }
+
+    if (selectedRegions.length) {
+      const regionValue = normalizeSearchValue(unesco.region);
+      if (!regionValue || !selectedRegions.includes(regionValue)) {
+        return false;
+      }
+    }
+
+    if (selectedContinents.length) {
+      const continents = getContinentsByRegion(unesco.region).map(normalizeSearchValue);
+      if (!continents.some((continent) => selectedContinents.includes(continent))) {
+        return false;
+      }
+    }
+
+    const countryQuery = normalizeSearchValue(filterCountryInput?.value);
+    if (countryQuery) {
+      const countries = Array.isArray(unesco.statesNames)
+        ? unesco.statesNames.join(" ")
+        : unesco.statesNames || "";
+      if (!normalizeSearchValue(countries).includes(countryQuery)) {
+        return false;
+      }
+    }
+
+    const dateFrom = Number.parseInt(filterDateFromInput?.value || "", 10);
+    const dateTo = Number.parseInt(filterDateToInput?.value || "", 10);
+    const dateValue = Number.parseInt(unesco.dateInscribed || "", 10);
+
+    if (!Number.isNaN(dateFrom) && (!dateValue || dateValue < dateFrom)) {
+      return false;
+    }
+
+    if (!Number.isNaN(dateTo) && (!dateValue || dateValue > dateTo)) {
+      return false;
+    }
+
+    return true;
   }
 
   function markerMatchesActiveFilter(markerState) {
@@ -214,8 +357,53 @@
 
       const markerState = markersData?.find((marker) => marker.unescoId == unesco.id);
 
-      return markerMatchesActiveFilter(markerState) && matchesSearch(unesco);
+      return markerMatchesActiveFilter(markerState) && matchesSearch(unesco) && matchesAdvancedFilters(unesco);
     });
+  }
+
+  function resetAdvancedFilters() {
+    document
+      .querySelectorAll('.filter-dropdown-content input[type="checkbox"]')
+      .forEach((input) => {
+        input.checked = false;
+      });
+
+    if (filterCountryInput) {
+      filterCountryInput.value = "";
+    }
+
+    if (filterDateFromInput) {
+      filterDateFromInput.value = "";
+    }
+
+    if (filterDateToInput) {
+      filterDateToInput.value = "";
+    }
+
+    applyFilters();
+  }
+
+  function setupAdvancedFilters() {
+    const regions = [...new Set(unescosData.map((unesco) => unesco.region).filter(Boolean))].sort();
+    const continents = [
+      ...new Set(
+        unescosData
+          .flatMap((unesco) => getContinentsByRegion(unesco.region))
+          .filter(Boolean)
+      ),
+    ].sort();
+
+    renderCheckboxOptions(filterRegionContainer, regions);
+    renderCheckboxOptions(filterContinentContainer, continents);
+
+    document.querySelectorAll(".filter-dropdown-content input").forEach((input) => {
+      const eventName = input.type === "checkbox" ? "change" : "input";
+      input.addEventListener(eventName, applyFilters);
+    });
+
+    if (filterResetButton) {
+      filterResetButton.addEventListener("click", resetAdvancedFilters);
+    }
   }
 
   function renderSiteList(unescos) {
@@ -255,6 +443,8 @@
       applyFilters();
     });
   }
+
+  setupAdvancedFilters();
 
   mapboxgl.accessToken = "pk.eyJ1IjoiNjdza2liaWRpc2NydW0iLCJhIjoiY21sYXdlamR3MGcyOTNlcXoxdHQ2bXliaiJ9.BXx6EzzxvsFrDg5yeo1LUQ";
 

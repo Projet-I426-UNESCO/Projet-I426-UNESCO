@@ -25,6 +25,18 @@
     "mark_site": "Bookmark site",
     "unmark_site": "Unbookmark site"
   },
+  "filters": {
+    "button_title": "Filters",
+    "category": "Category",
+    "region": "Region",
+    "country": "Country",
+    "continent": "Continent",
+    "date_inscribed": "Date inscribed",
+    "from": "From",
+    "to": "To",
+    "search_country_placeholder": "Search a country...",
+    "reset": "Reset"
+  },
   "sites": {
     "search_placeholder": "Search a site...",
     "filter_none": "Filter: none",

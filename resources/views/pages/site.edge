@@ -3,28 +3,71 @@
 <main class="sites-main">
   <div class="controls">
     <div class="search-container">
+      <details class="filter-dropdown">
+        <summary class="search-pill filter-dropdown-toggle" title="{{ t('messages.filters.button_title') }}">
+          <span class="material-symbols-outlined">tune</span>
+        </summary>
+        <div class="filter-dropdown-content">
+          <div class="filter-section">
+            <span class="filter-section-title">{{ t('messages.filters.category') }}</span>
+            <div class="filter-options" data-filter-group="category">
+              <label class="filter-option">
+                <input type="checkbox" value="cultural" />
+                <span>{{ t('messages.sites.filter_type_cultural') }}</span>
+              </label>
+              <label class="filter-option">
+                <input type="checkbox" value="natural" />
+                <span>{{ t('messages.sites.filter_type_natural') }}</span>
+              </label>
+              <label class="filter-option">
+                <input type="checkbox" value="mixed" />
+                <span>{{ t('messages.sites.filter_type_mixed') }}</span>
+              </label>
+            </div>
+          </div>
+          <div class="filter-section">
+            <span class="filter-section-title">{{ t('messages.filters.region') }}</span>
+            <div class="filter-options" data-filter-group="region"></div>
+          </div>
+          <div class="filter-section">
+            <span class="filter-section-title">{{ t('messages.filters.country') }}</span>
+            <input class="filter-input" type="text" data-filter-input="country"
+              placeholder="{{ t('messages.filters.search_country_placeholder') }}" />
+          </div>
+          <div class="filter-section">
+            <span class="filter-section-title">{{ t('messages.filters.continent') }}</span>
+            <div class="filter-options" data-filter-group="continent"></div>
+          </div>
+          <div class="filter-section">
+            <span class="filter-section-title">{{ t('messages.filters.date_inscribed') }}</span>
+            <div class="filter-range">
+              <input class="filter-input" type="number" data-filter-input="dateFrom"
+                placeholder="{{ t('messages.filters.from') }}" />
+              <input class="filter-input" type="number" data-filter-input="dateTo"
+                placeholder="{{ t('messages.filters.to') }}" />
+            </div>
+          </div>
+          <div class="filter-actions">
+            <button type="button" class="filter-reset" data-filter-reset>
+              {{ t('messages.filters.reset') }}
+            </button>
+          </div>
+        </div>
+      </details>
       <div class="search-pill">
         <span class="material-symbols-outlined">search</span>
-        <input type="text" placeholder="{{ t('messages.sites.search_placeholder') }}" />
-      </div>
-      <div class="search-pill">
-        <button class="filter" onclick="openFilters()">
-          <span class="material-symbols-outlined">filter_list</span>
-        </button>
-        <p>
-          @if(filter)
-            {{ t('messages.sites.filter_active') }} {{ filter }}
-          @else
-            {{ t('messages.sites.filter_none') }}
-          @end
-        </p>
+        <input id="siteSearchInput" type="text" placeholder="{{ t('messages.sites.search_placeholder') }}" />
       </div>
     </div>
   </div>
 
   <div class="sites-grid">
     @each((unesco) in unescos)
-      <a href="{{ route('site.show', { id: unesco.id }) }}" class="site-box">
+      <a href="{{ route('site.show', { id: unesco.id }) }}" class="site-box"
+        data-category="{{ unesco.category || '' }}"
+        data-region="{{ unesco.region || '' }}"
+        data-countries="{{ Array.isArray(unesco.statesNames) ? unesco.statesNames.join(', ') : (unesco.statesNames || '') }}"
+        data-date-inscribed="{{ unesco.dateInscribed || '' }}">
         @if(unesco.localImageThumb)
           <img src="{{ unesco.localImageThumb }}" class="site-box-img" />
         @else
@@ -63,36 +106,187 @@
     @end
   </div>
 
-  <div id="filterPopup" class="filter-popup">
-    <div class="filter-popup-content">
-      <div class="filter-popup-header">
-        <h2>{{ t('messages.sites.filters_title') }}</h2>
-        <button class="filter-close-btn" onclick="closeFilters()">
-          <span class="material-symbols-outlined">close</span>
-        </button>
-      </div>
-      <div class="filter-popup-body">
-        <div class="filter-section">
-          <label>{{ t('messages.sites.filter_country_label') }}</label>
-          <input type="text" id="countryFilter" placeholder="{{ t('messages.sites.filter_country_placeholder') }}" />
-        </div>
-        <div class="filter-section">
-          <label>{{ t('messages.sites.filter_type_label') }}</label>
-          <select id="typeFilter">
-            <option value="">{{ t('messages.sites.filter_type_all') }}</option>
-            <option value="cultural">{{ t('messages.sites.filter_type_cultural') }}</option>
-            <option value="natural">{{ t('messages.sites.filter_type_natural') }}</option>
-            <option value="mixed">{{ t('messages.sites.filter_type_mixed') }}</option>
-          </select>
-        </div>
-      </div>
-      <div class="filter-popup-footer">
-        <button class="btn-primary" onclick="applyFilters()">{{ t('messages.sites.apply_filters') }}</button>
-        <button class="btn-secondary" onclick="resetFilters()">{{ t('messages.sites.reset_filters') }}</button>
-      </div>
-    </div>
-  </div>
 </main>
+
+<script>
+  const searchInput = document.getElementById("siteSearchInput");
+  const filterCategoryContainer = document.querySelector('[data-filter-group="category"]');
+  const filterRegionContainer = document.querySelector('[data-filter-group="region"]');
+  const filterContinentContainer = document.querySelector('[data-filter-group="continent"]');
+  const filterCountryInput = document.querySelector('[data-filter-input="country"]');
+  const filterDateFromInput = document.querySelector('[data-filter-input="dateFrom"]');
+  const filterDateToInput = document.querySelector('[data-filter-input="dateTo"]');
+  const filterResetButton = document.querySelector('[data-filter-reset]');
+  const siteCards = Array.from(document.querySelectorAll(".site-box"));
+
+  function normalizeSearchValue(value) {
+    return (value || "")
+      .toString()
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .toLowerCase()
+      .trim();
+  }
+
+  const continentByRegion = {
+    "Europe and North America": ["Europe", "North America"],
+    "Latin America and the Caribbean": ["South America", "North America"],
+    "Asia and the Pacific": ["Asia", "Oceania"],
+    "Arab States": ["Asia", "Africa"],
+    "Africa": ["Africa"],
+  };
+
+  function getContinentsByRegion(region) {
+    return continentByRegion[region] || [];
+  }
+
+  function renderCheckboxOptions(container, values) {
+    if (!container) return;
+    container.innerHTML = values
+      .map((value, index) => {
+        const inputId = `${container.dataset.filterGroup || "filter"}-${index}`;
+        return `
+          <label class="filter-option" for="${inputId}">
+            <input type="checkbox" id="${inputId}" value="${normalizeSearchValue(value)}" />
+            <span>${value}</span>
+          </label>
+        `;
+      })
+      .join("");
+  }
+
+  function getSelectedFilterValues(container) {
+    if (!container) return [];
+    return Array.from(container.querySelectorAll('input[type="checkbox"]:checked')).map(
+      (input) => input.value
+    );
+  }
+
+  function matchesAdvancedFilters(site, options) {
+    const {
+      selectedCategories,
+      selectedRegions,
+      selectedContinents,
+      countryQuery,
+      dateFrom,
+      dateTo,
+    } = options;
+
+    if (selectedCategories.length) {
+      const categoryValue = normalizeSearchValue(site.dataset.category);
+      if (!categoryValue || !selectedCategories.includes(categoryValue)) {
+        return false;
+      }
+    }
+
+    if (selectedRegions.length) {
+      const regionValue = normalizeSearchValue(site.dataset.region);
+      if (!regionValue || !selectedRegions.includes(regionValue)) {
+        return false;
+      }
+    }
+
+    if (selectedContinents.length) {
+      const continents = getContinentsByRegion(site.dataset.region).map(normalizeSearchValue);
+      if (!continents.some((continent) => selectedContinents.includes(continent))) {
+        return false;
+      }
+    }
+
+    if (countryQuery) {
+      const countries = normalizeSearchValue(site.dataset.countries);
+      if (!countries.includes(countryQuery)) {
+        return false;
+      }
+    }
+
+    const dateValue = Number.parseInt(site.dataset.dateInscribed || "", 10);
+    if (!Number.isNaN(dateFrom) && (!dateValue || dateValue < dateFrom)) {
+      return false;
+    }
+
+    if (!Number.isNaN(dateTo) && (!dateValue || dateValue > dateTo)) {
+      return false;
+    }
+
+    return true;
+  }
+
+  function filterSites() {
+    const searchQuery = normalizeSearchValue(searchInput?.value);
+    const selectedCategories = getSelectedFilterValues(filterCategoryContainer);
+    const selectedRegions = getSelectedFilterValues(filterRegionContainer);
+    const selectedContinents = getSelectedFilterValues(filterContinentContainer);
+    const countryQuery = normalizeSearchValue(filterCountryInput?.value);
+    const dateFrom = Number.parseInt(filterDateFromInput?.value || "", 10);
+    const dateTo = Number.parseInt(filterDateToInput?.value || "", 10);
+
+    siteCards.forEach((site) => {
+      const siteName = normalizeSearchValue(site.querySelector(".site-box-info h3")?.textContent);
+      const countryName = normalizeSearchValue(site.dataset.countries);
+      const siteText = `${siteName} ${countryName}`;
+
+      const matchesSearch = !searchQuery || siteText.includes(searchQuery);
+      const matchesAdvanced = matchesAdvancedFilters(site, {
+        selectedCategories,
+        selectedRegions,
+        selectedContinents,
+        countryQuery,
+        dateFrom,
+        dateTo,
+      });
+
+      site.style.display = matchesSearch && matchesAdvanced ? "flex" : "none";
+    });
+  }
+
+  function resetAdvancedFilters() {
+    document
+      .querySelectorAll('.filter-dropdown-content input[type="checkbox"]')
+      .forEach((input) => {
+        input.checked = false;
+      });
+
+    if (filterCountryInput) {
+      filterCountryInput.value = "";
+    }
+
+    if (filterDateFromInput) {
+      filterDateFromInput.value = "";
+    }
+
+    if (filterDateToInput) {
+      filterDateToInput.value = "";
+    }
+
+    filterSites();
+  }
+
+  function setupAdvancedFilters() {
+    const regions = [...new Set(siteCards.map((site) => site.dataset.region).filter(Boolean))].sort();
+    const continents = [
+      ...new Set(regions.flatMap((region) => getContinentsByRegion(region)).filter(Boolean)),
+    ].sort();
+
+    renderCheckboxOptions(filterRegionContainer, regions);
+    renderCheckboxOptions(filterContinentContainer, continents);
+
+    document.querySelectorAll(".filter-dropdown-content input").forEach((input) => {
+      const eventName = input.type === "checkbox" ? "change" : "input";
+      input.addEventListener(eventName, filterSites);
+    });
+
+    if (filterResetButton) {
+      filterResetButton.addEventListener("click", resetAdvancedFilters);
+    }
+  }
+
+  if (searchInput) {
+    searchInput.addEventListener("input", filterSites);
+  }
+
+  setupAdvancedFilters();
+</script>
 
 <style>
 
