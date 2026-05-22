@@ -7,6 +7,7 @@ export default class extends BaseSchema {
     this.schema.alterTable(this.tableName, (table) => {
       table.string('local_image_main').nullable()
       table.string('local_image_thumb').nullable()
+      table.string('local_image_visited_sites').nullable()
     })
   }
 
@@ -14,6 +15,7 @@ export default class extends BaseSchema {
     this.schema.alterTable(this.tableName, (table) => {
       table.dropColumn('local_image_main')
       table.dropColumn('local_image_thumb')
+      table.dropColumn('local_image_visited_sites')
     })
   }
 }
