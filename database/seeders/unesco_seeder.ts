@@ -10,7 +10,8 @@ export default class extends BaseSeeder {
   async run() {
     const parseBoolean = (val: any) => val === 'True' || val === true
 
-    await Unesco.createMany(
+    await Unesco.updateOrCreateMany(
+      'idNo',
       unescos.results.map((item: any) => ({
         uuid: item.uuid,
         idNo: item.id_no,
