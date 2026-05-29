@@ -83,7 +83,7 @@
               @end
               <div class="site-box-info">
                 <h3>
-                  {{ unesco.nameFr }}
+                  {{ i18n.locale === 'en' ? (unesco.nameEn || unesco.nameFr) : (unesco.nameFr || unesco.nameEn) }}
                 </h3>
                 <p>
                   {{ unesco.statesNames }}

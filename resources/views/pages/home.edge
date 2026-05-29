@@ -72,7 +72,7 @@
           <img src="https://placehold.co/600x400" class="card-img" />
           @end
           <h4>
-            {{ unesco.nameFr }}
+            {{ i18n.locale === 'en' ? (unesco.nameEn || unesco.nameFr) : (unesco.nameFr || unesco.nameEn) }}
           </h4>
           <p>
             {{ unesco.statesNames }}
@@ -138,6 +138,14 @@
   // Set up the routes for markers
   const visitUrlTemplate = "{{ route('marker.visit', { unescoId: '__ID__' }) }}";
   const markUrlTemplate = "{{ route('marker.mark', { unescoId: '__ID__' }) }}";
+
+  function getLocalizedName(unesco) {
+    return currentLocale === "en"
+      ? (unesco.nameEn || unesco.nameFr)
+      : (unesco.nameFr || unesco.nameEn);
+  }
+
+  const currentLocale = "{{ i18n.locale || 'fr' }}";
 
   let activeFilter = "all"; // "all" | "visited" | "marked"
   let searchQuery = "";
@@ -273,7 +281,7 @@
           <div class="site-card" onclick="handleCardClick(${index}, ${unesco.id}, ${unesco.coordinates.lon}, ${unesco.coordinates.lat})">
             <div class="card-info">
               <img src="${unesco.localImageThumb || "https://placehold.co/600x400"}" class="card-img" />
-              <h4>${unesco.nameFr || unesco.nameEn || "Site UNESCO"}</h4>
+              <h4>${getLocalizedName(unesco) || "Site UNESCO"}</h4>
               <p>${unesco.statesNames || ""}</p>
             </div>
           </div>
