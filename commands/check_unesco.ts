@@ -30,7 +30,7 @@ export default class CheckUnesco extends BaseCommand {
     await writeFile(cachePath, String(currentUpdate))
 
     await this.kernel.exec('get:data', [])
-    await this.kernel.exec('db:seed', [])
+    await this.kernel.exec('db:seed', ['--files=database/seeders/unesco_seeder.ts'])
 
     this.logger.success('Successfully finished')
   }
