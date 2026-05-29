@@ -12,7 +12,7 @@ export default class UnescosController {
     await auth.check()
     const unescos = await Unesco.query().exec()
 
-    let markers = null
+    let markers: Marker[] = []
     if (auth.user) {
       // Gets the user's markers if he's logged in
       markers = await Marker.query().where('user_id', auth.user.id).exec()
@@ -23,10 +23,10 @@ export default class UnescosController {
   }
 
   async sites({ auth, view }: HttpContext) {
-        await auth.check()
+    await auth.check()
     const unescos = await Unesco.query().exec()
 
-    let markers = null
+    let markers: Marker[] = []
     if (auth.user) {
       // Gets the user's markers if he's logged in
       markers = await Marker.query().where('user_id', auth.user.id).exec()
@@ -159,18 +159,23 @@ export default class UnescosController {
       .slice(0, 3)
       .map((m) => ({
         name: m.unesco.nameFr || m.unesco.nameEn,
-        country: Array.isArray(m.unesco.statesNames) ? m.unesco.statesNames.join(', ') : (m.unesco.statesNames || ''),
+        country: Array.isArray(m.unesco.statesNames)
+          ? m.unesco.statesNames.join(', ')
+          : m.unesco.statesNames || '',
         id: m.unesco.id,
         date: m.updatedAt.setLocale('fr').toFormat('d MMMM yyyy'),
       }))
 
     // Group visited markers by region (continent)
-    const visitedByRegionMap: Record<string, Array<{
-      id: number
-      name: string
-      category: string | null
-      addedAt: string
-    }>> = {}
+    const visitedByRegionMap: Record<
+      string,
+      Array<{
+        id: number
+        name: string
+        category: string | null
+        addedAt: string
+      }>
+    > = {}
 
     visitedMarkers.forEach((m) => {
       if (m.unesco) {
@@ -201,12 +206,15 @@ export default class UnescosController {
       .sort((a, b) => a.regionName.localeCompare(b.regionName))
 
     // Group marked markers by region (continent)
-    const markedByRegionMap: Record<string, Array<{
-      id: number
-      name: string
-      category: string | null
-      addedAt: string
-    }>> = {}
+    const markedByRegionMap: Record<
+      string,
+      Array<{
+        id: number
+        name: string
+        category: string | null
+        addedAt: string
+      }>
+    > = {}
 
     markedMarkers.forEach((m) => {
       if (m.unesco) {
@@ -269,12 +277,12 @@ export default class UnescosController {
   /**
    * Display form to create a new record
    */
-  async create({ }: HttpContext) { }
+  async create({}: HttpContext) {}
 
   /**
    * Handle form submission for the create action
    */
-  async store({ request }: HttpContext) { }
+  async store({ request }: HttpContext) {}
 
   /**
    * Show individual record
@@ -294,15 +302,15 @@ export default class UnescosController {
   /**
    * Edit individual record
    */
-  async edit({ params }: HttpContext) { }
+  async edit({ params }: HttpContext) {}
   /**
 
    * Handle form submission for the edit action
    */
-  async update({ params, request }: HttpContext) { }
+  async update({ params, request }: HttpContext) {}
 
   /**
    * Delete record
    */
-  async destroy({ params }: HttpContext) { }
+  async destroy({ params }: HttpContext) {}
 }
