@@ -2,20 +2,12 @@
 
 /* --- VARIABLES ET CONFIGURATION GLOBALE --- */
 :root {
-  --primary: #2563eb;
-  --primary-hover: #1d4ed8;
-  --bg-main: #f8fafc;
-  --bg-card: #ffffff;
-  --text-main: #1e293b;
-  --text-muted: #64748b;
-  --border-color: #e2e8f0;
-  --background-color: #0f172a;
-  --radius: 12px;
   --font-size-base: clamp(1rem, 0.95rem + 0.25vw, 1.125rem);
   --font-size-h3: clamp(1.5rem, 1.3rem + 1vw, 2.25rem);
   --sidebar-width: 120px;
 }
-
+[data-theme='light'] {
+}
 * {
   font-family: 'K2D', sans-serif;
   box-sizing: border-box;
