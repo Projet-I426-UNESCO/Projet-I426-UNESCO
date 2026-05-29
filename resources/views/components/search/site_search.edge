@@ -1,0 +1,93 @@
+
+
+<!-- FILTER DROPDOWN -->
+<details class="filter-dropdown">
+
+  <summary class="search-pill filter-dropdown-toggle"
+    title="{{ t('messages.filters.button_title') }}">
+
+    <span class="material-symbols-outlined">tune</span>
+  </summary>
+
+  <div class="filter-dropdown-content">
+
+    <!-- CATEGORY -->
+    <div class="filter-section">
+      <span class="filter-section-title">{{ t('messages.filters.category') }}</span>
+
+      <div class="filter-options" data-filter-group="category">
+        <label class="filter-option">
+          <input type="checkbox" value="cultural" />
+          <span>{{ t('messages.sites.filter_type_cultural') }}</span>
+        </label>
+
+        <label class="filter-option">
+          <input type="checkbox" value="natural" />
+          <span>{{ t('messages.sites.filter_type_natural') }}</span>
+        </label>
+
+        <label class="filter-option">
+          <input type="checkbox" value="mixed" />
+          <span>{{ t('messages.sites.filter_type_mixed') }}</span>
+        </label>
+      </div>
+    </div>
+
+    <!-- REGION (dynamic) -->
+    <div class="filter-section">
+      <span class="filter-section-title">{{ t('messages.filters.region') }}</span>
+      <div class="filter-options" data-filter-group="region"></div>
+    </div>
+
+    <!-- COUNTRY -->
+    <div class="filter-section">
+      <span class="filter-section-title">{{ t('messages.filters.country') }}</span>
+
+      <input class="filter-input"
+              type="text"
+              data-filter-input="country"
+              placeholder="{{ t('messages.filters.search_country_placeholder') }}" />
+    </div>
+
+    <!-- CONTINENT (dynamic) -->
+    <div class="filter-section">
+      <span class="filter-section-title">{{ t('messages.filters.continent') }}</span>
+      <div class="filter-options" data-filter-group="continent"></div>
+    </div>
+
+    <!-- DATE RANGE -->
+    <div class="filter-section">
+      <span class="filter-section-title">{{ t('messages.filters.date_inscribed') }}</span>
+
+      <div class="filter-range">
+        <input class="filter-input"
+                type="number"
+                data-filter-input="dateFrom"
+                placeholder="{{ t('messages.filters.from') }}" />
+
+        <input class="filter-input"
+                type="number"
+                data-filter-input="dateTo"
+                placeholder="{{ t('messages.filters.to') }}" />
+      </div>
+    </div>
+
+    <!-- RESET -->
+    <div class="filter-actions">
+      <button type="button" class="filter-reset" data-filter-reset>
+        {{ t('messages.filters.reset') }}
+      </button>
+    </div>
+
+  </div>
+</details>
+
+<!-- SEARCH INPUT -->
+<div class="search-pill">
+  <span class="material-symbols-outlined">search</span>
+
+  <input id="siteSearchInput"
+          type="text"
+          placeholder="{{ t('messages.home.search_placeholder') }}"
+          autocomplete="off" />
+</div>
