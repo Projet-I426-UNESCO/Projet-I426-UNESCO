@@ -7,7 +7,7 @@ import env from '#start/env'
 
 export default class UnescosController {
   /**
-   * Display a list of resource
+   * Affiche une liste de ressources
    */
   async index({ view, auth }: HttpContext) {
     await auth.check()
@@ -15,7 +15,7 @@ export default class UnescosController {
 
     let markers: Marker[] = []
     if (auth.user) {
-      // Gets the user's markers if he's logged in
+      // Récupère les marqueurs de l'utilisateur s'il est connecté
       markers = await Marker.query().where('user_id', auth.user.id).exec()
     }
     const mapboxToken = env.get('MAPBOX_ACCESS_TOKEN')
@@ -30,7 +30,7 @@ export default class UnescosController {
 
     let markers: Marker[] = []
     if (auth.user) {
-      // Gets the user's markers if he's logged in
+      // Récupère les marqueurs de l'utilisateur s'il est connecté
       markers = await Marker.query().where('user_id', auth.user.id).exec()
     }
 
@@ -76,20 +76,20 @@ export default class UnescosController {
   }
 
   async profile({ view, auth }: HttpContext) {
-    const userId = auth.user!.id
+    const userId = auth.user!.id // récupérer l'id de l'utilisateur
 
-    const markers = await Marker.query().where('user_id', userId).preload('unesco')
+    const markers = await Marker.query().where('user_id', userId).preload('unesco') // récupérer les markers de l'utilisateur
 
     const visitedMarkers = markers.filter((m) => m.isVisited)
     const markedMarkers = markers.filter((m) => m.isMarked)
 
-    const totalSites = await Unesco.query().count('* as total').first()
-    const totalCount = totalSites ? totalSites.$extras.total : 0
+    const totalSites = await Unesco.query().count('* as total').first() // récupérer le nombre total des sites UNESCO
+    const totalCount = totalSites ? totalSites.$extras.total : 0 // compte le nombre total des sites UNESCO
 
     const lastVisit =
-      visitedMarkers.length > 0 ? visitedMarkers[visitedMarkers.length - 1].unesco : null
+      visitedMarkers.length > 0 ? visitedMarkers[visitedMarkers.length - 1].unesco : null // Le dernier site visité
 
-    const visitsByRegion: Record<string, number> = {}
+    const visitsByRegion: Record<string, number> = {} // calculer le nombre des sites visités par regino
     visitedMarkers.forEach((marker) => {
       if (marker.unesco && marker.unesco.region) {
         visitsByRegion[marker.unesco.region] = (visitsByRegion[marker.unesco.region] || 0) + 1
@@ -97,11 +97,12 @@ export default class UnescosController {
     })
 
     const completionPercentage =
-      totalCount > 0 ? Math.round((visitedMarkers.length / totalCount) * 100 * 10) / 10 : 0
+      totalCount > 0 ? Math.round((visitedMarkers.length / totalCount) * 100 * 10) / 10 : 0 // calcule le pourcentage globale de progression
 
-    const allRegions = await Unesco.query().whereNotNull('region').select('region').distinct()
+    const allRegions = await Unesco.query().whereNotNull('region').select('region').distinct() // récupère les régions de la db
 
     const regionStats: Array<{
+      // calculer les stats par région
       region: string
       visited: number
       total: number
@@ -109,6 +110,7 @@ export default class UnescosController {
       colorIndex: number
     }> = []
 
+    // parcourt chaque region pour calculer les stats
     allRegions.forEach((row, index) => {
       if (row.region) {
         const visited = visitsByRegion[row.region] || 0
@@ -126,11 +128,11 @@ export default class UnescosController {
       const total = await Unesco.query()
         .where('region', regionStats[i].region)
         .count('* as count')
-        .first()
-      const totalInRegion = total ? total.$extras.count : 0
-      regionStats[i].total = totalInRegion
+        .first() // compter le nombre total de sites par région
+      const totalInRegion = total ? total.$extras.count : 0 // nombre total de sites dans la région, si rien envoie 0
+      regionStats[i].total = totalInRegion // màj le total de sites
       regionStats[i].percentage =
-        totalInRegion > 0 ? Math.round((regionStats[i].visited / totalInRegion) * 100) : 0
+        totalInRegion > 0 ? Math.round((regionStats[i].visited / totalInRegion) * 100) : 0 // calcule le pourcentage de progression dans la région
     }
 
     const mostVisitedCountry = (() => {
@@ -142,11 +144,11 @@ export default class UnescosController {
           Array.isArray(marker.unesco.statesNames) &&
           marker.unesco.statesNames.length > 0
         ) {
-          const country = marker.unesco.statesNames[0]
-          countries[country] = (countries[country] || 0) + 1
+          const country = marker.unesco.statesNames[0] // Prend le premier pays de la liste
+          countries[country] = (countries[country] || 0) + 1 // incrémente le compteur
         }
       })
-      const sorted = Object.entries(countries).sort(([, a], [, b]) => b - a)
+      const sorted = Object.entries(countries).sort(([, a], [, b]) => b - a) // trie par nmbr de visites
       return sorted.length > 0 ? sorted[0][0] : null
     })()
 
@@ -168,7 +170,7 @@ export default class UnescosController {
         date: m.updatedAt.setLocale('fr').toFormat('d MMMM yyyy'),
       }))
 
-    // Group visited markers by region (continent)
+    // Regroupe les marqueurs visités par région (continent)
     const visitedByRegionMap: Record<
       string,
       Array<{
@@ -194,12 +196,12 @@ export default class UnescosController {
       }
     })
 
-    // Sort sites under each region alphabetically
+    // Trie les sites de chaque région par ordre alphabétique
     Object.keys(visitedByRegionMap).forEach((regionName) => {
       visitedByRegionMap[regionName].sort((a, b) => a.name.localeCompare(b.name))
     })
 
-    // Convert map to sorted array of objects for safe Edge template rendering
+    // Convertit la map en tableau trié d'objets pour un rendu sûr dans le template Edge
     const visitedByRegion = Object.entries(visitedByRegionMap)
       .map(([regionName, sites]) => ({
         regionName,
@@ -207,7 +209,7 @@ export default class UnescosController {
       }))
       .sort((a, b) => a.regionName.localeCompare(b.regionName))
 
-    // Group marked markers by region (continent)
+    // Regroupe les marqueurs marqués par région (continent)
     const markedByRegionMap: Record<
       string,
       Array<{
@@ -233,12 +235,12 @@ export default class UnescosController {
       }
     })
 
-    // Sort sites under each region alphabetically
+    // Trie les sites de chaque région par ordre alphabétique
     Object.keys(markedByRegionMap).forEach((regionName) => {
       markedByRegionMap[regionName].sort((a, b) => a.name.localeCompare(b.name))
     })
 
-    // Convert map to sorted array of objects
+    // Convertit la map en tableau trié d'objets
     const markedByRegion = Object.entries(markedByRegionMap)
       .map(([regionName, sites]) => ({
         regionName,
@@ -246,7 +248,7 @@ export default class UnescosController {
       }))
       .sort((a, b) => a.regionName.localeCompare(b.regionName))
 
-    // Format all markers with coordinates for the interactive profile map
+    // Formate tous les marqueurs avec leurs coordonnées pour la carte interactive du profil
     const mapMarkers = markers
       .filter((m) => m.unesco && m.unesco.coordinates)
       .map((m) => ({
@@ -276,48 +278,22 @@ export default class UnescosController {
       mapMarkers,
       visitedByRegion,
       markedByRegion,
-      mapboxToken
+      mapboxToken,
     })
   }
-  /**
-   * Display form to create a new record
-   */
-  async create({ }: HttpContext) { }
 
   /**
-   * Handle form submission for the create action
-   */
-  async store({ request }: HttpContext) { }
-
-  /**
-   * Show individual record
+   * Affiche une fiche individuelle
    */
   async show({ params, view, auth }: HttpContext) {
     await auth.check()
     const unesco = await Unesco.query().where('id', params.id).firstOrFail()
     let markers = null
     if (auth.user) {
-      // Gets the user's markers if he's logged in
+      // Récupère les marqueurs de l'utilisateur s'il est connecté
       markers = await Marker.query().where('user_id', auth.user.id).exec()
     }
-
     const mapboxToken = env.get('MAPBOX_ACCESS_TOKEN')
-
     return view.render('pages/site', { unesco, markers, mapboxToken })
   }
-
-  /**
-   * Edit individual record
-   */
-  async edit({ params }: HttpContext) { }
-  /**
-
-   * Handle form submission for the edit action
-   */
-  async update({ params, request }: HttpContext) { }
-
-  /**
-   * Delete record
-   */
-  async destroy({ params }: HttpContext) { }
 }
