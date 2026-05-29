@@ -1,399 +1,381 @@
 @layout('components/layout/index', { title: 'Sites', page: 'sites' })
 
-<main class="sites-main">
-  <div class="controls">
-    <div class="search-container">
-      <details class="filter-dropdown">
-        <summary class="search-pill filter-dropdown-toggle" title="{{ t('messages.filters.button_title') }}">
-          <span class="material-symbols-outlined">tune</span>
-        </summary>
-        <div class="filter-dropdown-content">
-          <div class="filter-section">
-            <span class="filter-section-title">{{ t('messages.filters.category') }}</span>
-            <div class="filter-options" data-filter-group="category">
-              <label class="filter-option">
-                <input type="checkbox" value="cultural" />
-                <span>{{ t('messages.sites.filter_type_cultural') }}</span>
-              </label>
-              <label class="filter-option">
-                <input type="checkbox" value="natural" />
-                <span>{{ t('messages.sites.filter_type_natural') }}</span>
-              </label>
-              <label class="filter-option">
-                <input type="checkbox" value="mixed" />
-                <span>{{ t('messages.sites.filter_type_mixed') }}</span>
-              </label>
+  <main class="sites-main">
+    <div class="controls">
+      <div class="search-container">
+        <details class="filter-dropdown">
+          <summary class="search-pill filter-dropdown-toggle" title="{{ t('messages.filters.button_title') }}">
+            <span class="material-symbols-outlined">tune</span>
+          </summary>
+          <div class="filter-dropdown-content">
+            <div class="filter-section">
+              <span class="filter-section-title">{{ t('messages.filters.category') }}</span>
+              <div class="filter-options" data-filter-group="category">
+                <label class="filter-option">
+                  <input type="checkbox" value="cultural" />
+                  <span>{{ t('messages.sites.filter_type_cultural') }}</span>
+                </label>
+                <label class="filter-option">
+                  <input type="checkbox" value="natural" />
+                  <span>{{ t('messages.sites.filter_type_natural') }}</span>
+                </label>
+                <label class="filter-option">
+                  <input type="checkbox" value="mixed" />
+                  <span>{{ t('messages.sites.filter_type_mixed') }}</span>
+                </label>
+              </div>
             </div>
-          </div>
-          <div class="filter-section">
-            <span class="filter-section-title">{{ t('messages.filters.region') }}</span>
-            <div class="filter-options" data-filter-group="region"></div>
-          </div>
-          <div class="filter-section">
-            <span class="filter-section-title">{{ t('messages.filters.country') }}</span>
-            <input class="filter-input" type="text" data-filter-input="country"
-              placeholder="{{ t('messages.filters.search_country_placeholder') }}" />
-          </div>
-          <div class="filter-section">
-            <span class="filter-section-title">{{ t('messages.filters.continent') }}</span>
-            <div class="filter-options" data-filter-group="continent"></div>
-          </div>
-          <div class="filter-section">
-            <span class="filter-section-title">{{ t('messages.filters.date_inscribed') }}</span>
-            <div class="filter-range">
-              <input class="filter-input" type="number" data-filter-input="dateFrom"
-                placeholder="{{ t('messages.filters.from') }}" />
-              <input class="filter-input" type="number" data-filter-input="dateTo"
-                placeholder="{{ t('messages.filters.to') }}" />
+            <div class="filter-section">
+              <span class="filter-section-title">{{ t('messages.filters.region') }}</span>
+              <div class="filter-options" data-filter-group="region">
+              </div>
             </div>
-          </div>
-          <div class="filter-actions">
-            <button type="button" class="filter-reset" data-filter-reset>
-              {{ t('messages.filters.reset') }}
+            <div class="filter-section">
+              <span class="filter-section-title">{{ t('messages.filters.country') }}</span>
+              <input
+                class="filter-input"
+                type="text"
+                data-filter-input="country"
+                placeholder="{{ t('messages.filters.search_country_placeholder') }}"
+              />
+            </div>
+            <div class="filter-section">
+              <span class="filter-section-title">{{ t('messages.filters.continent') }}</span>
+              <div class="filter-options" data-filter-group="continent">
+              </div>
+            </div>
+            <div class="filter-section">
+              <span class="filter-section-title">{{ t('messages.filters.date_inscribed') }}</span>
+              <div class="filter-range">
+                <input
+                  class="filter-input"
+                  type="number"
+                  data-filter-input="dateFrom"
+                  placeholder="{{ t('messages.filters.from') }}"
+                />
+                <input
+                  class="filter-input"
+                  type="number"
+                  data-filter-input="dateTo"
+                  placeholder="{{ t('messages.filters.to') }}"
+                />
+              </div>
+            </div>
+            <div class="filter-actions">
+              <button type="button" class="filter-reset" data-filter-reset>
+                {{ t('messages.filters.reset') }}
             </button>
+            </div>
           </div>
+        </details>
+        <div class="search-pill" style="flex: 1; min-width: 200px;">
+          <span class="material-symbols-outlined">search</span>
+          <input
+            id="siteSearchInput"
+            type="text"
+            placeholder="{{ t('messages.sites.search_placeholder') }}"
+            autocomplete="off"
+          />
         </div>
-      </details>
-      <div class="search-pill" style="flex: 1; min-width: 200px;">
-        <span class="material-symbols-outlined">search</span>
-        <input id="siteSearchInput" type="text" placeholder="{{ t('messages.sites.search_placeholder') }}"
-          autocomplete="off" />
       </div>
     </div>
-  </div>
 
-   <div class="sites-grid">
-    @if(unescos && unescos.length > 0)
-    @each((unesco) in unescos)
-    @let(marker = markers.find(m => m.unescoId == unesco.id))
-    <div class="site-box">
+    <div class="sites-grid">
+      @if(unescos && unescos.length > 0)
+        @each((unesco) in unescos)
+          @let(marker = markers.find(m => m.unescoId == unesco.id))
+          <div class="site-box">
 
-      <a href="{{ route('site.show', { id: unesco.id }) }}">
-        @if(unesco.localImageThumb)
-        <img src="{{ unesco.localImageMain }}" class="site-box-img" />
+            <a href="{{ route('site.show', { id: unesco.id }) }}">
+              @if(unesco.localImageThumb)
+                <img src="{{ unesco.localImageMain }}" class="site-box-img" />
+              @else
+                <img src="../../../public/placeholders/placeholderImage.png" class="site-box-img" />
+              @end
+              <div class="site-box-info">
+                <h3>
+                  {{ unesco.nameFr }}
+                </h3>
+                <p>
+                  {{ unesco.statesNames }}
+                </p>
+              </div>
+            </a>
+
+            <div class="add_button">
+              <button
+                class="btn-primary"
+                id="visitSiteBtn{{ unesco.id }}"
+                onclick="visitSite('{{ route('marker.visit', { unescoId: unesco.id }) }}', {{ unesco.id }})"
+              >
+                @if(marker && marker.isVisited)
+                  {{ t('messages.home.remove_from_visited') }}
+                @else
+                  {{ t('messages.home.add_to_visited') }}
+                @end
+              </button>
+              <button
+                class="btn-primary button_mark"
+                id="markSiteBtn{{ unesco.id }}"
+                onclick="markSite('{{ route('marker.mark', { unescoId: unesco.id }) }}', {{ unesco.id }})"
+              >                <span>
+                  @if(marker && marker.isMarked)
+                    {{ t('messages.home.unmark_site') }}
+                  @else
+                    {{ t('messages.home.mark_site') }}
+                  @end
+                </button>
+              </div>
+            </div>
+          @end
         @else
-        <img src="../../../public/placeholders/placeholderImage.png" class="site-box-img" />
-        @end
-        <div class="site-box-info">
-          <h3>
-            {{ unesco.nameFr }}
-          </h3>
-          <p>
-            {{ unesco.statesNames }}
+          <p class="no_site">
+            Vous n'avez pas encore de site visité.
           </p>
-        </div>
-      </a>
-
-      <div class="add_button">
-        <button class="btn-primary" id="visitSiteBtn{{unesco.id}}"
-          onclick="visitSite('{{ route('marker.visit', { unescoId: unesco.id }) }}', {{unesco.id}})">
-          @if(marker && marker.isVisited)
-            {{ t('messages.home.remove_from_visited') }}
-          @else
-            {{ t('messages.home.add_to_visited') }}
-          @end
-        </button>
-        <button class="btn-primary button_mark" id="markSiteBtn{{unesco.id}}"
-          onclick="markSite('{{ route('marker.mark', { unescoId: unesco.id }) }}', {{unesco.id}})"> <span>
-          @if(marker && marker.isMarked)
-            {{ t('messages.home.unmark_site') }}
-          @else
-            {{ t('messages.home.mark_site') }}
-            
-          @end
-        </button>
+        @end
       </div>
-    </div>
-    @end
-    @else
-    <p class="no_site">Vous n'avez pas encore de site visité.</p>
-    @end
-  </div>
 
-</main>
+    </main>
 
-<style>
-  .sites-grid {
-    gap: 20px;
-  }
+    <script>
+      // ===== Markers =====
+      const csrfToken = "{{ csrfToken }}";
 
-  .add_button {
-    margin-top: auto;
-    margin-bottom: 10px;
-  }
+      const markersData = {{{ JSON.stringify(markers) }}};
 
-  .button_mark {
-    background-color: #313644 !important;
-  }
-
-  .no_site {
-    color: white;
-  }
-</style>
-
-<script>
-
-  // ===== Markers =====
-
-  const csrfToken = "{{ csrfToken }}";
-  const markersData = {{{ JSON.stringify(markers) }}};
-
-  async function visitSite(url, unescoId) {
-    try {
-      const res = await fetch(url, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "x-csrf-token": csrfToken
+      async function visitSite(url, unescoId) {
+        try {
+          const res = await fetch(url, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "x-csrf-token": csrfToken
+            }
+          });
+          if (!res.ok) throw new Error("Request failed");
+          console.log(`Visiting sequence with unescoId : ${unescoId} `);
+          flipVisitSiteUI(unescoId);
+        } catch (err) {
+          console.error(err);
         }
-      });
+      }
 
-      if (!res.ok) throw new Error("Request failed");
-
-      console.log(`Visiting sequence with unescoId : ${unescoId} `);
-
-      flipVisitSiteUI(unescoId)
-
-    } catch (err) {
-      console.error(err);
-    }
-  }
-
-  async function markSite(url, unescoId) {
-    try {
-      const res = await fetch(url, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "x-csrf-token": csrfToken
+      async function markSite(url, unescoId) {
+        try {
+          const res = await fetch(url, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "x-csrf-token": csrfToken
+            }
+          });
+          if (!res.ok) throw new Error("Request failed");
+          console.log(`Marking sequence with unescoId : ${unescoId} `);
+          flipMarkSiteUI(unescoId);
+        } catch (err) {
+          console.error(err);
         }
-      });
-
-      if (!res.ok) throw new Error("Request failed");
-
-      console.log(`Marking sequence with unescoId : ${unescoId} `);
-
-      flipMarkSiteUI(unescoId)
-
-    } catch (err) {
-      console.error(err);
-    }
-  }
-
-  function flipVisitSiteUI(unescoId) {
-    // if the marker exists Flip the isVisited value in UI
-    if (markersData) {
-      const marker = markersData.find((marker) => marker.unescoId == unescoId)
-      const button = document.getElementById("visitSiteBtn" + unescoId)
-      console.log(button)
-      if (marker) {
-        markersData[markersData.findIndex((marker) => marker.unescoId == unescoId)].isVisited = !marker.isVisited
-        button.innerText = marker.isVisited ? "{{ t('messages.home.remove_from_visited') }}" : "{{ t('messages.home.add_to_visited') }}"
-        // Flips the isVisited in the gotten data, it modifies the now local data, not the distant one, simply to keep the UI up to date.
-      } else {
-        markersData.push({ isMarked: 0, isVisited: 1, unescoId: unescoId })
-        button.innerText = "{{ t('messages.home.remove_from_visited') }}"
       }
-    }
-  }
 
-  function flipMarkSiteUI(unescoId) {
-    // if the marker exists Flip the isMarked value in UI
-    if (markersData) {
-      const marker = markersData.find((marker) => marker.unescoId == unescoId)
-      const button = document.getElementById("markSiteBtn" + unescoId)
-      console.log(button)
-      if (marker) {
-        markersData[markersData.findIndex((marker) => marker.unescoId == unescoId)].isMarked = !marker.isMarked
-        button.innerText = marker.isMarked ? "{{ t('messages.home.unmark_site') }}" : "{{ t('messages.home.mark_site') }}"
-        // Flips the isMarked in the gotten data, it modifies the now local data, not the distant one, simply to keep the UI up to date.
-      } else {
-        // If the marker doesn't exist we manually, locally create it as the db would and change it's values manually
-        markersData.push({ isMarked: 1, isVisited: 0, unescoId: unescoId })
-        button.innerText = "{{ t('messages.home.unmark_site') }}"
+      function flipVisitSiteUI(unescoId) {
+        // if the marker exists Flip the isVisited value in UI
+        if (markersData) {
+          const marker = markersData.find(marker => marker.unescoId == unescoId);
+          const button = document.getElementById("visitSiteBtn" + unescoId);
+          console.log(button);
+          if (marker) {
+            markersData[markersData.findIndex(marker => marker.unescoId == unescoId)].isVisited = !marker.isVisited;
+            button.innerText = marker.isVisited ? "{{ t('messages.home.remove_from_visited') }}" : "{{ t('messages.home.add_to_visited') }}";
+            // Flips the isVisited in the gotten data, it modifies the now local data, not the distant one, simply to keep the UI up to date.
+          } else {
+            markersData.push({
+              isMarked: 0,
+              isVisited: 1,
+              unescoId: unescoId
+            });
+            button.innerText = "{{ t('messages.home.remove_from_visited') }}";
+          }
+        }
       }
-    }
-  }
 
-  // ===== Filter =====
-
-  const searchInput = document.getElementById("siteSearchInput");
-  const filterCategoryContainer = document.querySelector('[data-filter-group="category"]');
-  const filterRegionContainer = document.querySelector('[data-filter-group="region"]');
-  const filterContinentContainer = document.querySelector('[data-filter-group="continent"]');
-  const filterCountryInput = document.querySelector('[data-filter-input="country"]');
-  const filterDateFromInput = document.querySelector('[data-filter-input="dateFrom"]');
-  const filterDateToInput = document.querySelector('[data-filter-input="dateTo"]');
-  const filterResetButton = document.querySelector('[data-filter-reset]');
-  const siteCards = Array.from(document.querySelectorAll(".site-box"));
-
-  function normalizeSearchValue(value) {
-    return (value || "")
-      .toString()
-      .normalize("NFD")
-      .replace(/[\u0300-\u036f]/g, "")
-      .toLowerCase()
-      .trim();
-  }
-
-  const continentByRegion = {
-    "Europe and North America": ["Europe", "North America"],
-    "Latin America and the Caribbean": ["South America", "North America"],
-    "Asia and the Pacific": ["Asia", "Oceania"],
-    "Arab States": ["Asia", "Africa"],
-    "Africa": ["Africa"],
-  };
-
-  function getContinentsByRegion(region) {
-    return continentByRegion[region] || [];
-  }
-
-  function renderCheckboxOptions(container, values) {
-    if (!container) return;
-    container.innerHTML = values
-      .map((value, index) => {
-        const inputId = `${container.dataset.filterGroup || "filter"}-${index}`;
-        return `
-          <label class="filter-option" for="${inputId}">
-            <input type="checkbox" id="${inputId}" value="${normalizeSearchValue(value)}" />
-            <span>${value}</span>
-          </label>
-        `;
-      })
-      .join("");
-  }
-
-  function getSelectedFilterValues(container) {
-    if (!container) return [];
-    return Array.from(container.querySelectorAll('input[type="checkbox"]:checked')).map(
-      (input) => input.value
-    );
-  }
-
-  function matchesAdvancedFilters(site, options) {
-    const {
-      selectedCategories,
-      selectedRegions,
-      selectedContinents,
-      countryQuery,
-      dateFrom,
-      dateTo,
-    } = options;
-
-    if (selectedCategories.length) {
-      const categoryValue = normalizeSearchValue(site.dataset.category);
-      if (!categoryValue || !selectedCategories.includes(categoryValue)) {
-        return false;
+      function flipMarkSiteUI(unescoId) {
+        // if the marker exists Flip the isMarked value in UI
+        if (markersData) {
+          const marker = markersData.find(marker => marker.unescoId == unescoId);
+          const button = document.getElementById("markSiteBtn" + unescoId);
+          console.log(button);
+          if (marker) {
+            markersData[markersData.findIndex(marker => marker.unescoId == unescoId)].isMarked = !marker.isMarked;
+            button.innerText = marker.isMarked ? "{{ t('messages.home.unmark_site') }}" : "{{ t('messages.home.mark_site') }}";
+            // Flips the isMarked in the gotten data, it modifies the now local data, not the distant one, simply to keep the UI up to date.
+          } else {
+            // If the marker doesn't exist we manually, locally create it as the db would and change it's values manually
+            markersData.push({
+              isMarked: 1,
+              isVisited: 0,
+              unescoId: unescoId
+            });
+            button.innerText = "{{ t('messages.home.unmark_site') }}";
+          }
+        }
       }
-    }
+      // ===== Filter =====
 
-    if (selectedRegions.length) {
-      const regionValue = normalizeSearchValue(site.dataset.region);
-      if (!regionValue || !selectedRegions.includes(regionValue)) {
-        return false;
+      const searchInput = document.getElementById("siteSearchInput");
+
+      const filterCategoryContainer = document.querySelector('[data-filter-group="category"]');
+
+      const filterRegionContainer = document.querySelector('[data-filter-group="region"]');
+
+      const filterContinentContainer = document.querySelector('[data-filter-group="continent"]');
+
+      const filterCountryInput = document.querySelector('[data-filter-input="country"]');
+
+      const filterDateFromInput = document.querySelector('[data-filter-input="dateFrom"]');
+
+      const filterDateToInput = document.querySelector('[data-filter-input="dateTo"]');
+
+      const filterResetButton = document.querySelector("[data-filter-reset]");
+
+      const siteCards = Array.from(document.querySelectorAll(".site-box"));
+
+      function normalizeSearchValue(value) {
+        return (value || "").toString().normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim();
       }
-    }
 
-    if (selectedContinents.length) {
-      const continents = getContinentsByRegion(site.dataset.region).map(normalizeSearchValue);
-      if (!continents.some((continent) => selectedContinents.includes(continent))) {
-        return false;
+      const continentByRegion = {
+        "Europe and North America": [ "Europe", "North America" ],
+        "Latin America and the Caribbean": [ "South America", "North America" ],
+        "Asia and the Pacific": [ "Asia", "Oceania" ],
+        "Arab States": [ "Asia", "Africa" ],
+        Africa: [ "Africa" ]
+      };
+
+      function getContinentsByRegion(region) {
+        return continentByRegion[region] || [];
       }
-    }
 
-    if (countryQuery) {
-      const countries = normalizeSearchValue(site.dataset.countries);
-      if (!countries.includes(countryQuery)) {
-        return false;
+      function renderCheckboxOptions(container, values) {
+        if (!container) return;
+        container.innerHTML = values.map((value, index) => {
+          const inputId = `${container.dataset.filterGroup || "filter"}-${index}`;
+          return `
+                <label class="filter-option" for="${inputId}">
+                  <input type="checkbox" id="${inputId}" value="${normalizeSearchValue(value)}" />
+                  <span>${value}</span>
+                </label>
+              `;
+        }).join("");
       }
-    }
 
-    const dateValue = Number.parseInt(site.dataset.dateInscribed || "", 10);
-    if (!Number.isNaN(dateFrom) && (!dateValue || dateValue < dateFrom)) {
-      return false;
-    }
+      function getSelectedFilterValues(container) {
+        if (!container) return [];
+        return Array.from(container.querySelectorAll('input[type="checkbox"]:checked')).map(input => input.value);
+      }
 
-    if (!Number.isNaN(dateTo) && (!dateValue || dateValue > dateTo)) {
-      return false;
-    }
+      function matchesAdvancedFilters(site, options) {
+        const {
+          selectedCategories,
+          selectedRegions,
+          selectedContinents,
+          countryQuery,
+          dateFrom,
+          dateTo
+        } = options;
+        if (selectedCategories.length) {
+          const categoryValue = normalizeSearchValue(site.dataset.category);
+          if (!categoryValue || !selectedCategories.includes(categoryValue)) {
+            return false;
+          }
+        }
+        if (selectedRegions.length) {
+          const regionValue = normalizeSearchValue(site.dataset.region);
+          if (!regionValue || !selectedRegions.includes(regionValue)) {
+            return false;
+          }
+        }
+        if (selectedContinents.length) {
+          const continents = getContinentsByRegion(site.dataset.region).map(normalizeSearchValue);
+          if (!continents.some(continent => selectedContinents.includes(continent))) {
+            return false;
+          }
+        }
+        if (countryQuery) {
+          const countries = normalizeSearchValue(site.dataset.countries);
+          if (!countries.includes(countryQuery)) {
+            return false;
+          }
+        }
+        const dateValue = Number.parseInt(site.dataset.dateInscribed || "", 10);
+        if (!Number.isNaN(dateFrom) && (!dateValue || dateValue < dateFrom)) {
+          return false;
+        }
+        if (!Number.isNaN(dateTo) && (!dateValue || dateValue > dateTo)) {
+          return false;
+        }
+        return true;
+      }
 
-    return true;
-  }
+      function filterSites() {
+        const searchQuery = normalizeSearchValue(searchInput?.value);
+        const selectedCategories = getSelectedFilterValues(filterCategoryContainer);
+        const selectedRegions = getSelectedFilterValues(filterRegionContainer);
+        const selectedContinents = getSelectedFilterValues(filterContinentContainer);
+        const countryQuery = normalizeSearchValue(filterCountryInput?.value);
+        const dateFrom = Number.parseInt(filterDateFromInput?.value || "", 10);
+        const dateTo = Number.parseInt(filterDateToInput?.value || "", 10);
+        siteCards.forEach(site => {
+          const siteName = normalizeSearchValue(site.querySelector(".site-box-info h3")?.textContent);
+          const countryName = normalizeSearchValue(site.dataset.countries);
+          const siteText = `${siteName} ${countryName}`;
+          const matchesSearch = !searchQuery || siteText.includes(searchQuery);
+          const matchesAdvanced = matchesAdvancedFilters(site, {
+            selectedCategories: selectedCategories,
+            selectedRegions: selectedRegions,
+            selectedContinents: selectedContinents,
+            countryQuery: countryQuery,
+            dateFrom: dateFrom,
+            dateTo: dateTo
+          });
+          site.style.display = matchesSearch && matchesAdvanced ? "flex" : "none";
+        });
+      }
 
-  function filterSites() {
-    const searchQuery = normalizeSearchValue(searchInput?.value);
-    const selectedCategories = getSelectedFilterValues(filterCategoryContainer);
-    const selectedRegions = getSelectedFilterValues(filterRegionContainer);
-    const selectedContinents = getSelectedFilterValues(filterContinentContainer);
-    const countryQuery = normalizeSearchValue(filterCountryInput?.value);
-    const dateFrom = Number.parseInt(filterDateFromInput?.value || "", 10);
-    const dateTo = Number.parseInt(filterDateToInput?.value || "", 10);
+      function resetAdvancedFilters() {
+        document.querySelectorAll('.filter-dropdown-content input[type="checkbox"]').forEach(input => {
+          input.checked = false;
+        });
+        if (filterCountryInput) {
+          filterCountryInput.value = "";
+        }
+        if (filterDateFromInput) {
+          filterDateFromInput.value = "";
+        }
+        if (filterDateToInput) {
+          filterDateToInput.value = "";
+        }
+        filterSites();
+      }
 
-    siteCards.forEach((site) => {
-      const siteName = normalizeSearchValue(site.querySelector(".site-box-info h3")?.textContent);
-      const countryName = normalizeSearchValue(site.dataset.countries);
-      const siteText = `${siteName} ${countryName}`;
+      function setupAdvancedFilters() {
+        const regions = [ ...new Set(siteCards.map(site => site.dataset.region).filter(Boolean)) ].sort();
+        const continents = [ ...new Set(regions.flatMap(region => getContinentsByRegion(region)).filter(Boolean)) ].sort();
+        renderCheckboxOptions(filterRegionContainer, regions);
+        renderCheckboxOptions(filterContinentContainer, continents);
+        document.querySelectorAll(".filter-dropdown-content input").forEach(input => {
+          const eventName = input.type === "checkbox" ? "change" : "input";
+          input.addEventListener(eventName, filterSites);
+        });
+        if (filterResetButton) {
+          filterResetButton.addEventListener("click", resetAdvancedFilters);
+        }
+      }
 
-      const matchesSearch = !searchQuery || siteText.includes(searchQuery);
-      const matchesAdvanced = matchesAdvancedFilters(site, {
-        selectedCategories,
-        selectedRegions,
-        selectedContinents,
-        countryQuery,
-        dateFrom,
-        dateTo,
-      });
+      if (searchInput) {
+        searchInput.addEventListener("input", filterSites);
+      }
 
-      site.style.display = matchesSearch && matchesAdvanced ? "flex" : "none";
-    });
-  }
+      setupAdvancedFilters();
+    </script>
 
-  function resetAdvancedFilters() {
-    document
-      .querySelectorAll('.filter-dropdown-content input[type="checkbox"]')
-      .forEach((input) => {
-        input.checked = false;
-      });
-
-    if (filterCountryInput) {
-      filterCountryInput.value = "";
-    }
-
-    if (filterDateFromInput) {
-      filterDateFromInput.value = "";
-    }
-
-    if (filterDateToInput) {
-      filterDateToInput.value = "";
-    }
-
-    filterSites();
-  }
-
-  function setupAdvancedFilters() {
-    const regions = [...new Set(siteCards.map((site) => site.dataset.region).filter(Boolean))].sort();
-    const continents = [
-      ...new Set(regions.flatMap((region) => getContinentsByRegion(region)).filter(Boolean)),
-    ].sort();
-
-    renderCheckboxOptions(filterRegionContainer, regions);
-    renderCheckboxOptions(filterContinentContainer, continents);
-
-    document.querySelectorAll(".filter-dropdown-content input").forEach((input) => {
-      const eventName = input.type === "checkbox" ? "change" : "input";
-      input.addEventListener(eventName, filterSites);
-    });
-
-    if (filterResetButton) {
-      filterResetButton.addEventListener("click", resetAdvancedFilters);
-    }
-  }
-
-  if (searchInput) {
-    searchInput.addEventListener("input", filterSites);
-  }
-
-  setupAdvancedFilters();
-</script>
-
-@end
+  @end

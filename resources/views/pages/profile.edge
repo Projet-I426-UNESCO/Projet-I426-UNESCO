@@ -1,1233 +1,499 @@
 <!doctype html>
 <html lang="{{ i18n.locale }}">
 
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>
-    {{ t('messages.profile.title') }} -
-  </title>
-  <link rel="stylesheet"
-    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
-  <style>
-    @import url("https://fonts.googleapis.com/css2?family=K2D:wght@300;400;500&display=swap");
-
-    main {
-      padding: 25px;
-    }
-
-    .info-block {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      grid-gap: 10px;
-      grid-auto-rows: minmax(150px, auto);
-      max-width: 1500px;
-      margin: 0 auto;
-      align-items: stretch;
-    }
-
-    .info-block>div {
-      background-color: #1e2533;
-      border-radius: 20px;
-      padding: 20px;
-      color: #d1d5db;
-    }
-
-    .info-block>div:last-child {
-      background-color: #0f172a;
-      padding: 0;
-    }
-
-    .name-block {
-      display: flex;
-      align-items: center;
-      grid-column: 1 / 3;
-      justify-content: space-between;
-      background: linear-gradient(90deg, rgba(30, 41, 59, 1) 0%, rgba(15, 23, 42, 1) 100%);
-      border: 1px solid #2D313E;
-    }
-
-    .name-avatar {
-      display: flex;
-      align-items: center;
-      gap: 20px;
-    }
-
-    .avatar {
-      height: 100px;
-      width: 100px;
-      border: 4px solid #2D313E;
-      border-radius: 50%;
-      object-fit: cover;
-      background-color: #2d3748;
-      color: transparent;
-    }
-
-    .name h2 {
-      color: #ffffff;
-      font-size: 28px;
-      margin: 0;
-    }
-
-    .name p {
-      color: #94a3b8;
-      font-size: 14px;
-      margin: 0;
-    }
-
-    .last-visit-block {
-      grid-column: 3;
-      grid-row: 1/4;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-    }
-
-    .last-visit-block img {
-      width: 100%;
-      height: 250px;
-      object-fit: cover;
-      border-radius: 12px;
-      margin-bottom: 10px;
-    }
-
-    .progress-block {
-      grid-column: 1/2;
-      grid-row: 2;
-    }
-
-    .progress-value {
-      font-size: 32px;
-      font-weight: bold;
-      color: #ffffff;
-      margin-top: 10px;
-    }
-
-    .progress-bar {
-      background-color: #2d3748;
-      border-radius: 8px;
-      height: 12px;
-      margin-top: 10px;
-      overflow: hidden;
-    }
-
-    .progress-fill {
-      background: linear-gradient(90deg, #5f7ef2 0%, #68bff8 100%);
-      height: 100%;
-    }
-
-    .continent-stats-block {
-      grid-column: 2;
-      grid-row: 2/4;
-    }
-
-    .boss {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 16px 8px;
-      margin-top: 12px;
-    }
-
-    .continent-item {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-    }
-
-    .continent-donut {
-      position: relative;
-      width: 80px;
-      height: 80px;
-    }
-
-    .continent-donut svg {
-      width: 80px;
-      height: 80px;
-      transform: rotate(-90deg);
-    }
-
-    .continent-donut .track {
-      fill: none;
-      stroke: #2d3748;
-      stroke-width: 7;
-    }
-
-    .continent-donut .arc {
-      fill: none;
-      stroke-width: 7;
-      stroke-linecap: round;
-      transition: stroke-dashoffset 0.6s ease;
-    }
-
-    .continent-donut .arc.color-1 {
-      stroke: #5f7ef2;
-    }
-
-    .continent-donut .arc.color-2 {
-      stroke: #f59e0b;
-    }
-
-    .continent-donut .arc.color-3 {
-      stroke: #10b981;
-    }
-
-    .continent-donut .arc.color-4 {
-      stroke: #ec4899;
-    }
-
-    .continent-donut .arc.color-5 {
-      stroke: #8b5cf6;
-    }
-
-    .continent-donut .arc.color-6 {
-      stroke: #06b6d4;
-    }
-
-    .continent-donut-label {
-      position: absolute;
-      inset: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 15px;
-      font-weight: bold;
-      color: #ffffff;
-    }
-
-    .continent-name {
-      font-size: 11px;
-      color: #94a3b8;
-      text-align: center;
-      line-height: 1.3;
-    }
-
-    .few-last-visits-block {
-      grid-column: 1;
-      grid-row: 3/5;
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
-    }
-
-    .recent-visits-title {
-      font-size: 22px;
-      font-weight: 700;
-      color: #ffffff;
-      margin: 0 0 16px 0;
-    }
-
-    .visit-item {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      padding: 14px 0;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.07);
-      height: 80px;
-      max-height: 100px;
-      overflow: hidden;
-      box-sizing: border-box;
-    }
-
-    .visit-item:last-child {
-      border-bottom: none;
-    }
-
-    .visit-item-left {
-      display: flex;
-      flex-direction: column;
-      gap: 3px;
-    }
-
-    .visit-item-name {
-      font-size: 16px;
-      font-weight: 600;
-      color: #ffffff;
-      text-decoration: none;
-    }
-
-    .visit-item-name:hover {
-      color: #737df3;
-    }
-
-    .visit-item-country {
-      font-size: 13px;
-      color: #64748b;
-    }
-
-    .visit-item-date {
-      font-size: 15px;
-      font-weight: 600;
-      color: #ffffff;
-      white-space: nowrap;
-      padding-left: 12px;
-    }
-
-    .no-visits-msg {
-      color: #64748b;
-      font-size: 14px;
-      margin-top: 8px;
-    }
-
-    .general-stats-block {
-      grid-column: 2/4;
-      grid-row: 4;
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 10px;
-    }
-
-    .stat-card {
-      background-color: #1e2533;
-      border-radius: 12px;
-      padding: 15px;
-      text-align: center;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      gap: 6px;
-    }
-
-    .stat-label {
-      display: block;
-      font-size: 12px;
-      color: #94a3b8;
-    }
-
-    .stat-value {
-      font-size: 24px;
-      font-weight: bold;
-      color: #ffffff;
-    }
-
-    .line {
-      display: flex;
-      gap: 12px;
-      align-items: center;
-    }
-
-    .line form {
-      display: inline-block;
-      margin: 0;
-    }
-
-    .profile-btn {
-      appearance: none;
-      border: none;
-      background: none;
-      text-decoration: none;
-
-      font-family: inherit;
-      font-size: 14px;
-      font-weight: 500;
-
-      padding: 10px 20px;
-      border-radius: 6px;
-      display: inline-block;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      text-align: center;
-    }
-
-    .modif-btn {
-      background-color: #3b82f6;
-      color: white;
-    }
-
-    .modif-btn:hover {
-      background-color: #2563eb;
-    }
-
-    .logout-btn {
-      background-color: #ef4444;
-      color: white;
-    }
-
-    .logout-btn:hover {
-      background-color: #dc2626;
-    }
-
-    /* --- MODAL MODIFIER PROFIL --- */
-    .edit-modal-overlay {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: rgba(0, 0, 0, 0.6);
-      z-index: 1000;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .edit-modal-overlay.show {
-      display: flex;
-    }
-
-    .edit-modal {
-      background: #1e2533;
-      border-radius: 16px;
-      padding: 28px;
-      width: 380px;
-      max-width: 95vw;
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
-    }
-
-    .edit-modal-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 22px;
-    }
-
-    .edit-modal-header h3 {
-      color: white;
-      margin: 0;
-      font-size: 18px;
-      font-weight: 600;
-    }
-
-    .edit-modal-close {
-      background: none;
-      border: none;
-      color: #64748b;
-      font-size: 24px;
-      cursor: pointer;
-      line-height: 1;
-      padding: 0 4px;
-    }
-
-    .edit-modal-close:hover {
-      color: white;
-    }
-
-    .edit-alert {
-      border-radius: 8px;
-      padding: 10px 14px;
-      font-size: 13px;
-      margin-bottom: 16px;
-    }
-
-    .edit-alert-error {
-      background: rgba(239, 68, 68, 0.15);
-      color: #f87171;
-      border: 1px solid rgba(239, 68, 68, 0.3);
-    }
-
-    .edit-alert-success {
-      background: rgba(16, 185, 129, 0.15);
-      color: #34d399;
-      border: 1px solid rgba(16, 185, 129, 0.3);
-    }
-
-    .edit-form {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-
-    .edit-avatar-preview {
-      width: 80px;
-      height: 80px;
-      border-radius: 50%;
-      background: #2d3748;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      overflow: hidden;
-      margin: 0 auto 8px;
-      flex-shrink: 0;
-    }
-
-    .edit-avatar-preview img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      border-radius: 50%;
-    }
-
-    .avatar-placeholder {
-      font-size: 40px;
-      color: white;
-    }
-
-    .edit-field-label {
-      font-size: 12px;
-      color: #94a3b8;
-      font-weight: 500;
-    }
-
-    .edit-upload-btn {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      background: #2b3447;
-      color: #d1d5db;
-      border-radius: 8px;
-      padding: 9px 14px;
-      font-size: 14px;
-      cursor: pointer;
-      border: 1px solid rgba(255, 255, 255, 0.07);
-    }
-
-    .edit-upload-btn:hover {
-      background: #334155;
-    }
-
-    .edit-upload-btn .material-symbols-outlined {
-      font-size: 18px;
-    }
-
-    .edit-file-name {
-      font-size: 12px;
-      color: #64748b;
-      min-height: 16px;
-    }
-
-    .edit-input {
-      background: #141827;
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 8px;
-      padding: 10px 14px;
-      color: white;
-      font-size: 14px;
-      font-family: inherit;
-      outline: none;
-    }
-
-    .edit-input:focus {
-      border-color: #6366f1;
-    }
-
-    .edit-submit-btn {
-      background: #6366f1;
-      color: white;
-      border: none;
-      border-radius: 8px;
-      padding: 11px;
-      font-size: 14px;
-      font-weight: 600;
-      font-family: inherit;
-      cursor: pointer;
-      margin-top: 6px;
-    }
-
-    .edit-submit-btn:hover {
-      background: #4f46e5;
-    }
-
-    /* --- MAP SECTION --- */
-    .profile-map-section {
-      max-width: 1500px;
-      margin: 40px auto 0 auto;
-    }
-
-    .map-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      margin-bottom: 20px;
-    }
-
-    .map-title {
-      font-size: 26px;
-      font-weight: 700;
-      color: #ffffff;
-      margin: 0;
-    }
-
-    .map-controls {
-      display: flex;
-      flex-direction: column;
-      align-items: flex-end;
-      gap: 12px;
-    }
-
-    .map-toggle-group {
-      display: flex;
-      background-color: #0f172a;
-      border-radius: 8px;
-      padding: 4px;
-      border: 1px solid rgba(255, 255, 255, 0.08);
-    }
-
-    .map-toggle-btn {
-      background: none;
-      border: none;
-      color: #94a3b8;
-      padding: 8px 18px;
-      border-radius: 6px;
-      font-size: 14px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      font-family: inherit;
-    }
-
-    .map-toggle-btn.active {
-      background-color: #3b82f6;
-      color: #ffffff;
-    }
-
-    .open-tab-btn {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      background-color: #3b82f6;
-      color: #ffffff;
-      padding: 9px 18px;
-      border-radius: 8px;
-      font-size: 14px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      text-decoration: none;
-    }
-
-    .open-tab-btn:hover {
-      background-color: #2563eb;
-    }
-
-    .open-tab-btn .material-symbols-outlined {
-      font-size: 18px;
-    }
-
-    .map-box-container {
-      height: 576px;
-      width: 100%;
-      border-radius: 10px;
-      overflow: hidden;
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
-    }
-
-    #profile-map {
-      height: 100%;
-      width: 100%;
-    }
-
-    /* --- LIST SECTION --- */
-    .profile-list-section {
-      max-width: 1500px;
-      margin: 40px auto 30px auto;
-    }
-
-    .list-title {
-      font-size: 26px;
-      font-weight: 700;
-      color: #ffffff;
-      margin: 0 0 20px 0;
-    }
-
-    .list-card {
-      background-color: #1e2533;
-      border-radius: 10px;
-      padding: 24px 30px;
-    }
-
-    .list-card-header {
-      display: flex;
-      justify-content: space-between;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-      padding-bottom: 12px;
-      margin-bottom: 10px;
-    }
-
-    .list-header-left {
-      font-size: 15px;
-      font-weight: 600;
-      color: #94a3b8;
-    }
-
-    .list-header-right {
-      font-size: 15px;
-      font-weight: 600;
-      color: #94a3b8;
-      text-align: right;
-    }
-
-    .continent-accordion {
-      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-    }
-
-    .continent-accordion:last-child {
-      border-bottom: none;
-    }
-
-    .continent-accordion-trigger {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 18px;
-      font-weight: 700;
-      color: #ffffff;
-      padding: 16px 0;
-      cursor: pointer;
-      user-select: none;
-    }
-
-    .continent-accordion-trigger .chevron {
-      font-size: 20px;
-      transition: transform 0.25s ease;
-      color: #94a3b8;
-    }
-
-    .continent-accordion.collapsed .chevron {
-      transform: rotate(-90deg);
-    }
-
-    .continent-accordion-content {
-      overflow: hidden;
-      transition: max-height 0.3s cubic-bezier(0.4, 0, 0.2, 1), padding-bottom 0.3s ease;
-      padding-bottom: 14px;
-      max-height: 1000px;
-    }
-
-    .continent-accordion.collapsed .continent-accordion-content {
-      max-height: 0;
-      padding-bottom: 0;
-      pointer-events: none;
-    }
-
-    .site-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 12px 0 12px 10px;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.03);
-    }
-
-    .site-row:last-child {
-      border-bottom: none;
-    }
-
-    .site-row-left {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .category-dot {
-      width: 10px;
-      height: 10px;
-      flex-shrink: 0;
-    }
-
-    .category-dot.cultural {
-      background-color: #f59e0b;
-      transform: rotate(45deg);
-      border-radius: 1.5px;
-    }
-
-    .category-dot.natural {
-      background-color: #10b981;
-      border-radius: 50%;
-    }
-
-    .category-dot.mixed {
-      background-color: #f97316;
-      transform: rotate(45deg);
-      border-radius: 1.5px;
-    }
-
-    .site-row-name {
-      font-size: 15px;
-      font-weight: 500;
-      color: #d1d5db;
-      transition: color 0.2s ease;
-    }
-
-    .site-row-name:hover {
-      color: #3b82f6;
-    }
-
-    .site-row-right {
-      font-size: 14px;
-      color: #94a3b8;
-      text-align: right;
-    }
-
-    @media(max-width: 768px) {
-      .info-block {
-        grid-template-columns: 1fr;
-        grid-auto-rows: auto;
-      }
-
-      .name-block {
-        flex-direction: column;
-        align-items: center;
-        text-align: center;
-      }
-
-      .line {
-        justify-content: center;
-      }
-
-      .last-visit-block {
-        grid-column: 1;
-        grid-row: 4;
-        flex-direction: row;
-        gap: 20px;
-      }
-
-      .progress-block {
-        grid-column: 1;
-        grid-row: 5;
-      }
-
-      .continent-stats-block {
-        grid-column: 1;
-        grid-row: 6;
-      }
-
-      .few-last-visits-block {
-        grid-column: 1;
-        grid-row: 7;
-      }
-
-      .general-stats-block {
-        grid-column: 1;
-        grid-row: 8;
-        grid-template-columns: 1fr;
-      }
-    }
-  </style>
-</head>
-
-<body>
-  @layout('components/layout/index', { title: 'Accueil' })
-
-  <main>
-    <div class="info-block">
-      <div class="name-block">
-        <div class="name-avatar">
-          <img class="avatar" src="{{ auth.user.avatar || '' }}" alt="Avatar" />
-          <div class="name">
-            <h2>{{ auth.user.fullName }}</h2>
-          </div>
-        </div>
-        <div class="line">
-          <form method="POST" action="{{ route('auth.logout') }}">
-            {{ csrfField() }}
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>
+      {{ t('messages.profile.title') }} -
+    </title>
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
+    />
+  </head>
+
+  <body>
+    @layout('components/layout/index', { title: 'Accueil' })
+
+      <main>
+        <div class="info-block">
+          <div class="name-block">
+            <div class="name-avatar">
+              <img class="avatar" src="{{ auth.user.avatar || '' }}" alt="Avatar" />
+              <div class="name">
+                <h2>
+                  {{ auth.user.fullName }}
+                </h2>
+              </div>
+            </div>
+            <div class="line">
+              <form method="POST" action="{{ route('auth.logout') }}">
+                {{ csrfField() }}
             <button type="submit" class="profile-btn logout-btn">
-              {{ t('messages.profile.logout') }}
+                  {{ t('messages.profile.logout') }}
             </button>
-          </form>
+              </form>
 
-          <button class="profile-btn modif-btn" onclick="document.getElementById('editModal').classList.add('show')">
-            {{ t('messages.profile.edit_account') }}
+              <button
+                class="profile-btn modif-btn"
+                onclick="document.getElementById('editModal').classList.add('show')"
+              >
+                {{ t('messages.profile.edit_account') }}
           </button>
-        </div>
-      </div>
+            </div>
+          </div>
 
-      <div class="last-visit-block">
-        <div>
-          <p style="color: #ffffff; font-weight: 500; margin-bottom: 10px;">
-            {{ t('messages.profile.last_visit') }}
-          </p>
-          @if(stats.lastVisit)
-          <img src="{{ stats.lastVisit.localImageMain || stats.lastVisit.mainImageUrl }}"
-            alt="{{ stats.lastVisit.nameFr }}" />
-          <h3 style="margin: 0; color: #ffffff; font-size: 14px;">
-            {{ stats.lastVisit.nameFr }}
-          </h3>
-          <p style="margin: 5px 0 0 0; color: #94a3b8; font-size: 12px;">
-            @if(stats.lastVisit.statesNames && stats.lastVisit.statesNames.length > 0)
-            {{ stats.lastVisit.statesNames[0] }}
+          <div class="last-visit-block">
+            <div>
+              <p style="color: #ffffff; font-weight: 500; margin-bottom: 10px;">
+                {{ t('messages.profile.last_visit') }}
+              </p>
+              @if(stats.lastVisit)
+                <img
+                  src="{{ stats.lastVisit.localImageMain || stats.lastVisit.mainImageUrl }}"
+                  alt="{{ stats.lastVisit.nameFr }}"
+                />
+                <h3 style="margin: 0; color: #ffffff; font-size: 14px;">
+                  {{ stats.lastVisit.nameFr }}
+                </h3>
+                <p style="margin: 5px 0 0 0; color: #94a3b8; font-size: 12px;">
+                  @if(stats.lastVisit.statesNames && stats.lastVisit.statesNames.length > 0)
+                    {{ stats.lastVisit.statesNames[0] }}
+                  @end
+                </p>
+              @else
+                <p style="color: #94a3b8;">
+                  {{ t('messages.profile.no_visit_yet') }}
+                </p>
+              @end
+            </div>
+          </div>
+
+          <div class="progress-block">
+            <p style="margin-top: 0;">
+              {{ t('messages.profile.global_progress') }}
+            </p>
+            <div class="progress-value">
+              {{ stats.visitedSites }} / {{ stats.totalSites }}
+            </div>
+            <div class="progress-bar">
+              <div class="progress-fill" style="width: {{ stats.completionPercentage }}%;">
+              </div>
+            </div>
+            <p style="margin-bottom: 0; margin-top: 8px; font-size: 12px; color: #94a3b8;">
+              {{ stats.completionPercentage }}%
+            </p>
+          </div>
+
+          <div class="continent-stats-block">
+            <p style="margin-top: 0;">
+              {{ t('messages.profile.continent_exploration') }}
+            </p>
+            <div class="boss">
+              @each(data in stats.regionStats)
+                <div class="continent-item">
+                  <div class="continent-donut">
+                    <svg viewBox="0 0 80 80">
+                      <circle class="track" cx="40" cy="40" r="31" />
+                      <circle
+                        class="arc color-{{ data.colorIndex }}"
+                        cx="40"
+                        cy="40"
+                        r="31"
+                        stroke-dasharray="194.78"
+                        stroke-dashoffset="{{ 194.78 - (194.78 * data.percentage / 100) }}"
+                      />
+                    </svg>
+                    <div class="continent-donut-label">
+                      {{ data.percentage }}%
+                    </div>
+                  </div>
+                  <div class="continent-name">
+                    {{ data.region }}
+                  </div>
+                </div>
+              @endeach
+            </div>
+          </div>
+
+          <div class="few-last-visits-block">
+            <h2 class="recent-visits-title">
+              {{ t('messages.profile.recent_visits') }}
+            </h2>
+            @if(stats.recentVisits.length > 0)
+              @each(visit in stats.recentVisits)
+                <div class="visit-item">
+                  <div class="visit-item-left">
+                    <a href="/site/{{ visit.id }}" class="visit-item-name">{{ visit.name }}</a>
+                    <span class="visit-item-country">{{ visit.country }}</span>
+                  </div>
+                  <span class="visit-item-date">{{ visit.date }}</span>
+                </div>
+              @endeach
+            @else
+              <p class="no-visits-msg">
+                {{ t('messages.profile.no_visit_yet') }}
+              </p>
             @end
-          </p>
-          @else
-          <p style="color: #94a3b8;">
-            {{ t('messages.profile.no_visit_yet') }}
-          </p>
-          @end
-        </div>
-      </div>
+          </div>
 
-      <div class="progress-block">
-        <p style="margin-top: 0;">{{ t('messages.profile.global_progress') }}</p>
-        <div class="progress-value">{{ stats.visitedSites }} / {{ stats.totalSites }}</div>
-        <div class="progress-bar">
-          <div class="progress-fill" style="width: {{ stats.completionPercentage }}%;"></div>
-        </div>
-        <p style="margin-bottom: 0; margin-top: 8px; font-size: 12px; color: #94a3b8;">
-          {{ stats.completionPercentage }}%
-        </p>
-      </div>
-
-      <div class="continent-stats-block">
-        <p style="margin-top: 0;">{{ t('messages.profile.continent_exploration') }}</p>
-        <div class="boss">
-          @each(data in stats.regionStats)
-          <div class="continent-item">
-            <div class="continent-donut">
-              <svg viewBox="0 0 80 80">
-                <circle class="track" cx="40" cy="40" r="31" />
-                <circle class="arc color-{{ data.colorIndex }}" cx="40" cy="40" r="31" stroke-dasharray="194.78"
-                  stroke-dashoffset="{{ 194.78 - (194.78 * data.percentage / 100) }}" />
-              </svg>
-              <div class="continent-donut-label">{{ data.percentage }}%</div>
+          <div class="general-stats-block">
+            <div class="stat-card">
+              <span class="stat-label">{{ t('messages.profile.visited_sites') }}</span>
+              <span class="stat-value">{{ stats.visitedSites }}/{{ stats.totalSites }}</span>
             </div>
-            <div class="continent-name">{{ data.region }}</div>
+            <div class="stat-card">
+              <span class="stat-label">{{ t('messages.profile.completion_rate') }}</span>
+              <span class="stat-value">{{ stats.completionPercentage }}%</span>
+            </div>
+            <div class="stat-card">
+              <span class="stat-label">{{ t('messages.profile.most_visited_region') }}</span>
+              <span class="stat-value">{{ stats.mostVisitedRegion || 'N/A' }}</span>
+            </div>
+            <div class="stat-card">
+              <span class="stat-label">{{ t('messages.profile.most_visited_country') }}</span>
+              <span class="stat-value">{{ stats.mostVisitedCountry || 'N/A' }}</span>
+            </div>
           </div>
-          @endeach
         </div>
-      </div>
 
-      <div class="few-last-visits-block">
-        <h2 class="recent-visits-title">{{ t('messages.profile.recent_visits') }}</h2>
-        @if(stats.recentVisits.length > 0)
-        @each(visit in stats.recentVisits)
-        <div class="visit-item">
-          <div class="visit-item-left">
-            <a href="/site/{{ visit.id }}" class="visit-item-name">{{ visit.name }}</a>
-            <span class="visit-item-country">{{ visit.country }}</span>
-          </div>
-          <span class="visit-item-date">{{ visit.date }}</span>
-        </div>
-        @endeach
-        @else
-        <p class="no-visits-msg">{{ t('messages.profile.no_visit_yet') }}</p>
-        @end
-      </div>
-
-      <div class="general-stats-block">
-        <div class="stat-card">
-          <span class="stat-label">{{ t('messages.profile.visited_sites') }}</span>
-          <span class="stat-value">{{ stats.visitedSites }}/{{ stats.totalSites }}</span>
-        </div>
-        <div class="stat-card">
-          <span class="stat-label">{{ t('messages.profile.completion_rate') }}</span>
-          <span class="stat-value">{{ stats.completionPercentage }}%</span>
-        </div>
-        <div class="stat-card">
-          <span class="stat-label">{{ t('messages.profile.most_visited_region') }}</span>
-          <span class="stat-value">{{ stats.mostVisitedRegion || 'N/A' }}</span>
-        </div>
-        <div class="stat-card">
-          <span class="stat-label">{{ t('messages.profile.most_visited_country') }}</span>
-          <span class="stat-value">{{ stats.mostVisitedCountry || 'N/A' }}</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- Map Section -->
-    <div class="profile-map-section">
-      <div class="map-header">
-        <h2 class="map-title" id="mapTitle">Carte des sites visités</h2>
-        <div class="map-controls">
-          <div class="map-toggle-group">
-            <button class="map-toggle-btn active" id="btnMapVisited" onclick="setMapFilter('visited')">Sites
+        <!-- Map Section -->
+        <div class="profile-map-section">
+          <div class="map-header">
+            <h2 class="map-title" id="mapTitle">
+              Carte des sites visités
+            </h2>
+            <div class="map-controls">
+              <div class="map-toggle-group">
+                <button class="map-toggle-btn active" id="btnMapVisited" onclick="setMapFilter('visited')">Sites
               visités</button>
-            <button class="map-toggle-btn" id="btnMapMarked" onclick="setMapFilter('marked')">Sites marqués</button>
-          </div>
-          <a href="{{ route('visits') }}" target="_blank" class="open-tab-btn" id="openTabBtn">
-            Ouvrir dans un nouveau onglet
+                <button class="map-toggle-btn" id="btnMapMarked" onclick="setMapFilter('marked')">Sites marqués</button>
+              </div>
+              <a href="{{ route('visits') }}" target="_blank" class="open-tab-btn" id="openTabBtn">
+                Ouvrir dans un nouveau onglet
             <span class="material-symbols-outlined">open_in_new</span>
-          </a>
-        </div>
-      </div>
-      <div class="map-box-container">
-        <div id="profile-map"></div>
-      </div>
-    </div>
-
-    <div class="profile-list-section">
-      <h2 class="list-title" id="listTitle">Liste complète des sites visités</h2>
-      <div class="list-card">
-        <div class="list-card-header">
-          <div class="list-header-left">Continent / Site</div>
-          <div class="list-header-right">Ajouté dans la liste</div>
-        </div>
-
-        <div id="accordion-list-container">
-        </div>
-      </div>
-    </div>
-
-    <div id="editModal" class="edit-modal-overlay" onclick="handleOverlayClick(event)">
-      <div class="edit-modal">
-        <div class="edit-modal-header">
-          <h3>Modifier le profil</h3>
-          <button class="edit-modal-close"
-            onclick="document.getElementById('editModal').classList.remove('show')">&times;</button>
-        </div>
-
-        @if(flashMessages.has('editError'))
-        <div class="edit-alert edit-alert-error">{{ flashMessages.get('editError') }}</div>
-        @end
-        @if(flashMessages.has('editSuccess'))
-        <div class="edit-alert edit-alert-success">{{ flashMessages.get('editSuccess') }}</div>
-        @end
-
-        <form method="POST" action="{{ route('profile.update') }}" enctype="multipart/form-data" class="edit-form">
-          {{ csrfField() }}
-
-          <div class="edit-avatar-preview">
-            <img id="avatarPreview" src="{{ auth.user.avatar || '' }}" alt="Photo de profil"
-              onerror="this.style.display='none'" />
-            <span id="avatarPlaceholder" class="avatar-placeholder material-symbols-outlined"
-              style="{{ auth.user.avatar ? 'display:none' : '' }}">person</span>
+              </a>
+            </div>
           </div>
+          <div class="map-box-container">
+            <div id="profile-map">
+            </div>
+          </div>
+        </div>
 
-          <label class="edit-field-label" for="avatarInput">Photo de profil</label>
-          <label class="edit-upload-btn" for="avatarInput">
-            <span class="material-symbols-outlined">upload</span>
-            Choisir une image
+        <div class="profile-list-section">
+          <h2 class="list-title" id="listTitle">
+            Liste complète des sites visités
+          </h2>
+          <div class="list-card">
+            <div class="list-card-header">
+              <div class="list-header-left">
+                Continent / Site
+              </div>
+              <div class="list-header-right">
+                Ajouté dans la liste
+              </div>
+            </div>
+
+            <div id="accordion-list-container">
+            </div>
+          </div>
+        </div>
+
+        <div id="editModal" class="edit-modal-overlay" onclick="handleOverlayClick(event)">
+          <div class="edit-modal">
+            <div class="edit-modal-header">
+              <h3>
+                Modifier le profil
+              </h3>
+              <button class="edit-modal-close" onclick="document.getElementById('editModal').classList.remove('show')">&times;</button>
+            </div>
+
+            @if(flashMessages.has('editError'))
+              <div class="edit-alert edit-alert-error">
+                {{ flashMessages.get('editError') }}
+              </div>
+            @end
+            @if(flashMessages.has('editSuccess'))
+              <div class="edit-alert edit-alert-success">
+                {{ flashMessages.get('editSuccess') }}
+              </div>
+            @end
+            
+            <form
+              method="POST"
+              action="{{ route('profile.update') }}"
+              enctype="multipart/form-data"
+              class="edit-form"
+            >
+              {{ csrfField() }}
+              <div class="edit-avatar-preview">
+                <img
+                  id="avatarPreview"
+                  src="{{ auth.user.avatar || '' }}"
+                  alt="Photo de profil"
+                  onerror="this.style.display='none'"
+                />
+                <span
+                  id="avatarPlaceholder"
+                  class="avatar-placeholder material-symbols-outlined"
+                  style="{{ auth.user.avatar ? 'display:none' : '' }}"
+                >person</span>
+              </div>
+
+              <label class="edit-field-label" for="avatarInput">Photo de profil</label>
+              <label class="edit-upload-btn" for="avatarInput">
+                <span class="material-symbols-outlined">upload</span>
+                Choisir une image
           </label>
-          <input type="file" id="avatarInput" name="avatar" accept="image/*" style="display:none"
-            onchange="previewAvatar(event)" />
-          <span id="avatarFileName" class="edit-file-name"></span>
+              <input
+                type="file"
+                id="avatarInput"
+                name="avatar"
+                accept="image/*"
+                style="display:none"
+                onchange="previewAvatar(event)"
+              />
+              <span id="avatarFileName" class="edit-file-name"></span>
 
-          <label class="edit-field-label" for="nicknameInput">Pseudo</label>
-          <input class="edit-input" type="text" id="nicknameInput" name="nickname"
-            placeholder="{{ auth.user.fullName }}" value="{{ auth.user.fullName }}" />
+              <label class="edit-field-label" for="nicknameInput">Pseudo</label>
+              <input
+                class="edit-input"
+                type="text"
+                id="nicknameInput"
+                name="nickname"
+                placeholder="{{ auth.user.fullName }}"
+                value="{{ auth.user.fullName }}"
+              />
 
-          <button type="submit" class="edit-submit-btn">Enregistrer</button>
-        </form>
-      </div>
-    </div>
-  </main>
-
-
-
-  <script>
-    const ui = {
-      accordionList: 'accordion-list-container',
-      btnMapVisited: 'btnMapVisited',
-      btnMapMarked: 'btnMapMarked',
-      openTabBtn: 'openTabBtn',
-      mapTitle: 'mapTitle',
-      listTitle: 'listTitle'
-    };
-
-    const labels = {
-      mapVisited: "Carte des sites visités",
-      mapMarked: "Carte des sites marqués",
-      listVisited: "Liste complète des sites visités",
-      listMarked: "Liste complète des sites marqués",
-      noMarked: "Aucun site marqué pour l'instant",
-      noVisits: "{{ t('messages.profile.no_visit_yet') }}"
-    };
-
-    const routes = {
-      visits: "{{ route('visits') }}",
-      bookmarks: "{{ route('bookmarks') }}"
-    };
-
-    const mapConfig = {
-      accessToken: "pk.eyJ1IjoiNjdza2liaWRpc2NydW0iLCJhIjoiY21sYXdlamR3MGcyOTNlcXoxdHQ2bXliaiJ9.BXx6EzzxvsFrDg5yeo1LUQ",
-      container: "profile-map",
-      style: "mapbox://styles/mapbox/standard",
-      projection: "mercator",
-      zoom: 1.5,
-      center: [10, 20]
-    };
-
-    const markerColors = {
-      visited: "#fe8d50",
-      marked: "#8bf7df"
-    };
-
-    function previewAvatar(event) {
-      const file = event.target.files[0];
-      if (!file) return;
-      document.getElementById('avatarFileName').textContent = file.name;
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        const img = document.getElementById('avatarPreview');
-        const placeholder = document.getElementById('avatarPlaceholder');
-        img.src = e.target.result;
-        img.style.display = 'block';
-        if (placeholder) placeholder.style.display = 'none';
-      };
-      reader.readAsDataURL(file);
-    }
-    function handleOverlayClick(e) {
-      if (e.target === document.getElementById('editModal')) {
-        document.getElementById('editModal').classList.remove('show');
-      }
-    }
-
-    // --- MAPBOX & ACCORDION SCRIPTS ---
-    const markersData = {{{ JSON.stringify(mapMarkers) }}};
-    const visitedByRegion = {{{ JSON.stringify(visitedByRegion) }}};
-    const markedByRegion = {{{ JSON.stringify(markedByRegion) }}};
-    let currentMapFilter = 'visited';
-    let activeMarkerInstances = [];
-
-    mapboxgl.accessToken = mapConfig.accessToken;
-
-    const profileMap = new mapboxgl.Map({
-      container: mapConfig.container,
-      style: mapConfig.style,
-      projection: mapConfig.projection,
-      zoom: mapConfig.zoom,
-      center: mapConfig.center
-    });
-
-    profileMap.addControl(new mapboxgl.NavigationControl());
-
-    function renderProfileMapMarkers() {
-      // Clear previous markers
-      activeMarkerInstances.forEach(marker => marker.remove());
-      activeMarkerInstances = [];
-
-      markersData.forEach(data => {
-        if (currentMapFilter === 'visited' && !data.isVisited) return;
-        if (currentMapFilter === 'marked' && !data.isMarked) return;
-
-        const color = currentMapFilter === 'visited' ? markerColors.visited : markerColors.marked;
-
-        const popup = new mapboxgl.Popup({ offset: 25 })
-          .setHTML(`<div style="color: #1e293b; padding: 4px;"><h4 style="margin: 0 0 4px 0; font-size: 14px; font-weight: 600;">${data.name}</h4><a href="/site/${data.id}" style="color: #3b82f6; font-size: 12px; font-weight: 600; text-decoration: none;">Voir le site</a></div>`);
-
-        const marker = new mapboxgl.Marker({ color })
-          .setLngLat([data.lon, data.lat])
-          .setPopup(popup)
-          .addTo(profileMap);
-
-        activeMarkerInstances.push(marker);
-      });
-    }
-
-    profileMap.on('load', () => {
-      renderProfileMapMarkers();
-    });
-
-    function renderDynamicAccordionList(mode) {
-      const container = document.getElementById(ui.accordionList);
-      if (!container) return;
-
-      const data = mode === 'visited' ? visitedByRegion : markedByRegion;
-
-      if (!data || data.length === 0) {
-        const noMsg = mode === 'visited' ? labels.noVisits : labels.noMarked;
-        container.innerHTML = `<p class="no-visits-msg" style="text-align: center; padding: 20px 0;">${noMsg}</p>`;
-        return;
-      }
-
-      let html = '';
-      data.forEach((item, index) => {
-        let sitesHtml = '';
-        item.sites.forEach(site => {
-          let dotClass = 'mixed';
-          let dotTitle = 'Mixte';
-          if (site.category === 'cultural' || site.category === 'Culturel') {
-            dotClass = 'cultural';
-            dotTitle = 'Culturel';
-          } else if (site.category === 'natural' || site.category === 'Naturel') {
-            dotClass = 'natural';
-            dotTitle = 'Naturel';
-          }
-
-          sitesHtml += `
-            <div class="site-row">
-              <div class="site-row-left">
-                <div class="category-dot ${dotClass}" title="${dotTitle}"></div>
-                <a href="/site/${site.id}" class="site-row-name">${site.name}</a>
-              </div>
-              <div class="site-row-right">
-                ${site.addedAt}
-              </div>
-            </div>
-          `;
-        });
-
-        html += `
-          <div class="continent-accordion" id="accordion-${index}">
-            <div class="continent-accordion-trigger" onclick="toggleAccordion('${index}')">
-              <span class="material-symbols-outlined chevron">expand_more</span>
-              <span>${item.regionName}</span>
-            </div>
-            <div class="continent-accordion-content">
-              ${sitesHtml}
-            </div>
+              <button type="submit" class="edit-submit-btn">Enregistrer</button>
+            </form>
           </div>
-        `;
-      });
+        </div>
+      </main>
 
-      container.innerHTML = html;
+      <script>
+        const ui = {
+          accordionList: "accordion-list-container",
+          btnMapVisited: "btnMapVisited",
+          btnMapMarked: "btnMapMarked",
+          openTabBtn: "openTabBtn",
+          mapTitle: "mapTitle",
+          listTitle: "listTitle"
+        };
 
-      // Force recalculate scrollHeight for transition after DOM update
-      setTimeout(() => {
-        const accordions = container.querySelectorAll('.continent-accordion');
-        accordions.forEach((acc) => {
-          const content = acc.querySelector('.continent-accordion-content');
-          if (content && !acc.classList.contains('collapsed')) {
-            content.style.maxHeight = content.scrollHeight + 'px';
-          }
-        });
-      }, 50);
-    }
+        const labels = {
+          mapVisited: "Carte des sites visités",
+          mapMarked: "Carte des sites marqués",
+          listVisited: "Liste complète des sites visités",
+          listMarked: "Liste complète des sites marqués",
+          noMarked: "Aucun site marqué pour l'instant",
+          noVisits: "{{ t('messages.profile.no_visit_yet') }}"
+        };
 
-    function setMapFilter(mode) {
-      currentMapFilter = mode;
+        const routes = {
+          visits: "{{ route('visits') }}",
+          bookmarks: "{{ route('bookmarks') }}"
+        };
 
-      // Update button classes
-      const btnVisited = document.getElementById(ui.btnMapVisited);
-      const btnMarked = document.getElementById(ui.btnMapMarked);
+        const mapConfig = {
+          accessToken: "pk.eyJ1IjoiNjdza2liaWRpc2NydW0iLCJhIjoiY21sYXdlamR3MGcyOTNlcXoxdHQ2bXliaiJ9.BXx6EzzxvsFrDg5yeo1LUQ",
+          container: "profile-map",
+          style: "mapbox://styles/mapbox/standard",
+          projection: "mercator",
+          zoom: 1.5,
+          center: [ 10, 20 ]
+        };
 
-      if (mode === 'visited') {
-        btnVisited.classList.add('active');
-        btnMarked.classList.remove('active');
-      } else {
-        btnVisited.classList.remove('active');
-        btnMarked.classList.add('active');
-      }
+        const markerColors = {
+          visited: "#fe8d50",
+          marked: "#8bf7df"
+        };
 
-      renderProfileMapMarkers();
-
-      // Dynamic external link
-      const openTabBtn = document.getElementById(ui.openTabBtn);
-      if (openTabBtn) {
-        if (mode === 'visited') {
-          openTabBtn.href = routes.visits;
-        } else {
-          openTabBtn.href = routes.bookmarks;
+        function previewAvatar(event) {
+          const file = event.target.files[0];
+          if (!file) return;
+          document.getElementById("avatarFileName").textContent = file.name;
+          const reader = new FileReader();
+          reader.onload = e => {
+            const img = document.getElementById("avatarPreview");
+            const placeholder = document.getElementById("avatarPlaceholder");
+            img.src = e.target.result;
+            img.style.display = "block";
+            if (placeholder) placeholder.style.display = "none";
+          };
+          reader.readAsDataURL(file);
         }
-      }
 
-      // Update headers
-      const mapTitle = document.getElementById(ui.mapTitle);
-      const listTitle = document.getElementById(ui.listTitle);
-      if (mapTitle) {
-        mapTitle.textContent = mode === 'visited' ? labels.mapVisited : labels.mapMarked;
-      }
-      if (listTitle) {
-        listTitle.textContent = mode === 'visited' ? labels.listVisited : labels.listMarked;
-      }
+        function handleOverlayClick(e) {
+          if (e.target === document.getElementById("editModal")) {
+            document.getElementById("editModal").classList.remove("show");
+          }
+        }
+        // --- MAPBOX & ACCORDION SCRIPTS ---
 
-      // Dynamic List Rendering
-      renderDynamicAccordionList(mode);
-    }
+        const markersData = {{{ JSON.stringify(mapMarkers) }}};
 
-    // Collapsible Accordion logic
-    function toggleAccordion(index) {
-      const accordion = document.getElementById(`accordion-${index}`);
-      if (!accordion) return;
+        const visitedByRegion = {{{ JSON.stringify(visitedByRegion) }}};
 
-      const content = accordion.querySelector('.continent-accordion-content');
-      if (!content) return;
+        const markedByRegion = {{{ JSON.stringify(markedByRegion) }}};
 
-      const isCollapsed = accordion.classList.contains('collapsed');
+        let currentMapFilter = "visited";
 
-      if (isCollapsed) {
-        accordion.classList.remove('collapsed');
-        content.style.maxHeight = content.scrollHeight + 'px';
-      } else {
-        accordion.classList.add('collapsed');
-        content.style.maxHeight = '0px';
-      }
-    }
+        let activeMarkerInstances = [];
 
-    // Set scroll height dynamically on DOM load so smooth expand/collapse transition works
-    window.addEventListener('DOMContentLoaded', () => {
-      renderDynamicAccordionList('visited');
-    });
-  </script>
+        mapboxgl.accessToken = mapConfig.accessToken;
 
-  @end
-</body>
+        const profileMap = new mapboxgl.Map({
+          container: mapConfig.container,
+          style: mapConfig.style,
+          projection: mapConfig.projection,
+          zoom: mapConfig.zoom,
+          center: mapConfig.center
+        });
+
+        profileMap.addControl(new mapboxgl.NavigationControl());
+
+        function renderProfileMapMarkers() {
+          // Clear previous markers
+          activeMarkerInstances.forEach(marker => marker.remove());
+          activeMarkerInstances = [];
+          markersData.forEach(data => {
+            if (currentMapFilter === "visited" && !data.isVisited) return;
+            if (currentMapFilter === "marked" && !data.isMarked) return;
+            const color = currentMapFilter === "visited" ? markerColors.visited : markerColors.marked;
+            const popup = new mapboxgl.Popup({
+              offset: 25
+            }).setHTML(`<div style="color: #1e293b; padding: 4px;"><h4 style="margin: 0 0 4px 0; font-size: 14px; font-weight: 600;">${data.name}</h4><a href="/site/${data.id}" style="color: #3b82f6; font-size: 12px; font-weight: 600; text-decoration: none;">Voir le site</a></div>`);
+            const marker = new mapboxgl.Marker({
+              color: color
+            }).setLngLat([ data.lon, data.lat ]).setPopup(popup).addTo(profileMap);
+            activeMarkerInstances.push(marker);
+          });
+        }
+
+        profileMap.on("load", () => {
+          renderProfileMapMarkers();
+        });
+
+        function renderDynamicAccordionList(mode) {
+          const container = document.getElementById(ui.accordionList);
+          if (!container) return;
+          const data = mode === "visited" ? visitedByRegion : markedByRegion;
+          if (!data || data.length === 0) {
+            const noMsg = mode === "visited" ? labels.noVisits : labels.noMarked;
+            container.innerHTML = `<p class="no-visits-msg" style="text-align: center; padding: 20px 0;">${noMsg}</p>`;
+            return;
+          }
+          let html = "";
+          data.forEach((item, index) => {
+            let sitesHtml = "";
+            item.sites.forEach(site => {
+              let dotClass = "mixed";
+              let dotTitle = "Mixte";
+              if (site.category === "cultural" || site.category === "Culturel") {
+                dotClass = "cultural";
+                dotTitle = "Culturel";
+              } else if (site.category === "natural" || site.category === "Naturel") {
+                dotClass = "natural";
+                dotTitle = "Naturel";
+              }
+              sitesHtml += `
+                    <div class="site-row">
+                      <div class="site-row-left">
+                        <div class="category-dot ${dotClass}" title="${dotTitle}"></div>
+                        <a href="/site/${site.id}" class="site-row-name">${site.name}</a>
+                      </div>
+                      <div class="site-row-right">
+                        ${site.addedAt}
+                      </div>
+                    </div>
+                  `;
+            });
+            html += `
+                  <div class="continent-accordion" id="accordion-${index}">
+                    <div class="continent-accordion-trigger" onclick="toggleAccordion('${index}')">
+                      <span class="material-symbols-outlined chevron">expand_more</span>
+                      <span>${item.regionName}</span>
+                    </div>
+                    <div class="continent-accordion-content">
+                      ${sitesHtml}
+                    </div>
+                  </div>
+                `;
+          });
+          container.innerHTML = html;
+          // Force recalculate scrollHeight for transition after DOM update
+          setTimeout(() => {
+            const accordions = container.querySelectorAll(".continent-accordion");
+            accordions.forEach(acc => {
+              const content = acc.querySelector(".continent-accordion-content");
+              if (content && !acc.classList.contains("collapsed")) {
+                content.style.maxHeight = content.scrollHeight + "px";
+              }
+            });
+          }, 50);
+        }
+
+        function setMapFilter(mode) {
+          currentMapFilter = mode;
+          // Update button classes
+          const btnVisited = document.getElementById(ui.btnMapVisited);
+          const btnMarked = document.getElementById(ui.btnMapMarked);
+          if (mode === "visited") {
+            btnVisited.classList.add("active");
+            btnMarked.classList.remove("active");
+          } else {
+            btnVisited.classList.remove("active");
+            btnMarked.classList.add("active");
+          }
+          renderProfileMapMarkers();
+          // Dynamic external link
+          const openTabBtn = document.getElementById(ui.openTabBtn);
+          if (openTabBtn) {
+            if (mode === "visited") {
+              openTabBtn.href = routes.visits;
+            } else {
+              openTabBtn.href = routes.bookmarks;
+            }
+          }
+          // Update headers
+          const mapTitle = document.getElementById(ui.mapTitle);
+          const listTitle = document.getElementById(ui.listTitle);
+          if (mapTitle) {
+            mapTitle.textContent = mode === "visited" ? labels.mapVisited : labels.mapMarked;
+          }
+          if (listTitle) {
+            listTitle.textContent = mode === "visited" ? labels.listVisited : labels.listMarked;
+          }
+          // Dynamic List Rendering
+          renderDynamicAccordionList(mode);
+        }
+        // Collapsible Accordion logic
+
+        function toggleAccordion(index) {
+          const accordion = document.getElementById(`accordion-${index}`);
+          if (!accordion) return;
+          const content = accordion.querySelector(".continent-accordion-content");
+          if (!content) return;
+          const isCollapsed = accordion.classList.contains("collapsed");
+          if (isCollapsed) {
+            accordion.classList.remove("collapsed");
+            content.style.maxHeight = content.scrollHeight + "px";
+          } else {
+            accordion.classList.add("collapsed");
+            content.style.maxHeight = "0px";
+          }
+        }
+        // Set scroll height dynamically on DOM load so smooth expand/collapse transition works
+
+        window.addEventListener("DOMContentLoaded", () => {
+          renderDynamicAccordionList("visited");
+        });
+      </script>
+
+    @end
+  </body>
 
 </html>
