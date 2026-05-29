@@ -26,12 +26,7 @@ yarn-error.log
 # Platform specific
 .DS_Store
 
-# Import db
-public/data
-
-# Tool sqlite
-sqlite3.exe
-
 public/unesco/*
+public/data/*
 
 db.sqlite3

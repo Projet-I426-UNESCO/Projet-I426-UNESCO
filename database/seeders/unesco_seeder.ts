@@ -91,7 +91,8 @@ export default class extends BaseSeeder {
     await db.rawQuery(`
       UPDATE unescos
       SET local_image_main = 'https://unesco.etml.net/unesco/images/main/' || id_no || '.webp',
-          local_image_thumb = 'https://unesco.etml.net/unesco/images/thumb/' || id_no || '.webp'
+      local_image_thumb = 'https://unesco.etml.net/unesco/images/thumb/' || id_no || '.webp',
+      local_image_visited_sites = 'https://unesco.etml.net/unesco/images/visited_sites/' || id_no || '.webp'
       WHERE id_no IS NOT NULL
         AND main_image_url IS NOT NULL
         AND main_image_url != '';

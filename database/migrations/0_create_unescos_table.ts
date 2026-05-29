@@ -82,6 +82,10 @@ export default class extends BaseSchema {
       table.text('components_list', 'longtext')
       table.integer('components_count')
 
+      table.string('local_image_main').nullable()
+      table.string('local_image_thumb').nullable()
+      table.string('local_image_visited_sites').nullable()
+
       table.timestamp('created_at', { useTz: true })
       table.timestamp('updated_at', { useTz: true })
     })
