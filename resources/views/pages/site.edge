@@ -52,7 +52,8 @@ unesco.nameEn), page: 'sites' })
 </main>
 
 <script>
-  mapboxgl.accessToken = "pk.eyJ1IjoiNjdza2liaWRpc2NydW0iLCJhIjoiY21sYXdlamR3MGcyOTNlcXoxdHQ2bXliaiJ9.BXx6EzzxvsFrDg5yeo1LUQ";
+  //console.log(mapboxToken);
+  mapboxgl.accessToken = "{{ mapboxToken }}";
 
   const csrfToken = "{{ csrfToken }}";
   const tAddVisited = "{{ t('messages.home.add_to_visited') }}";
@@ -63,6 +64,7 @@ unesco.nameEn), page: 'sites' })
   document.addEventListener('DOMContentLoaded', () => {
     const unesco = {{{ JSON.stringify(unesco)
   }}};
+
 
   for (let i = 0; i < 2; i++) {
     flipVisitSiteUI(unesco.id)

@@ -3,6 +3,7 @@ import Unesco from '#models/unesco'
 import { dd } from '@adonisjs/core/services/dumper'
 import Marker from '#models/marker'
 import User from '#models/user'
+import env from '#start/env'
 
 export default class UnescosController {
   /**
@@ -17,9 +18,10 @@ export default class UnescosController {
       // Gets the user's markers if he's logged in
       markers = await Marker.query().where('user_id', auth.user.id).exec()
     }
+    const mapboxToken = env.get('MAPBOX_ACCESS_TOKEN')
 
     // Appel de la vue
-    return view.render('pages/home', { unescos, markers })
+    return view.render('pages/home', { unescos, markers, mapboxToken })
   }
 
   async sites({ auth, view }: HttpContext) {
@@ -257,6 +259,8 @@ export default class UnescosController {
         category: m.unesco.category,
       }))
 
+    const mapboxToken = env.get('MAPBOX_ACCESS_TOKEN')
+
     return view.render('pages/profile', {
       stats: {
         visitedSites: visitedMarkers.length,
@@ -272,17 +276,18 @@ export default class UnescosController {
       mapMarkers,
       visitedByRegion,
       markedByRegion,
+      mapboxToken
     })
   }
   /**
    * Display form to create a new record
    */
-  async create({}: HttpContext) {}
+  async create({ }: HttpContext) { }
 
   /**
    * Handle form submission for the create action
    */
-  async store({ request }: HttpContext) {}
+  async store({ request }: HttpContext) { }
 
   /**
    * Show individual record
@@ -296,21 +301,23 @@ export default class UnescosController {
       markers = await Marker.query().where('user_id', auth.user.id).exec()
     }
 
-    return view.render('pages/site', { unesco, markers })
+    const mapboxToken = env.get('MAPBOX_ACCESS_TOKEN')
+
+    return view.render('pages/site', { unesco, markers, mapboxToken })
   }
 
   /**
    * Edit individual record
    */
-  async edit({ params }: HttpContext) {}
+  async edit({ params }: HttpContext) { }
   /**
 
    * Handle form submission for the edit action
    */
-  async update({ params, request }: HttpContext) {}
+  async update({ params, request }: HttpContext) { }
 
   /**
    * Delete record
    */
-  async destroy({ params }: HttpContext) {}
+  async destroy({ params }: HttpContext) { }
 }
