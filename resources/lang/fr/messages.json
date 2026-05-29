@@ -85,7 +85,8 @@
     "completion_rate": "Pourcentage des sites UNESCO visités",
     "most_visited_region": "Continent le plus visité",
     "most_visited_country": "Pays le plus visité",
-    "countries_explored": "Pays explorés"
+    "countries_explored": "Pays explorés",
+    "no_visits": "Aucun"
   },
   "site": {
     "country": "Pays",

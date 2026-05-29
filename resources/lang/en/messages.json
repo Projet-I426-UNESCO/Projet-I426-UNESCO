@@ -76,13 +76,17 @@
     "logout": "Logout",
     "edit_account": "Edit account",
     "last_visit": "Last visit",
+    "no_visit_yet": "No visits for now",
     "global_progress": "Global Progress",
     "continent_exploration": "Exploration by continent",
     "recent_visits": "Recent visits",
     "visited_sites": "Visited sites",
     "continents": "Continents",
     "completion_rate": "Completion rate",
-    "countries_explored": "Countries explored"
+    "most_visited_region": "Most visited continent",
+    "most_visited_country": "Most visited Country",
+    "countries_explored": "Countries explored",
+    "no_visits": "None"
   },
   "site": {
     "country": "Country",
