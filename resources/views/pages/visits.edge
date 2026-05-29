@@ -3,20 +3,7 @@
   <main class="sites-main">
     <div class="controls">
       <div class="search-container">
-        <div class="search-pill">
-          <span class="material-symbols-outlined">search</span>
-          <input type="text" placeholder="Rechercher un site..." />
-        </div>
-        <div class="search-pill">
-          <button class="filter" onclick="openFilters()">            <span class="material-symbols-outlined">filter_list</span></button>
-          <p>
-            @if(filter)
-              Filtre: {{ filter }}
-            @else
-              Filtre: aucun
-            @end
-          </p>
-        </div>
+        @include('components/search/site_search')
       </div>
     </div>
     <div class="sites-grid">
@@ -73,7 +60,7 @@
       @if(unescos && unescos.length > 0)
         @each((unesco) in unescos)
           @let(marker = markers.find(m => m.unescoId == unesco.id))
-          <div class="site-box">
+          <div class="site-box" data-id="{{ unesco.id }}">
 
             <a href="{{ route('site.show', { id: unesco.id }) }}">
               @if(unesco.localImageThumb)
@@ -119,7 +106,21 @@
         @end
       </div>
     </main>
+    <script type="module">
+      import { initSiteSearch } from "./resources/views/components/js/siteSearch.js";
+      initSiteSearch({
+        unescos: unescosData,
+        markers: markersData,
+        onUpdate: (filtered) => {
+          const visibleIds = new Set(filtered.map(u => u.id));
 
+          document.querySelectorAll(".site-box").forEach(box => {
+            const id = Number(box.dataset.id);
+            box.style.display = visibleIds.has(id) ? "" : "none";
+          });
+        }
+      });
+    </script>
     <script>
       function openFilters() {
         const popup = document.getElementById("filterPopup");
@@ -164,6 +165,7 @@
 
       const csrfToken = "{{ csrfToken }}";
 
+      const unescosData = {{{ JSON.stringify(unescos) }}};
       const markersData = {{{ JSON.stringify(markers) }}};
 
       async function visitSite(url, unescoId) {
