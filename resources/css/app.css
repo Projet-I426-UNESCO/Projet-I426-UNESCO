@@ -1530,6 +1530,7 @@ aside {
   padding: 100px 100px 80px 100px;
   background-color: #2c303d;
   height: 100%;
+  color: white;
 }
 
 .site_temp {
@@ -1606,10 +1607,6 @@ aside {
   height: 700px;
   padding: 30px;
   cursor: default !important;
-}
-
-.site_main html {
-  color: white;
 }
 
 .site_main a {
