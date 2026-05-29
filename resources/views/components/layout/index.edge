@@ -1,27 +1,30 @@
 <!DOCTYPE html>
 <html lang="fr">
 
-<head>
-  <meta charset="UTF-8" />
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <link href="https://api.mapbox.com/mapbox-gl-js/v3.18.1/mapbox-gl.css" rel="stylesheet" />
-  <script src="https://api.mapbox.com/mapbox-gl-js/v3.18.1/mapbox-gl.js">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link href="https://api.mapbox.com/mapbox-gl-js/v3.18.1/mapbox-gl.css" rel="stylesheet" />
+    <script src="https://api.mapbox.com/mapbox-gl-js/v3.18.1/mapbox-gl.js">
 
-  </script>
-  @vite(['resources/css/app.css', 'resources/js/app.js'])
-  <title>
-    {{ title || "Patrimoine mondiale de l'Unesco" }}
-  </title>
-</head>
+    </script>
+    <script src="./js/app.js">
 
-<body class="page-{{ page }}">
-  @if(!hideHeader)
-  @include('partials/header')
-  @end
-  {{-- @include('partials/flash') --}}
-  {{{ await $slots.main() }}}
-  {{-- @include('partials/footer') --}}
-</body>
+    </script>
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    <title>
+      {{ title || "Patrimoine mondiale de l'Unesco" }}
+    </title>
+  </head>
+
+  <body class="page-{{ page }}">
+    @if(!hideHeader)
+      @include('partials/header')
+    @end
+    {{-- @include('partials/flash') --}}
+    {{{ await $slots.main() }}}
+    {{-- @include('partials/footer') --}}
+  </body>
 
 </html>
