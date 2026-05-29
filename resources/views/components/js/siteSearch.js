@@ -1,4 +1,7 @@
+import { continentByCountry } from "./countries";
+
 export function initSiteSearch({ unescos, markers, onUpdate }) {
+
   const searchInput = document.getElementById("siteSearchInput");
 
   const filterCategory = document.querySelector('[data-filter-group="category"]');
@@ -11,11 +14,6 @@ export function initSiteSearch({ unescos, markers, onUpdate }) {
 
   const resetBtn = document.querySelector('[data-filter-reset]');
 
-  let searchQuery = "";
-  let activeFilter = "all";
-
-  setupDynamicFilters();
-
   const normalize = (v) =>
     (v || "")
       .toString()
@@ -24,9 +22,46 @@ export function initSiteSearch({ unescos, markers, onUpdate }) {
       .toLowerCase()
       .trim();
 
+  let searchQuery = "";
+  let activeFilter = "all";
+
   function getSelected(container) {
     if (!container) return [];
     return [...container.querySelectorAll("input:checked")].map(i => i.value);
+  }
+
+  function setupDynamicFilters(unescos) {
+    const regions = [...new Set(unescos.map(u => u.region).filter(Boolean))].sort();
+    const continents = [...new Set(
+      unescos.flatMap(u => {
+        const countries = Array.isArray(u.statesNames)
+          ? u.statesNames
+          : typeof u.statesNames === "string"
+            ? u.statesNames.split(/[;,]/)
+            : [];
+
+        return countries
+          .map(country => continentByCountry[country])
+          .filter(Boolean);
+      })
+    )].sort();
+
+    function render(container, values) {
+      if (!container) return;
+
+      container.innerHTML = values.map((v, i) => {
+        const id = `${container.dataset.filterGroup}-${i}`;
+        return `
+          <label class="filter-option" for="${id}">
+            <input id="${id}" type="checkbox" value="${normalize(v)}" />
+            <span>${v}</span>
+          </label>
+        `;
+      }).join("");
+    }
+
+    render(filterRegion, regions);
+    render(filterContinent, continents);
   }
 
   function matchesSearch(item) {
@@ -43,6 +78,23 @@ export function initSiteSearch({ unescos, markers, onUpdate }) {
 
     if (cats.length && !cats.includes(normalize(item.category))) return false;
     if (regions.length && !regions.includes(normalize(item.region))) return false;
+
+    const countries = Array.isArray(item.statesNames)
+      ? item.statesNames
+      : typeof item.statesNames === "string"
+        ? item.statesNames.split(/[;,]/)
+        : [];
+
+    const itemContinents = countries
+      .map(country => continentByCountry[country])
+      .filter(Boolean);
+
+    if (
+      continents.length &&
+      !itemContinents.some(c => continents.includes(normalize(c)))
+    ) {
+      return false;
+    }
 
     const countryQuery = normalize(filterCountry?.value);
     if (countryQuery && !normalize(item.statesNames).includes(countryQuery)) return false;
@@ -76,6 +128,21 @@ export function initSiteSearch({ unescos, markers, onUpdate }) {
     onUpdate(result);
   }
 
+  function bindFilterListeners() {
+
+    document
+      .querySelectorAll('[data-filter-group] input[type="checkbox"]')
+      .forEach(el => {
+        el.addEventListener("change", apply);
+      });
+
+    document
+      .querySelectorAll('[data-filter-input]')
+      .forEach(el => {
+        el.addEventListener("input", apply);
+      });
+  }
+
   function setFilter(mode) {
     activeFilter = mode;
 
@@ -86,13 +153,13 @@ export function initSiteSearch({ unescos, markers, onUpdate }) {
     apply();
   }
 
+  setupDynamicFilters(unescos);
+  bindFilterListeners();
+
   searchInput?.addEventListener("input", (e) => {
     searchQuery = e.target.value || "";
     apply();
   });
-
-  document.querySelectorAll("[data-filter-group] input, [data-filter-input]")
-    .forEach(el => el.addEventListener("input", apply));
 
   resetBtn?.addEventListener("click", () => {
     document.querySelectorAll("input[type=checkbox]").forEach(i => i.checked = false);
@@ -103,41 +170,5 @@ export function initSiteSearch({ unescos, markers, onUpdate }) {
   });
 
   window.setFilter = setFilter;
-
   apply();
-}
-
-function setupDynamicFilters() {
-  const continentByRegion = {
-    "Europe and North America": ["Europe", "North America"],
-    "Latin America and the Caribbean": ["South America", "North America"],
-    "Asia and the Pacific": ["Asia", "Oceania"],
-    "Arab States": ["Asia", "Africa"],
-    "Africa": ["Africa"],
-  };
-
-  const getContinents = (region) => continentByRegion[region] || [];
-
-  const regions = [...new Set(unescos.map(u => u.region).filter(Boolean))].sort();
-
-  const continents = [...new Set(
-    unescos.flatMap(u => getContinents(u.region))
-  )].sort();
-
-  function render(container, values) {
-    if (!container) return;
-
-    container.innerHTML = values.map((v, i) => {
-      const id = `${container.dataset.filterGroup}-${i}`;
-      return `
-        <label class="filter-option" for="${id}">
-          <input id="${id}" type="checkbox" value="${normalize(v)}" />
-          <span>${v}</span>
-        </label>
-      `;
-    }).join("");
-  }
-
-  render(filterRegion, regions);
-  render(filterContinent, continents);
 }
