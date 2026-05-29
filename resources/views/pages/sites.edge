@@ -87,8 +87,8 @@
           <div class="site-box">
 
             <a href="{{ route('site.show', { id: unesco.id }) }}">
-              @if(unesco.localImageThumb)
-                <img src="{{ unesco.localImageMain }}" class="site-box-img" />
+              @if(unesco.localImageVisitedSites)
+                <img src="{{ unesco.localImageVisitedSites }}" class="site-box-img" />
               @else
                 <img src="../../../public/placeholders/placeholderImage.png" class="site-box-img" />
               @end

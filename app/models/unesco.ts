@@ -202,4 +202,7 @@ export default class Unesco extends BaseModel {
 
   @column()
   declare localImageThumb: string | null
+
+  @column()
+  declare localImageVisitedSites: string | null
 }
