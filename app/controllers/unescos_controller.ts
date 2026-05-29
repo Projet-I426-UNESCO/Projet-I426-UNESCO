@@ -12,7 +12,7 @@ export default class UnescosController {
     await auth.check()
     const unescos = await Unesco.query().exec()
 
-    let markers: Marker[] = []
+    let markers = null
     if (auth.user) {
       // Gets the user's markers if he's logged in
       markers = await Marker.query().where('user_id', auth.user.id).exec()
@@ -26,7 +26,7 @@ export default class UnescosController {
     await auth.check()
     const unescos = await Unesco.query().exec()
 
-    let markers: Marker[] = []
+    let markers = null
     if (auth.user) {
       // Gets the user's markers if he's logged in
       markers = await Marker.query().where('user_id', auth.user.id).exec()
