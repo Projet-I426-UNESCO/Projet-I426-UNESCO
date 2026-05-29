@@ -1,15 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=K2D:wght@300;400;500&display=swap');
 
 :root {
-  --primary: #2563eb;
-  --primary-hover: #1d4ed8;
-  --bg-main: #f8fafc;
-  --bg-card: #ffffff;
-  --text-main: #1e293b;
-  --text-muted: #64748b;
-  --border-color: #e2e8f0;
-  --background-color: #0f172a;
-  --radius: 12px;
   --font-size-base: clamp(1rem, 0.95rem + 0.25vw, 1.125rem);
   --font-size-h3: clamp(1.5rem, 1.3rem + 1vw, 2.25rem);
   --sidebar-width: 120px;
@@ -94,8 +85,6 @@
   --gradient-end: #68bff8;
 }
 
-<<<<<<< Updated upstream
-=======
 [data-theme='light'] {
   --bg-base: #f8fafc;
   --bg-surface: #f1f5f9;
@@ -178,7 +167,6 @@
   --gradient-end: #38bdf8;
 }
 
->>>>>>> Stashed changes
 * {
   font-family: 'K2D', sans-serif;
   box-sizing: border-box;
@@ -1704,10 +1692,7 @@ aside {
   padding: 100px 100px 80px 100px;
   background-color: var(--bg-page);
   height: 100%;
-<<<<<<< Updated upstream
-=======
   color: var(--text-white);
->>>>>>> Stashed changes
 }
 
 .site_temp {
@@ -1784,10 +1769,6 @@ aside {
   height: 700px;
   padding: 30px;
   cursor: default !important;
-}
-
-.site_main html {
-  color: white;
 }
 
 .site_main a {
@@ -2372,8 +2353,7 @@ aside {
 
 .map-toggle-group {
   display: flex;
-
-  background-color: #0f172a;
+  background-color: var(--bg-base);
   border-radius: 8px;
   padding: 4px;
   border: 1px solid var(--border-alpha-4);
@@ -2390,7 +2370,6 @@ aside {
   cursor: pointer;
   transition: all 0.2s ease;
   font-family: inherit;
-  width: 133px;
 }
 
 .map-toggle-btn.active {
@@ -2402,9 +2381,9 @@ aside {
   display: flex;
   align-items: center;
   gap: 8px;
-  background-color: #3b82f6;
-  color: #ffffff;
-  padding: 9px 20px;
+  background-color: var(--accent-blue);
+  color: var(--text-white);
+  padding: 9px 18px;
   border-radius: 8px;
   font-size: 14px;
   font-weight: 600;
