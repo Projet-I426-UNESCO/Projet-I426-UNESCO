@@ -62,7 +62,7 @@
     "login_title": "Login",
     "register_title": "Register",
     "back": "Go back",
-    "username_placeholder": "Username (e.g. xXx67Erdem67xXx-LFT)",
+    "username_placeholder": "Username",
     "password_placeholder": "Password",
     "login_button": "Login",
     "register_button": "Register",
