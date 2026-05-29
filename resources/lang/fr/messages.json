@@ -23,7 +23,9 @@
     "add_to_visited": "Ajouter à mes visites",
     "remove_from_visited": "Enlever de mes visites",
     "mark_site": "Marquer le Site",
-    "unmark_site": "Démarquer le Site"
+    "unmark_site": "Démarquer le Site",
+    "no_marked_sites": "Vous n'avez pas encore de sites marqués.",
+    "no_visited_sites": "Vous n'avez pas encore de sites visités."
   },
   "filters": {
     "button_title": "Filtres",

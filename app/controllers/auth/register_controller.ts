@@ -10,7 +10,7 @@ export default class RegisterController {
 
   async store({request, response, auth}: HttpContext) {
     const data = await request.validateUsing(registerValidator)
-    const user = await User.create(data)
+    const user = await User.create({avatar: '/placeholders/avatar.png', ...data})
 
     await auth.use('web').login(user)
 

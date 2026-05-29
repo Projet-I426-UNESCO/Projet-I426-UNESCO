@@ -22,8 +22,10 @@
     "back_button": "Go back",
     "add_to_visited": "Add to visits",
     "remove_from_visited": "Remove from visits",
-    "mark_site": "Mark site",
-    "unmark_site": "Unmark site"
+    "mark_site": "Bookmark site",
+    "unmark_site": "Unbookmark site",
+    "no_marked_sites": "No sites marked yet.",
+    "no_visited_sites": "No sites visited yet."
   },
   "filters": {
     "button_title": "Filters",

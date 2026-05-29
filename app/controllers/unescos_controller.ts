@@ -37,7 +37,14 @@ export default class UnescosController {
 
   async bookmarks({ view, auth }: HttpContext) {
     await auth.check()
-    const unescos = await Unesco.query().exec()
+    const user = await User.query().where('id', auth.user!.id).firstOrFail()
+
+    const unescos = await Unesco.query()
+      .join('markers', 'unescos.id', '=', 'markers.unesco_id')
+      .where('markers.user_id', user.id)
+      .where('markers.is_marked', true)
+      .select('unescos.*')
+      .groupBy('unescos.id')
 
     let markers: Marker[] = []
     if (auth.user) {

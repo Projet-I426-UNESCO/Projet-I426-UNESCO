@@ -73,6 +73,7 @@
   <div class="sites-grid">
     @if(unescos && unescos.length > 0)
     @each((unesco) in unescos)
+    @let(marker = markers.find(m => m.unescoId == unesco.id))
     <div class="site-box">
 
       <a href="{{ route('site.show', { id: unesco.id }) }}">
@@ -94,22 +95,20 @@
       <div class="add_button">
         <button class="btn-primary" id="visitSiteBtn{{unesco.id}}"
           onclick="visitSite('{{ route('marker.visit', { unescoId: unesco.id }) }}', {{unesco.id}})">
-          <span>Enlever de mes visites</span></button>
+          <span>{{ t('messages.home.remove_from_visited') }}</span></button>
         <button class="btn-primary button_mark" id="markSiteBtn{{unesco.id}}"
           onclick="markSite('{{ route('marker.mark', { unescoId: unesco.id }) }}', {{unesco.id}})"> <span>
-            @each(marker in markers)
-            @if(marker.unescoId == unesco.id && marker.isMarked)
-            Démarquer le Site
-            @elseif(marker.unescoId == unesco.id && !marker.isMarked)
-            Marquer le Site
-            @end
-            @end
+          @if(marker && marker.isMarked)
+            {{ t('messages.home.unmark_site') }}
+          @else
+            {{ t('messages.home.mark_site') }}
+          @end
         </button>
       </div>
     </div>
     @end
     @else
-    <p class="no_site">Vous n'avez pas encore de site visité.</p>
+    <p class="no_site">{{ t('messages.home.no_visited_sites')}}</p>
     @end
   </div>
 </main>
@@ -230,11 +229,11 @@
       console.log(button)
       if (marker) {
         markersData[markersData.findIndex((marker) => marker.unescoId == unescoId)].isVisited = !marker.isVisited
-        button.innerText = marker.isVisited ? "Enlever de mes visites" : "Ajouter à mes visites"
+        button.innerText = marker.isVisited ? "{{ t('messages.home.remove_from_visited') }}" : "{{ t('messages.home.add_to_visited') }}"
         // Flips the isVisited in the gotten data, it modifies the now local data, not the distant one, simply to keep the UI up to date.
       } else {
         markersData.push({ isMarked: 0, isVisited: 1, unescoId: unescoId })
-        button.innerText = "Enlever de mes visites"
+        button.innerText = "{{ t('messages.home.remove_from_visited') }}"
       }
     }
   }
@@ -247,12 +246,12 @@
       console.log(button)
       if (marker) {
         markersData[markersData.findIndex((marker) => marker.unescoId == unescoId)].isMarked = !marker.isMarked
-        button.innerText = marker.isMarked ? "Démarquer le Site" : "Marquer le Site"
+        button.innerText = marker.isMarked ? "{{ t('messages.home.unmark_site') }}" : "{{ t('messages.home.mark_site') }}"
         // Flips the isMarked in the gotten data, it modifies the now local data, not the distant one, simply to keep the UI up to date.
       } else {
         // If the marker doesn't exist we manually, locally create it as the db would and change it's values manually
         markersData.push({ isMarked: 1, isVisited: 0, unescoId: unescoId })
-        button.innerText = "Démarquer le Site"
+        button.innerText = "{{ t('messages.home.unmark_site') }}"
       }
     }
   }
