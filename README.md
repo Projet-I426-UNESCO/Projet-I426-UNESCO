@@ -9,6 +9,8 @@ Tiré des propositions de DOD de Kleer
 
 # Installation
 
+Installer Node.JS 24 (LTS)
+
 Cloner le Repo
 ```sh
 git clone https://github.com/Projet-I426-UNESCO/Projet-I426-UNESCO
@@ -31,9 +33,19 @@ Générer une clef pour l'application
 node ace generate:key
 ```
 
+Ajouter la clé MapBox fournie dans le .env à `MAPBOX_ACCESS_TOKEN`
+```env
+MAPBOX_ACCESS_TOKEN=VotreClé
+```
+
+Depuis la racine du projet, créer le dossier `public/data`
+```sh
+mkdir public/data
+```
+
 Recevoir les données de l'Unesco
 ```sh
-node ace get:data # Si vous avez une erreur, essayer de créer le dossier data dans "public/".
+node ace get:data # Si vous avez une erreur, vérifier que le dossier public/data existe.
 ```
 
 Préparer la db
